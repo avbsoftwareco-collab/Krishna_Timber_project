@@ -33,8 +33,7 @@ export const requirementApi = createApi({
         body: formData,
       }),
       invalidatesTags: ["PurchaseRequests"],
-      // Optional: you can also invalidate DropdownData if needed
-      // invalidatesTags: ["PurchaseRequests", "DropdownData"],
+      
     }),
 
   }),
