@@ -131,6 +131,107 @@ export async function POST(request) {
 
 
 
+// app/api/billing-backend/challans/route.js — Add this DELETE handler
+
+export async function DELETE(request) {
+  try {
+    const { challanNo } = await request.json();
+
+    if (!challanNo) {
+      return NextResponse.json(
+        { success: false, error: 'challanNo required' },
+        { status: 400 }
+      );
+    }
+
+    // ── Delete from Challans_Data ──
+    const challansRes = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Challans_Data!A2:H',
+    });
+    const challanRows = challansRes.data.values || [];
+    const challanIdx = challanRows.findIndex(r => r[0] === challanNo);
+
+    if (challanIdx !== -1) {
+      // Get sheet ID for Challans_Data
+      const sheetMeta = await sheets.spreadsheets.get({ spreadsheetId });
+      const challansSheet = sheetMeta.data.sheets.find(
+        s => s.properties.title === 'Challans_Data'
+      );
+
+      if (challansSheet) {
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId,
+          requestBody: {
+            requests: [{
+              deleteDimension: {
+                range: {
+                  sheetId: challansSheet.properties.sheetId,
+                  dimension: 'ROWS',
+                  startIndex: challanIdx + 1, // +1 for header
+                  endIndex: challanIdx + 2,
+                },
+              },
+            }],
+          },
+        });
+      }
+    }
+
+    // ── Delete from Challan_Items ──
+    const itemsRes = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Challan_Items!A2:H',
+    });
+    const itemRows = itemsRes.data.values || [];
+
+    // Find all item row indices matching this challanNo (reverse order)
+    const itemIndices = [];
+    itemRows.forEach((r, idx) => {
+      if (r[0] === challanNo) itemIndices.push(idx);
+    });
+
+    if (itemIndices.length > 0) {
+      const sheetMeta2 = await sheets.spreadsheets.get({ spreadsheetId });
+      const itemsSheet = sheetMeta2.data.sheets.find(
+        s => s.properties.title === 'Challan_Items'
+      );
+
+      if (itemsSheet) {
+        // Delete in reverse order so indices don't shift
+        const requests = itemIndices
+          .reverse()
+          .map(idx => ({
+            deleteDimension: {
+              range: {
+                sheetId: itemsSheet.properties.sheetId,
+                dimension: 'ROWS',
+                startIndex: idx + 1,
+                endIndex: idx + 2,
+              },
+            },
+          }));
+
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId,
+          requestBody: { requests },
+        });
+      }
+    }
+
+    return NextResponse.json({
+      success: true,
+      message: `Challan ${challanNo} deleted`,
+    });
+  } catch (error) {
+    console.error('DELETE /challans error:', error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}
+
 
 
 
