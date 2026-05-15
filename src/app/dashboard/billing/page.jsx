@@ -2330,14 +2330,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;font-size:15px;color:#000;backgroun
 .btn-save:hover{transform:translateY(-1px)}
 .btn-close{background:#fff;color:#333;border:1px solid #ddd;box-shadow:0 1px 4px rgba(0,0,0,0.1)}
 
-.ktp-header{background:linear-gradient(135deg,#5a1515,#7B1E1E,#9a2828);color:#fff;padding:14px 24px 12px;display:flex;align-items:center;gap:18px;}
-.ktp-logo-circle{width:72px;height:72px;border-radius:50%;border:3px solid rgba(255,255,255,0.9);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+.ktp-header{background:linear-gradient(135deg,#5a1515,#7B1E1E,#9a2828);color:#fff;padding:22px 30px 20px;display:flex;align-items:center;gap:24px;}
+.ktp-logo-circle{width:100px;height:100px;border-radius:50%;border:4px solid rgba(255,255,255,0.95);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,0.3);}
 .ktp-logo-circle img{width:100%;height:100%;object-fit:cover}
 .ktp-header-center{flex:1;text-align:center}
-.ktp-brand-name{font-size:42px;font-style:italic;font-weight:bold;font-family:Georgia,'Times New Roman',serif;line-height:1;text-shadow:1px 1px 2px rgba(0,0,0,0.2)}
-.ktp-brand-sub{font-size:20px;font-family:Georgia,'Times New Roman',serif;font-style:italic;letter-spacing:3px;opacity:0.95;margin-top:3px}
-.ktp-brand-addr{font-size:12.5px;margin-top:5px;opacity:0.95;letter-spacing:0.3px;font-weight:500}
-.ktp-header-right-space{width:72px;flex-shrink:0}
+.ktp-brand-name{font-size:54px;font-style:italic;font-weight:bold;font-family:Georgia,'Times New Roman',serif;line-height:1;text-shadow:2px 2px 3px rgba(0,0,0,0.25);letter-spacing:1px}
+.ktp-brand-sub{font-size:26px;font-family:Georgia,'Times New Roman',serif;font-style:italic;letter-spacing:4px;opacity:0.98;margin-top:4px}
+.ktp-brand-addr{font-size:14.5px;margin-top:8px;opacity:1;letter-spacing:0.4px;font-weight:600}
+.ktp-header-right-space{width:100px;flex-shrink:0}
 
 .ktp-meta{display:flex;justify-content:space-between;align-items:center;border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:7px 18px;background:#FBF6F0;}
 .ktp-meta-left{display:flex;flex-direction:column;gap:1px}
@@ -2347,14 +2347,14 @@ body{font-family:'Segoe UI',Arial,sans-serif;font-size:15px;color:#000;backgroun
 .ktp-dc-title{font-size:20px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:2px;border:2.5px solid #7B1E1E;padding:2px 16px;display:inline-block;border-radius:4px;}
 .ktp-dc-details{font-size:13px;margin-top:3px;color:#222;font-weight:500}
 
-.ktp-info{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:10px 18px;background:#fff;}
-.ktp-info-title{font-size:12px;font-weight:bold;text-transform:uppercase;color:#7B1E1E;letter-spacing:1.5px;margin-bottom:6px;border-bottom:1px solid #E8DCC8;padding-bottom:3px;}
-.ktp-info-grid{display:flex;flex-wrap:wrap;gap:6px 22px}
-.ktp-field{display:flex;align-items:baseline;gap:6px;margin-bottom:3px}
-.ktp-field-label{font-size:13px;font-weight:700;white-space:nowrap;color:#222}
-.ktp-field-value{font-size:14px;border-bottom:1px dotted #888;padding-bottom:1px;min-width:80px;color:#000;font-weight:600}
-.ktp-field-value.wide{min-width:220px;flex:1}
-.ktp-field-value.medium{min-width:140px}
+.ktp-info{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:12px 20px;background:#fff;}
+.ktp-info-title{font-size:14px;font-weight:bold;text-transform:uppercase;color:#7B1E1E;letter-spacing:1.5px;margin-bottom:8px;border-bottom:1.5px solid #E8DCC8;padding-bottom:5px;}
+.ktp-info-grid{display:flex;flex-wrap:wrap;gap:8px 26px}
+.ktp-field{display:flex;align-items:baseline;gap:8px;margin-bottom:5px}
+.ktp-field-label{font-size:15px;font-weight:700;white-space:nowrap;color:#1a1a1a}
+.ktp-field-value{font-size:16px;border-bottom:1px dotted #777;padding-bottom:2px;min-width:90px;color:#000;font-weight:600}
+.ktp-field-value.wide{min-width:240px;flex:1}
+.ktp-field-value.medium{min-width:150px}
 
 .ktp-table-wrap{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;flex:1;}
 table.items{width:100%;border-collapse:collapse}
@@ -2604,7 +2604,7 @@ function getChallanPrintHTML(
 
   // const minRows = hidePrice ? 27 : 21;
 
-  const minRows = hidePrice ? 18 : 14;
+  const minRows = hidePrice ? 12 : 8;
 
   const emptyCount = Math.max(0, minRows - itemRows.length);
   const colCount = hidePrice ? 3 : 5;
