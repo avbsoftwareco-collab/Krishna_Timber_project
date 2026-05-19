@@ -307,7 +307,7 @@ import Image from 'next/image';
 
 import {
   Package, FileText, LogOut, Bell, ChevronDown,
-  ShoppingCart, Menu, X, User, Settings, Sun, Moon
+  ShoppingCart, Menu, X, User, Settings, Sun, Moon,RotateCcw,Receipt         
 } from 'lucide-react';
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -443,9 +443,29 @@ export default function DashboardLayout({ children }) {
     setProfileOpen(false);
   };
 
-  const tabs = [
-    { label: 'Billing', path: '/dashboard/billing', icon: <FileText className="w-4 h-4" /> },
-  ];
+ // ✅ YAHAN add karo - tabs array me
+const tabs = [
+  
+  // { 
+  //   label: 'Customer Summary',     // ✅ NEW
+  //   path: '/dashboard/customer-summary',
+  //   icon: <TrendingUp className="w-4 h-4" />
+  // },
+  { 
+    label: 'Billing', 
+    path: '/dashboard/billing', 
+    icon: <FileText className="w-4 h-4" /> 
+  },
+  { 
+    label: 'Goods Return',        // ✅ NEW
+    path: '/dashboard/goods-return',         // ✅ NEW
+    icon: <RotateCcw className="w-4 h-4" />  // ✅ NEW
+  },
+
+   { label: 'Customer Ledger', path: '/dashboard/customer-ledger', icon: <Receipt className="w-4 h-4" /> },
+
+  
+];
 
   const isActive = (path) => pathname === path || pathname.startsWith(path + '/');
 
@@ -504,55 +524,7 @@ export default function DashboardLayout({ children }) {
       >
         <div className="h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
 
-          {/* ── Logo ── */}
-          {/* <Link href="/dashboard/billing" className="flex items-center gap-3 no-underline">
-            <div
-              className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden"
-              style={{
-                background: darkMode
-                  ? 'linear-gradient(135deg, #3a1515, #5a2020)'
-                  : `linear-gradient(135deg, ${LIGHT.maroonDark}, ${LIGHT.maroon})`,
-                boxShadow: `0 4px 14px ${T.shadowStrong}`
-              }}
-            >
-              {!logoError ? (
-                <Image
-                  src="/logo.jpeg"
-                  alt="Krishna Timber"
-                  width={28}
-                  height={28}
-                  style={{
-                    objectFit: 'contain',
-                    filter: 'brightness(0) invert(1)'
-                  }}
-                  onError={() => setLogoError(true)}
-                />
-              ) : (
-                <KTPFallback />
-              )}
-            </div>
-            <div className="hidden sm:block">
-              <h1
-                className="text-lg font-bold leading-tight m-0"
-                style={{ color: T.textDark, fontFamily: 'Georgia, serif' }}
-              >
-                Krishna
-              </h1>
-              <p
-                className="text-xs uppercase m-0"
-                style={{
-                  color: T.maroon,
-                  letterSpacing: '2px',
-                  fontFamily: 'Georgia, serif',
-                  fontWeight: 600
-                }}
-              >
-                Timber & Plywoods
-              </p>
-            </div>
-          </Link> */}
-
-
+        
           {/* ── Logo ── */}
 <Link href="/dashboard/billing" className="flex items-center gap-3 no-underline">
   <div
@@ -590,6 +562,8 @@ export default function DashboardLayout({ children }) {
     </p>
   </div>
 </Link>
+
+
 
           {/* ── CENTER TABS (desktop) ── */}
           <div
