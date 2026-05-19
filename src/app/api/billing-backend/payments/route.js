@@ -1,108 +1,22 @@
-// import { NextResponse } from 'next/server';
-// import { sheets, spreadsheetId } from '../../config/googleSheet';
-
-// async function findFirstEmptyRow() {
-//   const res = await sheets.spreadsheets.values.get({ spreadsheetId, range: 'Payments!A:A' });
-//   const rows = res.data.values || [];
-//   for (let i = 0; i < rows.length; i++) {
-//     if (!rows[i] || rows[i][0] === '') {
-//       return i + 2; // +1 for zero-index, +1 for header row -> row number
-//     }
-//   }
-//   // If no empty row, return next row after last
-//   return rows.length + 2;
-// }
-
-// async function updateRow(rowNumber, values) {
-//   await sheets.spreadsheets.values.update({
-//     spreadsheetId,
-//     range: `Payments!A${rowNumber}:G${rowNumber}`,
-//     valueInputOption: 'USER_ENTERED',
-//     requestBody: { values: [values] },
-//   });
-// }
-
-// async function generatePaymentId() {
-//   const year = new Date().getFullYear().toString().slice(-2);
-//   const prefix = `PAY-${year}-`;
-//   const res = await sheets.spreadsheets.values.get({ spreadsheetId, range: 'Payments!A2:A' });
-//   const rows = res.data.values || [];
-//   let maxNum = 0;
-//   for (const row of rows) {
-//     const id = row[0] || '';
-//     if (id.startsWith(prefix)) {
-//       const numPart = id.replace(prefix, '');
-//       const num = parseInt(numPart, 10);
-//       if (!isNaN(num) && num > maxNum) maxNum = num;
-//     }
-//   }
-//   const nextNum = (maxNum + 1).toString().padStart(4, '0');
-//   return `${prefix}${nextNum}`;
-// }
-
-// export async function POST(request) {
-//   try {
-//     const { payment } = await request.json();
-//     const amount = parseFloat(payment?.amount);
-//     if (isNaN(amount) || amount <= 0) {
-//       return NextResponse.json({ success: false, error: 'Valid amount required' }, { status: 400 });
-//     }
-
-//     const paymentId = await generatePaymentId();
-//     const challanNoValue = (payment.challanNo && payment.challanNo.trim() !== '') ? payment.challanNo.trim() : '';
-//     const rowData = [
-//       paymentId,
-//       challanNoValue,
-//       payment.customerName || '',
-//       amount,
-//       payment.paymentDate || new Date().toISOString().split('T')[0],
-//       payment.mode || 'Cash',
-//       payment.notes || '',
-//     ];
-
-//     const emptyRowNumber = await findFirstEmptyRow();
-//     await updateRow(emptyRowNumber, rowData);
-
-//     return NextResponse.json({ success: true, paymentId });
-//   } catch (error) {
-//     console.error('POST /payments error:', error);
-//     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-//   }
-// }
-
-// export async function DELETE(request) {
-//   try {
-//     const { paymentId } = await request.json();
-//     if (!paymentId) {
-//       return NextResponse.json({ success: false, error: 'paymentId required' }, { status: 400 });
-//     }
-//     // Optional: implement delete logic (find row by paymentId and delete)
-//     // For now just return success
-//     return NextResponse.json({ success: true, message: 'Payment deleted' });
-//   } catch (error) {
-//     return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-//   }
-// }
-
-
-
 
 
 
 import { NextResponse } from 'next/server';
-// 1. Path alias use karo takki deployment me dikkat na aaye
-import { sheets, spreadsheetId } from '@/config/googleSheet.js'; 
+import { sheets, spreadsheetId } from '../../config/googleSheet.js';
 
-// Hame ab findFirstEmptyRow() ki zaroorat nahi hai, append automatically end me add karega
-
+// ── Payment ID Generator ──────────────────────────────────────────────
 async function generatePaymentId() {
   const year = new Date().getFullYear().toString().slice(-2);
   const prefix = `PAY-${year}-`;
-  
-  const res = await sheets.spreadsheets.values.get({ spreadsheetId, range: 'Payments!A2:A' });
+
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: 'Payments!A2:A',
+  });
+
   const rows = res.data.values || [];
   let maxNum = 0;
-  
+
   for (const row of rows) {
     const id = row[0] || '';
     if (id.startsWith(prefix)) {
@@ -111,58 +25,170 @@ async function generatePaymentId() {
       if (!isNaN(num) && num > maxNum) maxNum = num;
     }
   }
+
   const nextNum = (maxNum + 1).toString().padStart(4, '0');
   return `${prefix}${nextNum}`;
 }
 
+// ── GET - Sari Payments Fetch Karo ───────────────────────────────────
+export async function GET() {
+  try {
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Payments!A2:G',
+    });
+
+    const rows = res.data.values || [];
+
+    const payments = rows
+      .filter(row => row && row[0]) // empty rows skip
+      .map(row => ({
+        paymentId:    row[0] || '',
+        challanNo:    row[1] || '',
+        customerName: row[2] || '',
+        amount:       parseFloat(row[3]) || 0,
+        paymentDate:  row[4] || '',
+        mode:         row[5] || 'Cash',
+        notes:        row[6] || '',
+      }));
+
+    return NextResponse.json({ success: true, payments });
+  } catch (error) {
+    console.error('GET /payments error:', error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
+  }
+}
+
+// ── POST - Naya Payment Add Karo ─────────────────────────────────────
 export async function POST(request) {
   try {
     const { payment } = await request.json();
     const amount = parseFloat(payment?.amount);
-    
+
+    if (!payment) {
+      return NextResponse.json(
+        { success: false, error: 'Payment data required' },
+        { status: 400 }
+      );
+    }
+
     if (isNaN(amount) || amount <= 0) {
-      return NextResponse.json({ success: false, error: 'Valid amount required' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'Valid amount required' },
+        { status: 400 }
+      );
     }
 
     const paymentId = await generatePaymentId();
-    const challanNoValue = (payment.challanNo && payment.challanNo.trim() !== '') ? payment.challanNo.trim() : '';
-    
+    const challanNo = payment.challanNo?.trim() || '';
+
     const rowData = [
       paymentId,
-      challanNoValue,
+      challanNo,
       payment.customerName || '',
       amount,
       payment.paymentDate || new Date().toISOString().split('T')[0],
-      payment.mode || 'Cash',
-      payment.notes || '',
+      payment.mode        || 'Cash',
+      payment.notes       || '',
     ];
 
-    // 2. Safest way: Direct Append karo, ye apne aap pehli khali row me data daal dega
     await sheets.spreadsheets.values.append({
       spreadsheetId,
-      range: 'Payments!A:G', // Kis columns me data daalna hai
+      range: 'Payments!A:G',
       valueInputOption: 'USER_ENTERED',
-      insertDataOption: 'INSERT_ROWS', // Nayi row insert karega bina purane data ko chede
-      requestBody: {
-        values: [rowData],
-      },
+      insertDataOption: 'INSERT_ROWS',
+      requestBody: { values: [rowData] },
     });
 
     return NextResponse.json({ success: true, paymentId });
   } catch (error) {
     console.error('POST /payments error:', error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
   }
 }
 
+// ── DELETE - Payment Delete Karo ──────────────────────────────────────
 export async function DELETE(request) {
   try {
     const { paymentId } = await request.json();
+
     if (!paymentId) {
-      return NextResponse.json({ success: false, error: 'paymentId required' }, { status: 400 });
+      return NextResponse.json(
+        { success: false, error: 'paymentId required' },
+        { status: 400 }
+      );
     }
-    return NextResponse.json({ success: true, message: 'Payment deleted' });
+
+    // Step 1: Sari rows fetch karo
+    const res = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Payments!A2:A',
+    });
+
+    const rows = res.data.values || [];
+
+    // Step 2: Row index dhundo
+    const rowIndex = rows.findIndex(
+      row => row[0]?.trim() === paymentId.trim()
+    );
+
+    if (rowIndex === -1) {
+      return NextResponse.json(
+        { success: false, error: 'Payment not found' },
+        { status: 404 }
+      );
+    }
+
+    // Step 3: Sheet ID lo
+    const sheetMeta = await sheets.spreadsheets.get({ spreadsheetId });
+    const sheet = sheetMeta.data.sheets?.find(
+      s => s.properties.title === 'Payments'
+    );
+
+    if (!sheet) {
+      return NextResponse.json(
+        { success: false, error: 'Payments sheet not found' },
+        { status: 404 }
+      );
+    }
+
+    const sheetId = sheet.properties.sheetId;
+    const actualRow = rowIndex + 1; // 0-indexed + header row offset
+
+    // Step 4: Row delete karo
+    await sheets.spreadsheets.batchUpdate({
+      spreadsheetId,
+      requestBody: {
+        requests: [
+          {
+            deleteDimension: {
+              range: {
+                sheetId,
+                dimension: 'ROWS',
+                startIndex: actualRow,    // 0-indexed
+                endIndex:   actualRow + 1,
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    return NextResponse.json({
+      success: true,
+      message: 'Payment deleted successfully',
+    });
   } catch (error) {
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error('DELETE /payments error:', error);
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
   }
 }

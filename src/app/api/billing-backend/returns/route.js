@@ -1,6 +1,6 @@
 // app/api/billing-backend/returns/route.js
 import { NextResponse } from 'next/server';
-import { sheets, spreadsheetId } from '../../config/googleSheet';
+import { sheets, spreadsheetId } from '../../config/googleSheet.js';
 
 async function appendWithRetry(range, values, retries = 3) {
   for (let i = 0; i < retries; i++) {
