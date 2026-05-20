@@ -1,3 +1,4 @@
+
 // "use client";
 
 // import { useState, useEffect, useCallback, useRef } from "react";
@@ -12,10 +13,8 @@
 //   Download,
 //   Eye,
 //   X,
-//   TruckIcon,
 //   EyeOff,
 //   ChevronDown,
-//   Edit2,
 // } from "lucide-react";
 
 // const SHOP_INFO = {
@@ -238,18 +237,10 @@
 
 // function parseDoorFrameDimensions(name) {
 //   if (!name) return null;
-
-//   // Section: 5x2.5 or 4x2.5
 //   const sectionMatch = name.match(/(\d+(?:\.\d+)?)\s*[x×]\s*(\d+(?:\.\d+)?)\s*feet/i);
-  
-//   // Height: 7'0"
 //   const heightMatch = name.match(/(\d+)'(\d+)"/);
-  
-//   // Width: 2'6" or 3'0"
 //   const widthMatches = [...name.matchAll(/(\d+)'(\d+)"/g)];
-
 //   if (!sectionMatch) return null;
-
 //   return {
 //     sectionWidth: parseFloat(sectionMatch[1]),
 //     sectionThickness: parseFloat(sectionMatch[2]),
@@ -329,22 +320,16 @@
 //   const frames = parseFloat(item.quantity || 1);
 //   const verticalQty = parseFloat(item.dfVerticalQty || 2);
 //   const horizontalQty = parseFloat(item.dfHorizontalQty || 1);
-
 //   if (!w || !t || !heightFt || !widthFt) return 0;
-
 //   const vertical = (w * t * heightFt * verticalQty) / 144;
 //   const horizontal = (w * t * widthFt * horizontalQty) / 144;
 //   const totalCFT = (vertical + horizontal) * frames;
-
 //   return Math.round(totalCFT * 1000) / 1000;
 // }
-
-
 
 // function calculateByUnit(item) {
 //   const qty = parseFloat(item.quantity || 0);
 //   const rate = parseFloat(item.rate || 0);
-
 //   if (isSolidSurface(item)) {
 //     const customL = parseFloat(item.customLength || 0);
 //     const customW = parseFloat(item.customWidth || 0);
@@ -356,8 +341,6 @@
 //       amount: Math.round(totalSqft * rate * 100) / 100,
 //     };
 //   }
-
-//   // Door Frame
 //   if (isDoorFrame(item)) {
 //     const totalCFT = calculateDoorFrameCFT(item);
 //     return {
@@ -365,7 +348,6 @@
 //       amount: Math.round(totalCFT * rate * 100) / 100,
 //     };
 //   }
-
 //   if (isCeilingPlank(item)) {
 //     const customL = parseFloat(item.customLength || 0);
 //     const customW = parseFloat(item.customWidth || 0);
@@ -381,7 +363,6 @@
 //       amount: Math.round(calculatedQty * rate * 100) / 100,
 //     };
 //   }
-
 //   if (isWoodenBaluster(item)) {
 //     const width = parseFloat(item.width || 0);
 //     const thickness = parseFloat(item.thickness || 0);
@@ -397,7 +378,6 @@
 //       amount: Math.round(calculatedQty * rate * 100) / 100,
 //     };
 //   }
-
 //   if (isWoodenCladding(item)) {
 //     const width = parseFloat(item.width || 0);
 //     const lengthFeet =
@@ -412,7 +392,6 @@
 //       amount: Math.round(calculatedQty * rate * 100) / 100,
 //     };
 //   }
-
 //   if (isTimberWood(item) || (item.isWood && !item.isSheet)) {
 //     const width = parseFloat(item.width || 0);
 //     const thickness = parseFloat(item.thickness || 0);
@@ -439,7 +418,6 @@
 //       amount: Math.round(calculatedQty * rate * 100) / 100,
 //     };
 //   }
-
 //   if (item.isSheet && item.unit === "SQFT") {
 //     const customL = parseFloat(item.customLength || 0);
 //     const customW = parseFloat(item.customWidth || 0);
@@ -451,11 +429,9 @@
 //       amount: Math.round(totalSqft * rate * 100) / 100,
 //     };
 //   }
-
 //   if (item.isSheet && (item.unit === "Per Piece" || item.unit === "Pcs")) {
 //     return { calculatedQty: qty, amount: Math.round(qty * rate * 100) / 100 };
 //   }
-
 //   return { calculatedQty: qty, amount: Math.round(qty * rate * 100) / 100 };
 // }
 
@@ -464,55 +440,6 @@
 //   const rate = parseFloat(charge.rate || 0);
 //   if (charge.unit === "Lump Sum") return Math.round(rate * 100) / 100;
 //   return Math.round(qty * rate * 100) / 100;
-// }
-
-// function rebuildItemForEdit(savedItem) {
-//   const item = {
-//     uid: uid(),
-//     product: savedItem.product || "",
-//     unit: savedItem.unit || "",
-//     lengthFeet: savedItem.lengthFeet || "",
-//     lengthInches: savedItem.lengthInches || "",
-//     quantity: savedItem.quantity || "",
-//     rate: savedItem.rate || "",
-//     amount: savedItem.amount || 0,
-//     calculatedQty: savedItem.calculatedQty || 0,
-//     skuCode: savedItem.skuCode || "",
-//     isWood: savedItem.isWood || false,
-//     isSheet: savedItem.isSheet || false,
-//     width: parseFloat(savedItem.width || 0),
-//     thickness: parseFloat(savedItem.thickness || 0),
-//     size: savedItem.size || "",
-//     materialType: savedItem.materialType || "",
-//     category: savedItem.category || "",
-//     subCategory: savedItem.subCategory || "",
-//     specification: savedItem.specification || "",
-//     areaPerPiece: savedItem.areaPerPiece || null,
-//     customLength: "",
-//     customWidth: "",
-//   };
-//   if (item.isSheet && !item.areaPerPiece) {
-//     const dims = parseSheetDimensions(item.product);
-//     if (dims) {
-//       item.areaPerPiece = dims.areaPerPiece;
-//       item.width = dims.widthFeet;
-//       item.size = `${dims.widthFeet}'×${dims.heightFeet}'`;
-//       item.customLength = dims.widthFeet;
-//       item.customWidth = dims.heightFeet;
-//     }
-//   } else if (item.isWood && !item.isSheet && (!item.width || !item.thickness)) {
-//     const dims = parseWoodDimensions(item.product);
-//     if (dims) {
-//       item.width = dims.width;
-//       item.thickness = dims.thickness;
-//       item.size = `${dims.width}×${dims.thickness}"`;
-//     }
-//   }
-//   if (item.isSheet && !item.unit) item.unit = "SQFT";
-//   const calc = calculateByUnit(item);
-//   item.calculatedQty = calc.calculatedQty;
-//   item.amount = calc.amount;
-//   return item;
 // }
 
 // function numberToWords(num) {
@@ -604,11 +531,9 @@
 //   const [inputValue, setInputValue] = useState("");
 //   const wrapRef = useRef(null);
 //   const isInternalChange = useRef(false);
-
 //   const getVal = (o) => (typeof o === "string" ? o : (o.value ?? o.label ?? o));
 //   const getDisp = (o) =>
 //     typeof o === "string" ? o : (o.label ?? o.value ?? o);
-
 //   useEffect(() => {
 //     if (isInternalChange.current) {
 //       isInternalChange.current = false;
@@ -635,14 +560,12 @@
 //       setInputValue("");
 //     }
 //   }, [value, displayValue, options, allowCustom]);
-
 //   const commit = (val, disp) => {
 //     isInternalChange.current = true;
 //     setInputValue(disp);
 //     setIsOpen(false);
 //     onChange(val);
 //   };
-
 //   useEffect(() => {
 //     const onClickOutside = (e) => {
 //       if (wrapRef.current && !wrapRef.current.contains(e.target))
@@ -651,7 +574,6 @@
 //     document.addEventListener("mousedown", onClickOutside);
 //     return () => document.removeEventListener("mousedown", onClickOutside);
 //   }, []);
-
 //   const filtered = options.filter((o) =>
 //     getDisp(o)
 //       .toLowerCase()
@@ -660,7 +582,6 @@
 //   const exactMatch = options.find(
 //     (o) => getDisp(o).toLowerCase() === (inputValue || "").trim().toLowerCase(),
 //   );
-
 //   return (
 //     <div ref={wrapRef} className="searchable-select">
 //       <div className="ss-input-wrap">
@@ -753,6 +674,8 @@
 //   );
 // }
 
+
+
 // const PRINT_CSS = `
 // *{box-sizing:border-box;margin:0;padding:0}
 // body{font-family:'Segoe UI',Arial,sans-serif;font-size:15px;color:#000;background:#f5f5f5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -782,36 +705,14 @@
 // .ktp-dc-box{text-align:right}
 // .ktp-dc-title{font-size:20px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:2px;padding:2px 12px;display:inline-block;}
 // .ktp-dc-details{font-size:13px;margin-top:3px;color:#222;font-weight:500}
-
-// /* ✅ COMPACT CONSIGNEE - matches physical bill */
 // .ktp-info{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:8px 14px 10px;background:#fff;}
 // .ktp-info-title-box{font-size:13px;font-weight:bold;color:#7B1E1E;letter-spacing:0.3px;display:inline-block;border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;padding:2px 10px;white-space:nowrap;}
 // .ktp-compact-row{display:flex;align-items:baseline;gap:18px;margin-bottom:7px;}
 // .ktp-compact-row:last-child{margin-bottom:0;}
 // .ktp-compact-field{display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;}
 // .ktp-compact-field.flex-name{flex:2;}
-// /* ✅ LABEL - subtle gray, normal weight */
-// .ktp-compact-label{
-//   font-size:12.5px;
-//   font-weight:600;
-//   color:#555;
-//   white-space:nowrap;
-// }
-
-// /* ✅ VALUE - bold black, slightly bigger */
-// .ktp-compact-value{
-//   font-size:13.5px;
-//   font-weight:700;
-//   color:#000;
-//   border-bottom:1px solid #777;
-//   flex:1;
-//   padding-bottom:1px;
-//   min-width:60px;
-//   line-height:1.3;
-//   min-height:16px;
-//   word-break:break-word;
-//   padding-left:3px;
-// }
+// .ktp-compact-label{font-size:12.5px;font-weight:600;color:#555;white-space:nowrap;}
+// .ktp-compact-value{font-size:13.5px;font-weight:700;color:#000;border-bottom:1px solid #777;flex:1;padding-bottom:1px;min-width:60px;line-height:1.3;min-height:16px;word-break:break-word;padding-left:3px;}
 // .ktp-table-wrap{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;flex:1;}
 // table.items{width:100%;border-collapse:collapse}
 // table.items thead tr{background:linear-gradient(135deg,#5a1515,#7B1E1E)}
@@ -831,92 +732,35 @@
 // .ktp-words{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-top:2px solid #7B1E1E;padding:6px 18px;background:#FDF8F2;}
 // .ktp-words-label{font-size:10.5px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:1px}
 // .ktp-words-text{font-size:13px;font-weight:700;color:#222;margin-top:1px}
-// .ktp-footer{border:2px solid #7B1E1E;border-top:2px solid #7B1E1E;display:flex;background:#fff;}
-// .ktp-footer-left{flex:1;padding:8px 18px;border-right:2px solid #7B1E1E;display:flex;flex-direction:column;justify-content:space-between;}
-// .ktp-footer-cert{font-size:12px;color:#7B1E1E;line-height:1.4;font-weight:700;margin-bottom:5px;}
-
+// .ktp-footer{border:2px solid #7B1E1E;border-top:2px solid #7B1E1E;display:flex;background:#fff;page-break-inside:avoid;}
+// .ktp-footer-left{flex:1;padding:6px 14px;border-right:2px solid #7B1E1E;display:flex;flex-direction:column;justify-content:space-between;}
+// .ktp-footer-cert{font-size:10px;color:#7B1E1E;line-height:1.3;font-weight:700;margin-bottom:2px;}
 // .ktp-footer-for{font-size:12px;font-weight:bold;color:#7B1E1E;margin-top:4px}
 // .ktp-footer-terms{display:none;}
-
-// /* ✅ Terms list - chhote bold bullets */
 // .ktp-terms-section{}
-// .ktp-terms-list{
-//   list-style:none;
-//   padding:0;
-//   margin:5px 0 0 0;
-// }
-// .ktp-terms-list li{
-//   font-size:10.5px;
-//   color:#222;
-//   line-height:1.4;
-//   padding-left:12px;
-//   position:relative;
-//   font-weight:600;
-//   letter-spacing:0.2px;
-//   margin-bottom:3px;
-// }
-// .ktp-terms-list li:last-child{
-//   margin-bottom:0;
-// }
-// .ktp-terms-list li:before{
-//   content:"•";
-//   color:#7B1E1E;
-//   font-weight:bold;
-//   font-size:13px;
-//   position:absolute;
-//   left:2px;
-//   top:-1px;
-// }
-
-// /* ✅ Two signature boxes layout */
-// .ktp-sig-area{
-//   display:flex;
-//   justify-content:space-between;
-//   align-items:flex-end;
-//   margin-top:10px;
-//   gap:20px;
-//   padding-bottom:18px;
-// }
-// .ktp-sig-box{
-//   text-align:center;
-//   flex:1;
-// }
-// .ktp-sig-line{
-//   width:100%;
-//   max-width:160px;
-//   border-top:1.5px solid #000;
-//   margin:0 auto 2px;
-// }
-// .ktp-sig-label{
-//   font-size:10.5px;
-//   color:#222;
-//   font-weight:700;
-// }
-
-// /* ✅ "For: Krishna Timber..." text upar */
-// .ktp-footer-for-inline{
-//   font-size:11px;
-//   font-weight:bold;
-//   color:#7B1E1E;
-//   margin-bottom:32px;
-//   text-align:center;
-// }
-
-
-// .ktp-footer-right{width:250px;display:flex;flex-direction:column;}
+// .ktp-terms-list{list-style:none;padding:0;margin:4px 0 0 0;}
+// .ktp-terms-list li{font-size:9px;color:#222;line-height:1.2;padding-left:12px;position:relative;font-weight:600;letter-spacing:0.2px;margin-bottom:2px;}
+// .ktp-terms-list li:last-child{margin-bottom:0;}
+// .ktp-terms-list li:before{content:"•";color:#7B1E1E;font-weight:bold;font-size:13px;position:absolute;left:2px;top:-1px;}
+// .ktp-sig-area{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px;gap:10px;padding-bottom:20px;}
+// .ktp-sig-box{text-align:center;flex:1;}
+// .ktp-sig-line{width:100%;max-width:120px;border-top:1.5px solid #000;margin:0 auto 2px;}
+// .ktp-sig-label{font-size:9px;color:#222;font-weight:700;}
+// .ktp-footer-for-inline{font-size:12px;font-weight:bold;color:#7B1E1E;margin-bottom:30px;text-align:center;}
+// .ktp-footer-right{width:240px;display:flex;flex-direction:column;justify-content:space-between;}
 // .ktp-charge-section{border-bottom:1.5px solid #7B1E1E}
-// .ktp-charge-header{padding:5px 14px;font-size:11px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:0.5px;background:#FDF8F2;border-bottom:1px solid #E8DCC8;}
-// .ktp-charge-row{display:flex;justify-content:space-between;padding:4px 14px;font-size:12.5px;color:#222;border-bottom:1px solid #f0e6da;font-weight:500}
+// .ktp-charge-header{padding:3px 12px;font-size:10px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:0.5px;background:#FDF8F2;border-bottom:1px solid #E8DCC8;}
+// .ktp-charge-row{display:flex;justify-content:space-between;padding:3px 12px;font-size:11px;color:#222;border-bottom:1px solid #f0e6da;font-weight:500}
 // .ktp-charge-row:last-child{border-bottom:none}
 // .ktp-charge-name{max-width:150px;overflow:hidden;text-overflow:ellipsis}
 // .ktp-charge-amt{font-weight:700;font-variant-numeric:tabular-nums}
-// .ktp-total-row{display:flex;justify-content:space-between;padding:6px 14px;font-size:13.5px;border-bottom:1px solid #E8DCC8;color:#222;}
+// .ktp-total-row{display:flex;justify-content:space-between;padding:4px 12px;font-size:12px;border-bottom:1px solid #E8DCC8;color:#222;}
 // .ktp-total-row .ktp-total-label{font-weight:600}
 // .ktp-total-row .ktp-total-val{font-weight:700;font-variant-numeric:tabular-nums}
-// .ktp-total-row.grand{background:linear-gradient(135deg,#5a1515,#7B1E1E);color:#fff;font-size:16px;font-weight:bold;border-bottom:none;padding:9px 14px;}
+// .ktp-total-row.grand{background:linear-gradient(135deg,#5a1515,#7B1E1E);color:#fff;font-size:14px;font-weight:bold;border-bottom:none;padding:6px 12px;}
 // .ktp-total-row.grand .ktp-total-val{letter-spacing:0.5px}
 // .ktp-sig-right{display:none;}
-// .ktp-eoe-line{padding:3px 14px;font-size:9.5px;color:#666;text-align:right;border-top:1px solid #E8DCC8;letter-spacing:0.5px;font-weight:500}
+// .ktp-eoe-line{padding:2px 12px;font-size:9px;color:#666;text-align:right;border-top:1px solid #E8DCC8;letter-spacing:0.5px;font-weight:500}
 // .ktp-no-price-box{padding:22px 14px;text-align:center;color:#7B1E1E;font-weight:bold;font-size:14px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
 // @media print{
 // html{margin:0!important;padding:0!important}
@@ -933,6 +777,8 @@
 // }
 // @page{size:A4;margin:0}
 // `;
+
+
 
 // function getChallanPrintHTML(
 //   order,
@@ -955,29 +801,15 @@
 //   const challanTotal = hidePrice ? 0 : finalGrandTotal;
 
 //   let sno = 0;
+//   const formatQty = (val) => {
+//     const num = parseFloat(val || 0);
+//     if (isNaN(num)) return val || "0";
+//     return num % 1 === 0 ? num.toString() : parseFloat(num.toFixed(3)).toString();
+//   };
 //   const itemRows = regularItems.map((it) => {
 //     sno++;
-//     // let qtyVal = it.calculatedQty ? parseFloat(it.calculatedQty).toFixed(3) : it.sentQty;
-//     // let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
-//     // if (it.isSheet && it.unit === 'SQFT' && parseFloat(it.sentQty || it.quantity || 0) > 0) {
-//     //   const pcs = parseFloat(it.sentQty || it.quantity || 0);
-//     //   qtyWithUnit = `${qtyVal} ${it.unit}<br><span class="item-detail">(${pcs} pcs)</span>`;
-//     // }
-
-//     // ✅ Smart quantity formatting - decimal hatao agar zaroorat nahi
-//     const formatQty = (val) => {
-//       const num = parseFloat(val || 0);
-//       if (isNaN(num)) return val || "0";
-//       // Agar whole number hai (1, 5, 10) -> "1", "5", "10"
-//       // Agar decimal hai (1.5, 2.75) -> "1.5", "2.75" (trailing zeros hatao)
-//       return num % 1 === 0
-//         ? num.toString()
-//         : parseFloat(num.toFixed(3)).toString();
-//     };
-
 //     let qtyVal = formatQty(it.calculatedQty || it.sentQty);
 //     let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
-
 //     if (
 //       it.isSheet &&
 //       it.unit === "SQFT" &&
@@ -986,7 +818,6 @@
 //       const pcs = formatQty(it.sentQty || it.quantity || 0);
 //       qtyWithUnit = `${qtyVal} ${it.unit} <span class="item-detail">(${pcs} pcs)</span>`;
 //     }
-
 //     let descText = `<strong>${it.product}</strong>`;
 //     let details = [];
 //     if (it.size) details.push(it.size);
@@ -995,7 +826,6 @@
 //     if (ld && ld !== "0'-0\"" && ld !== "'-\"" && ld !== "-") details.push(ld);
 //     if (details.length)
 //       descText += ` <span class="item-detail" style="display:inline;">${details.join(" · ")}</span>`;
-
 //     return `<tr>
 //       <td class="c">${sno}</td>
 //       <td class="tl">${descText}</td>
@@ -1012,6 +842,7 @@
 //   });
 
 //   const minRows = 15;
+
 //   const emptyCount = Math.max(0, minRows - itemRows.length);
 //   const colCount = hidePrice ? 3 : 5;
 //   let emptyRows = "";
@@ -1068,9 +899,7 @@
 //     footerRightContent = `<div class="ktp-no-price-box"><div style="font-size:22px;">📋</div><div>DELIVERY CHALLAN</div><div style="font-size:9px;font-weight:normal;color:#999;">For Goods Reference Only</div></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
 //   }
 
-//   // ✅ COMPACT CONSIGNEE LAYOUT - exactly like physical bill
 //   const consigneeInfoHTML = `
-//     <!-- Row 1: Title Box |  Phone No. | Vehicle No. -->
 //     <div class="ktp-compact-row">
 //       <span class="ktp-info-title-box">CONSIGNOR (DETAILS OF RECEIVER)</span>
 //       <div class="ktp-compact-field">
@@ -1082,8 +911,6 @@
 //         <span class="ktp-compact-value">${order.vehicleNo || ""}</span>
 //       </div>
 //     </div>
-    
-//     <!-- Row 2: Name | Cust. PO No. -->
 //     <div class="ktp-compact-row">
 //       <div class="ktp-compact-field flex-name">
 //         <span class="ktp-compact-label">Name:</span>
@@ -1094,8 +921,6 @@
 //         <span class="ktp-compact-value">${order.poNumber || ""}</span>
 //       </div>
 //     </div>
-    
-//     <!-- Row 3: Address full width -->
 //     <div class="ktp-compact-row">
 //       <div class="ktp-compact-field" style="flex:1;">
 //         <span class="ktp-compact-label">Address:</span>
@@ -1106,18 +931,6 @@
 
 //   return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Challan ${challan.challanNo}</title><style>${PRINT_CSS}</style></head><body><div class="action-bar"><button class="action-btn btn-print" onclick="window.print()">🖨️ Print Challan</button><button class="action-btn btn-save" onclick="savePDF()">💾 Save as PDF</button><button class="action-btn btn-close" onclick="window.close()">✕ Close</button></div><div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title">DELIVERY CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${itemRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRightContent}</div></div></div></div><script>function savePDF(){var ab=document.querySelector('.action-bar');if(ab)ab.style.display='none';window.print();setTimeout(function(){if(ab)ab.style.display='flex';},1200);}</script></body></html>`;
 // }
-
-// const buildItemDesc = (it) => {
-//   let name = `<strong>${it.product}</strong>`;
-//   let details = [];
-//   if (it.specification?.trim()) details.push(`(${it.specification})`);
-//   if (it.size) details.push(it.size);
-//   const ld = it.lengthDisplay || "";
-//   if (ld && ld !== "0'-0\"" && ld !== "'-\"" && ld !== "-") details.push(ld);
-//   if (details.length)
-//     name += `<br><span class="item-detail">${details.join(" · ")}</span>`;
-//   return name;
-// };
 
 // const apiGet = async (url) => {
 //   try {
@@ -1138,21 +951,6 @@
 //     });
 //     return await r.json();
 //   } catch (e) {
-//     console.error("❌ API Error:", e);
-//     return { success: false, error: e.message };
-//   }
-// };
-
-// const apiPatch = async (url, body) => {
-//   try {
-//     const r = await fetch(url, {
-//       method: "PATCH",
-//       headers: { "Content-Type": "application/json" },
-//       body: JSON.stringify(body),
-//     });
-//     return await r.json();
-//   } catch (e) {
-//     console.error("❌ API Error:", e);
 //     return { success: false, error: e.message };
 //   }
 // };
@@ -1170,74 +968,35 @@
 //   }
 // };
 
-// const openPDFView = (html) => {
-//   const w = window.open("", "_blank");
-//   w.document.write(html);
-//   w.document.close();
-// };
-// const openPDFPrint = (html) => {
-//   const w = window.open("", "_blank");
-//   w.document.write(html);
-//   w.document.close();
-//   setTimeout(() => {
-//     w.focus();
-//     w.print();
-//   }, 600);
-// };
-// const sortLatestFirst = (items, df) =>
-//   [...items].sort((a, b) => new Date(b[df]) - new Date(a[df]));
-
-// export default function OrderChallanBilling() {
-//   const [activeTab, setActiveTab] = useState("orders");
-//   const [orders, setOrders] = useState([]);
+// export default function ChallanOnlyBilling() {
 //   const [challans, setChallans] = useState([]);
 //   const [products, setProducts] = useState([]);
 //   const [loading, setLoading] = useState(true);
-//   const [saving, setSaving] = useState(false);
 //   const [error, setError] = useState(null);
 //   const [searchQuery, setSearchQuery] = useState("");
-//   const [challanSearchQuery, setChallanSearchQuery] = useState("");
-//   const [filterStatus, setFilterStatus] = useState("All");
-//   const [showOrderForm, setShowOrderForm] = useState(false);
-//   const [isEditMode, setIsEditMode] = useState(false);
-//   const [editingOrder, setEditingOrder] = useState(null);
+//   const [darkMode, setDarkMode] = useState(false);
 //   const [showChallanForm, setShowChallanForm] = useState(false);
-//   const [selectedOrder, setSelectedOrder] = useState(null);
-//   const [showChallanSuccess, setShowChallanSuccess] = useState(false);
+//   const [saving, setSaving] = useState(false);
+//   const [showSuccess, setShowSuccess] = useState(false);
 //   const [lastChallanHTML, setLastChallanHTML] = useState("");
 //   const [lastChallanNo, setLastChallanNo] = useState("");
-//   const [orderForm, setOrderForm] = useState({
+
+//   // Challan form state
+//   const [challanForm, setChallanForm] = useState({
 //     customerName: "",
 //     customerPhone: "",
 //     customerAddress: "",
 //     vehicleNo: "",
-//     orderDate: new Date().toISOString().split("T")[0],
+//     challanDate: new Date().toISOString().split("T")[0],
 //     gstRate: 0,
 //     notes: "",
 //     poNumber: "",
 //     gstCustomerName: "",
 //     hidePrice: false,
 //   });
-//   const [orderGroups, setOrderGroups] = useState([createEmptyGroup()]);
-//   const [orderCharges, setOrderCharges] = useState([]);
-//   const [challanDate, setChallanDate] = useState(
-//     new Date().toISOString().split("T")[0],
-//   );
-//   const [challanItems, setChallanItems] = useState([]);
-//   const [deliveryNote, setDeliveryNote] = useState("");
-//   const [hidePriceOnChallan, setHidePriceOnChallan] = useState(false);
-//   const [darkMode, setDarkMode] = useState(false);
-//   const [addingToSheet, setAddingToSheet] = useState({});
 
-//   useEffect(() => {
-//     const stored = localStorage.getItem("ktp-dark-mode");
-//     if (stored === "true") setDarkMode(true);
-//     const handleStorage = (e) => {
-//       if (e.key === "ktp-dark-mode") setDarkMode(e.newValue === "true");
-//     };
-//     window.addEventListener("storage", handleStorage);
-//     return () => window.removeEventListener("storage", handleStorage);
-//   }, []);
+//   const [itemGroups, setItemGroups] = useState([createEmptyGroup()]);
+//   const [charges, setCharges] = useState([]);
 
 //   const T = darkMode ? DARK : LIGHT;
 
@@ -1271,7 +1030,8 @@
 //       dfHeightIn: "",
 //       dfWidthFt: "",
 //       dfWidthIn: "",
-//       dfVerticalQty: '', dfHorizontalQty: '',
+//       dfVerticalQty: '',
+//       dfHorizontalQty: '',
 //       ...ov,
 //     };
 //   }
@@ -1299,8 +1059,8 @@
 //     };
 //   }
 
-//   const getAllOrderItems = () =>
-//     orderGroups.flatMap((g) =>
+//   const getAllItems = () =>
+//     itemGroups.flatMap((g) =>
 //       g.items.map((i) => ({
 //         ...i,
 //         filterMaterialType: g.filterMaterialType,
@@ -1308,26 +1068,18 @@
 //         filterSubCategory: g.filterSubCategory,
 //       })),
 //     );
-//   const orderSubtotal = getAllOrderItems().reduce(
-//     (s, i) => s + (i.amount || 0),
-//     0,
-//   );
-//   const chargesSubtotal = orderCharges.reduce((s, c) => s + (c.amount || 0), 0);
-//   const orderTax =
-//     orderForm.gstRate > 0
-//       ? (orderSubtotal + chargesSubtotal) * (orderForm.gstRate / 100)
-//       : 0;
-//   const orderTotal = orderSubtotal + chargesSubtotal + orderTax;
+//   const itemsSubtotal = getAllItems().reduce((s, i) => s + (i.amount || 0), 0);
+//   const chargesSubtotal = charges.reduce((s, c) => s + (c.amount || 0), 0);
+//   const gstAmount = challanForm.gstRate > 0 ? (itemsSubtotal + chargesSubtotal) * (challanForm.gstRate / 100) : 0;
+//   const challanTotal = itemsSubtotal + chargesSubtotal + gstAmount;
 
 //   const fetchData = useCallback(async () => {
 //     setLoading(true);
 //     try {
-//       const [oR, cR, pR] = await Promise.all([
-//         apiGet("/api/billing-backend/orders"),
+//       const [cR, pR] = await Promise.all([
 //         apiGet("/api/billing-backend/challans"),
 //         apiGet("/api/dropdown-data"),
 //       ]);
-//       setOrders(oR.success ? oR.data : []);
 //       setChallans(cR.success ? cR.data : []);
 //       setProducts(pR.success && pR.data ? pR.data : []);
 //     } catch {
@@ -1335,63 +1087,57 @@
 //     }
 //     setLoading(false);
 //   }, []);
+
 //   useEffect(() => {
 //     fetchData();
+//     const stored = localStorage.getItem("ktp-dark-mode");
+//     if (stored === "true") setDarkMode(true);
+//     const handleStorage = (e) => {
+//       if (e.key === "ktp-dark-mode") setDarkMode(e.newValue === "true");
+//     };
+//     window.addEventListener("storage", handleStorage);
+//     return () => window.removeEventListener("storage", handleStorage);
 //   }, [fetchData]);
 
-//   const isWoodMaterial = (item) =>
-//     /timber|wood|lakdi|railing/i.test(
-//       item?.materialType || item?.product || "",
-//     );
-//  function isSheetMaterialFn(name) {
-//   return /mdf|hdhdr|hdmr|wpc|ply|block|flush|laminate|board|sunmica|formica|veneer/i.test(name || '');
-// }
+//   const genChallanNo = () => {
+//     const y = new Date().getFullYear();
+//     const prefix = `CHL-${y}-`;
+//     const max = challans
+//       .filter((c) => c.challanNo?.startsWith(prefix))
+//       .reduce((m, c) => Math.max(m, parseInt(c.challanNo.replace(prefix, "")) || 0), 0);
+//     return `${prefix}${String(max + 1).padStart(4, "0")}`;
+//   };
 
-//   const isRailingMaterial = (name) => /railing/i.test(name);
+//   const resetForm = () => {
+//     setChallanForm({
+//       customerName: "",
+//       customerPhone: "",
+//       customerAddress: "",
+//       vehicleNo: "",
+//       challanDate: new Date().toISOString().split("T")[0],
+//       gstRate: 0,
+//       notes: "",
+//       poNumber: "",
+//       gstCustomerName: "",
+//       hidePrice: false,
+//     });
+//     setItemGroups([createEmptyGroup()]);
+//     setCharges([]);
+//   };
 
-//   const getFilteredProductsForGroup = (g) =>
-//     products.filter(
-//       (p) =>
-//         (!g.filterMaterialType || p.materialType === g.filterMaterialType) &&
-//         (!g.filterCategory || p.category === g.filterCategory) &&
-//         (!g.filterSubCategory || p.subCategory === g.filterSubCategory),
-//     );
-//   const getAllMaterialTypes = () => [
-//     ...new Set(products.map((p) => p.materialType).filter(Boolean)),
-//   ];
-//   const getCategoriesFor = (mt) => [
-//     ...new Set(
-//       products
-//         .filter((p) => !mt || p.materialType === mt)
-//         .map((p) => p.category)
-//         .filter(Boolean),
-//     ),
-//   ];
-//   const getSubCategoriesFor = (mt, cat) => [
-//     ...new Set(
-//       products
-//         .filter(
-//           (p) => (!mt || p.materialType === mt) && (!cat || p.category === cat),
-//         )
-//         .map((p) => p.subCategory)
-//         .filter(Boolean),
-//     ),
-//   ];
-
+//   // Group & item handlers
 //   const updateGroupFilter = (gid, field, val) =>
-//     setOrderGroups((prev) =>
+//     setItemGroups((prev) =>
 //       prev.map((g) => (g.groupId === gid ? { ...g, [field]: val } : g)),
 //     );
 //   const addItemToGroup = (gid) =>
-//     setOrderGroups((prev) =>
+//     setItemGroups((prev) =>
 //       prev.map((g) =>
-//         g.groupId === gid
-//           ? { ...g, items: [...g.items, createEmptyItem()] }
-//           : g,
+//         g.groupId === gid ? { ...g, items: [...g.items, createEmptyItem()] } : g,
 //       ),
 //     );
 //   const removeItemFromGroup = (gid, iuid) =>
-//     setOrderGroups((prev) =>
+//     setItemGroups((prev) =>
 //       prev.map((g) =>
 //         g.groupId === gid && g.items.length > 1
 //           ? { ...g, items: g.items.filter((i) => i.uid !== iuid) }
@@ -1399,15 +1145,12 @@
 //       ),
 //     );
 //   const removeGroup = (gid) => {
-//     if (orderGroups.length > 1)
-//       setOrderGroups((prev) => prev.filter((g) => g.groupId !== gid));
+//     if (itemGroups.length > 1) setItemGroups((prev) => prev.filter((g) => g.groupId !== gid));
 //   };
-//   const addNewGroup = () =>
-//     setOrderGroups((prev) => [...prev, createEmptyGroup()]);
-
+//   const addNewGroup = () => setItemGroups((prev) => [...prev, createEmptyGroup()]);
 
 //   const updateGroupItem = (gid, iuid, field, val) => {
-//     setOrderGroups((prev) =>
+//     setItemGroups((prev) =>
 //       prev.map((g) => {
 //         if (g.groupId !== gid) return g;
 //         return {
@@ -1419,9 +1162,8 @@
 //             if (field === "skuCode") {
 //               const found = products.find((p) => p.skuCode === val);
 //               if (found) {
-//                 const isSheet = isSheetMaterialFn(found.materialName);
-//                 const isWood = isWoodMaterial(found) && !isSheet;
-
+//                 const isSheet = isSheetMaterial(found.materialName);
+//                 const isWood = isTimberWood(found) && !isSheet;
 //                 u = {
 //                   ...u,
 //                   product: found.materialName,
@@ -1432,7 +1174,6 @@
 //                   isWood,
 //                   isSheet,
 //                 };
-
 //                 if (isSolidSurface(u)) {
 //                   u.unit = "SQFT";
 //                   const dims = parseSolidSurfaceDimensions(found.materialName);
@@ -1476,14 +1217,14 @@
 //                 } else if (isDoorFrame(u)) {
 //                   u.unit = "CFT";
 //                   const dims = parseDoorFrameDimensions(found.materialName);
-//   if (dims) {
-//     u.dfSectionWidth = dims.sectionWidth;
-//     u.dfSectionThickness = dims.sectionThickness;
-//     u.dfHeightFt = dims.heightFt;
-//     u.dfHeightIn = dims.heightIn;
-//     u.dfWidthFt = dims.widthFt;
-//     u.dfWidthIn = dims.widthIn;
-//   }
+//                   if (dims) {
+//                     u.dfSectionWidth = dims.sectionWidth;
+//                     u.dfSectionThickness = dims.sectionThickness;
+//                     u.dfHeightFt = dims.heightFt;
+//                     u.dfHeightIn = dims.heightIn;
+//                     u.dfWidthFt = dims.widthFt;
+//                     u.dfWidthIn = dims.widthIn;
+//                   }
 //                 } else if (isSheet) {
 //                   u.unit = "SQFT";
 //                   const dims = parseSheetDimensions(found.materialName);
@@ -1500,9 +1241,7 @@
 //                   u.lengthFeet = "";
 //                   u.lengthInches = "";
 //                 } else if (isWood) {
-//                   u.unit = isRailingMaterial(found.materialName)
-//                     ? "RFT"
-//                     : "CFT";
+//                   u.unit = /railing/i.test(found.materialName) ? "RFT" : "CFT";
 //                   const dims = parseWoodDimensions(found.materialName);
 //                   if (dims) {
 //                     u.width = dims.width;
@@ -1523,8 +1262,8 @@
 //             }
 
 //             if (field === "customProductName" && val?.trim()) {
-//               const isSheet = isSheetMaterialFn(val);
-//               const isWood = isWoodMaterial({ product: val }) && !isSheet;
+//               const isSheet = isSheetMaterial(val);
+//               const isWood = isTimberWood({ product: val }) && !isSheet;
 //               u.product = val;
 //               u.skuCode = "";
 //               u.materialType = g.filterMaterialType || "Custom";
@@ -1575,15 +1314,15 @@
 //                 }
 //               } else if (isDoorFrame(u)) {
 //                 u.unit = "CFT";
-//                  const dims = parseDoorFrameDimensions(found.materialName);
-//   if (dims) {
-//     u.dfSectionWidth = dims.sectionWidth;
-//     u.dfSectionThickness = dims.sectionThickness;
-//     u.dfHeightFt = dims.heightFt;
-//     u.dfHeightIn = dims.heightIn;
-//     u.dfWidthFt = dims.widthFt;
-//     u.dfWidthIn = dims.widthIn;
-//   }
+//                 const dims = parseDoorFrameDimensions(val);
+//                 if (dims) {
+//                   u.dfSectionWidth = dims.sectionWidth;
+//                   u.dfSectionThickness = dims.sectionThickness;
+//                   u.dfHeightFt = dims.heightFt;
+//                   u.dfHeightIn = dims.heightIn;
+//                   u.dfWidthFt = dims.widthFt;
+//                   u.dfWidthIn = dims.widthIn;
+//                 }
 //               } else if (isSheet) {
 //                 u.unit = "SQFT";
 //                 const dims = parseSheetDimensions(val);
@@ -1598,7 +1337,7 @@
 //                   u.customWidth = dims.heightFeet;
 //                 }
 //               } else if (isWood) {
-//                 u.unit = isRailingMaterial(val) ? "RFT" : "CFT";
+//                 u.unit = /railing/i.test(val) ? "RFT" : "CFT";
 //                 const dims = parseWoodDimensions(val);
 //                 if (dims) {
 //                   u.width = dims.width;
@@ -1618,11 +1357,7 @@
 //             if (field === "specification") u.specification = val;
 //             if (field === "customLength") u.customLength = val;
 //             if (field === "customWidth") u.customWidth = val;
-
-//             // ✅ Door Frame fields
-//             if (
-//              ['dfSectionWidth','dfSectionThickness','dfHeightFt','dfHeightIn','dfWidthFt','dfWidthIn','dfVerticalQty','dfHorizontalQty'].includes(field)
-//             ) {
+//             if (['dfSectionWidth','dfSectionThickness','dfHeightFt','dfHeightIn','dfWidthFt','dfWidthIn','dfVerticalQty','dfHorizontalQty'].includes(field)) {
 //               u[field] = val;
 //             }
 
@@ -1636,12 +1371,10 @@
 //     );
 //   };
 
-//   const addCharge = () =>
-//     setOrderCharges((prev) => [...prev, createEmptyCharge()]);
-//   const removeCharge = (cuid) =>
-//     setOrderCharges((prev) => prev.filter((c) => c.uid !== cuid));
+//   const addCharge = () => setCharges((prev) => [...prev, createEmptyCharge()]);
+//   const removeCharge = (cuid) => setCharges((prev) => prev.filter((c) => c.uid !== cuid));
 //   const updateCharge = (cuid, field, val) => {
-//     setOrderCharges((prev) =>
+//     setCharges((prev) =>
 //       prev.map((c) => {
 //         if (c.uid !== cuid) return c;
 //         let u = { ...c, [field]: val };
@@ -1656,586 +1389,145 @@
 //     );
 //   };
 
-//   const genOrderNo = () => {
-//     const y = new Date().getFullYear();
-//     const prefix = `ORD-${y}-`;
-//     const max = orders
-//       .filter((o) => o.orderNo?.startsWith(prefix))
-//       .reduce(
-//         (m, o) => Math.max(m, parseInt(o.orderNo.replace(prefix, "")) || 0),
-//         0,
-//       );
-//     return `${prefix}${String(max + 1).padStart(4, "0")}`;
-//   };
-//   const genChallanNo = () => {
-//     const y = new Date().getFullYear();
-//     const prefix = `CHL-${y}-`;
-//     const max = challans
-//       .filter((c) => c.challanNo?.startsWith(prefix))
-//       .reduce(
-//         (m, c) => Math.max(m, parseInt(c.challanNo.replace(prefix, "")) || 0),
-//         0,
-//       );
-//     return `${prefix}${String(max + 1).padStart(4, "0")}`;
-//   };
-//   const getExistingChallanForOrder = (orderNo) =>
-//     challans.filter((c) => c.orderNo === orderNo);
-
-//   const openEditOrder = (order) => {
-//     setIsEditMode(true);
-//     setEditingOrder(order);
-//     setOrderForm({
-//       customerName: order.customerName || "",
-//       customerPhone: order.customerPhone || "",
-//       customerAddress: order.customerAddress || "",
-//       vehicleNo: order.vehicleNo || "",
-//       orderDate: order.orderDate || new Date().toISOString().split("T")[0],
-//       gstRate: order.gstRate || 0,
-//       notes: order.notes || "",
-//       poNumber: order.poNumber || "",
-//       gstCustomerName: order.gstCustomerName || "",
-//       hidePrice: order.hidePrice || false,
-//     });
-//     const savedItems = order.items || [];
-//     const regularItems = savedItems.filter((i) => !i.isCharge);
-//     if (regularItems.length === 0) {
-//       setOrderGroups([createEmptyGroup()]);
-//     } else {
-//       const groupsMap = {};
-//       regularItems.forEach((it) => {
-//         const key = it.materialType || "Other";
-//         if (!groupsMap[key]) groupsMap[key] = [];
-//         groupsMap[key].push(rebuildItemForEdit(it));
-//       });
-//       setOrderGroups(
-//         Object.entries(groupsMap).map(([mt, items]) => ({
-//           groupId: uid(),
-//           filterMaterialType: mt === "Other" ? "" : mt,
-//           filterCategory: items[0]?.category || "",
-//           filterSubCategory: items[0]?.subCategory || "",
-//           items,
-//         })),
-//       );
-//     }
-//     const savedCharges = order.charges || [];
-//     setOrderCharges(
-//       savedCharges.map((ch) => ({
-//         uid: ch.uid || uid(),
-//         chargeType: ch.chargeType || "custom",
-//         chargeName: ch.chargeName || "",
-//         chargeDescription: ch.chargeDescription || "",
-//         unit: ch.unit || "Per Piece",
-//         quantity: ch.quantity || "",
-//         rate: ch.rate || "",
-//         amount: ch.amount || 0,
-//       })),
-//     );
-//     setShowOrderForm(true);
-//   };
-
-//   const resetOrderForm = () => {
-//     setOrderForm({
-//       customerName: "",
-//       customerPhone: "",
-//       customerAddress: "",
-//       vehicleNo: "",
-//       orderDate: new Date().toISOString().split("T")[0],
-//       gstRate: 0,
-//       notes: "",
-//       poNumber: "",
-//       gstCustomerName: "",
-//       hidePrice: false,
-//     });
-//     setOrderGroups([createEmptyGroup()]);
-//     setOrderCharges([]);
-//     setIsEditMode(false);
-//     setEditingOrder(null);
-//   };
-
-//   const handleAddToSheet = async (group, item) => {
-//     if (!item.product) {
-//       setError("Product name required");
-//       return;
-//     }
-//     if (item.skuCode) {
-//       setError("Product already in sheet");
-//       return;
-//     }
-//     setAddingToSheet((prev) => ({ ...prev, [item.uid]: true }));
-//     try {
-//       const productData = {
-//         materialType: item.materialType || group.filterMaterialType || "Custom",
-//         category: item.category || group.filterCategory || "Custom",
-//         subCategory: item.subCategory || group.filterSubCategory || "",
-//         materialName: item.product,
-//         unit:
-//           item.unit || (item.isWood ? "CFT" : item.isSheet ? "SQFT" : "Pcs"),
-//       };
-//       const res = await apiPost("/api/dropdown-data", {
-//         products: [productData],
-//       });
-//       if (res.success && res.data?.length) {
-//         const newProduct = res.data[0];
-//         setProducts((prev) =>
-//           prev.some((p) => p.skuCode === newProduct.skuCode)
-//             ? prev
-//             : [...prev, newProduct],
-//         );
-//         updateGroupItem(group.groupId, item.uid, "skuCode", newProduct.skuCode);
-//       } else setError(res.error || "Failed to add to sheet");
-//     } catch (err) {
-//       setError("Error adding to sheet: " + err.message);
-//     } finally {
-//       setAddingToSheet((prev) => ({ ...prev, [item.uid]: false }));
-//     }
-//   };
-
-//   const handleSubmitOrder = async () => {
-//     if (
-//       !orderForm.customerName ||
-//       getAllOrderItems().filter((i) => i.product).length === 0
-//     ) {
-//       setError("Customer name aur items required");
-//       return;
-//     }
-//     setSaving(true);
-//     setError(null);
-//     try {
-//       const validItems = getAllOrderItems()
-//         .filter((i) => i.product && (i.quantity || i.calculatedQty))
-//         .map((it) => ({
-//           ...it,
-//           lengthDisplay: it.isWood
-//             ? `${it.lengthFeet || 0}'-${it.lengthInches || 0}"`
-//             : "",
-//           isCharge: false,
-//           specification: it.specification || "",
-//         }));
-
-//       const validCharges = orderCharges
-//         .filter((c) => c.chargeName && c.amount > 0)
-//         .map((ch) => ({
-//           uid: ch.uid,
-//           chargeName: ch.chargeName,
-//           chargeType: ch.chargeType || "custom",
-//           unit: ch.unit || "Per Piece",
-//           quantity: ch.quantity || "",
-//           rate: ch.rate || "",
-//           amount: ch.amount || 0,
-//           chargeIcon:
-//             CHARGE_TYPES.find((t) => t.value === ch.chargeType)?.icon || "📋",
-//         }));
-
-//       const gstRateValue = parseFloat(orderForm.gstRate || 0);
-//       const gstAmountValue = parseFloat(orderTax || 0);
-
-//       let orderNo,
-//         existingChallans = [];
-//       if (isEditMode && editingOrder) {
-//         orderNo = editingOrder.orderNo;
-//         existingChallans = getExistingChallanForOrder(orderNo);
-
-//         const r = await apiPatch("/api/billing-backend/orders", {
-//           orderNo,
-//           order: {
-//             ...orderForm,
-//             orderNo,
-//             subtotal: orderSubtotal,
-//             chargesTotal: chargesSubtotal,
-//             gstRate: gstRateValue,
-//             gstAmount: gstAmountValue,
-//             tax: gstAmountValue,
-//             total: orderTotal,
-//             status: editingOrder.status,
-//             includeGST: gstRateValue > 0,
-//             hidePrice: orderForm.hidePrice,
-//             vehicleNo: orderForm.vehicleNo,
-//           },
-//           items: validItems,
-//           charges: validCharges,
-//         });
-//         if (!r.success) throw new Error(r.error);
-//         for (const old of existingChallans) {
-//           await apiDelete("/api/billing-backend/challans", {
-//             challanNo: old.challanNo,
-//           });
-//         }
-//       } else {
-//         orderNo = genOrderNo();
-
-//         const r = await apiPost("/api/billing-backend/orders", {
-//           order: {
-//             ...orderForm,
-//             orderNo,
-//             subtotal: orderSubtotal,
-//             chargesTotal: chargesSubtotal,
-//             gstRate: gstRateValue,
-//             gstAmount: gstAmountValue,
-//             tax: gstAmountValue,
-//             total: orderTotal,
-//             status: "Active",
-//             includeGST: gstRateValue > 0,
-//             hidePrice: orderForm.hidePrice,
-//             vehicleNo: orderForm.vehicleNo,
-//           },
-//           items: validItems,
-//           charges: validCharges,
-//         });
-//         if (!r.success) throw new Error(r.error);
-//       }
-
-//       const challanNo =
-//         isEditMode && existingChallans.length
-//           ? existingChallans[0].challanNo
-//           : genChallanNo();
-//       const hidePrice = orderForm.hidePrice;
-//       const challanTotal = hidePrice ? 0 : orderTotal;
-
-//       const challanPayloadItems = validItems.map((it) => ({
-//         product: it.product,
-//         unit: it.unit,
-//         orderedQty: it.calculatedQty || parseFloat(it.quantity || 0),
-//         pieces: parseFloat(it.quantity || 0),
-//         sentQty: parseFloat(it.quantity || 0),
-//         calculatedQty: it.calculatedQty || parseFloat(it.quantity || 0),
-//         rate: parseFloat(it.rate || 0),
-//         amount: it.amount || 0,
-//         size: it.size || "",
-//         lengthDisplay: it.lengthDisplay || "",
-//         specification: it.specification || "",
-//         isCharge: false,
-//         areaPerPiece: it.areaPerPiece,
-//         isSheet: it.isSheet,
-//         quantity: it.quantity,
-//       }));
-
-//       // ✨ Build challan charges array - includes regular charges + GST as a charge entry
-//       const challanChargesArray = validCharges.map((ch) => ({
-//         name: ch.chargeName,
-//         type: ch.chargeType,
-//         unit: ch.unit,
-//         quantity: ch.quantity,
-//         rate: ch.rate,
-//         amount: ch.amount,
-//       }));
-
-//       // ✨ Add GST as a separate charge entry in Challan_Charges
-//       if (gstRateValue > 0 && gstAmountValue > 0) {
-//         challanChargesArray.push({
-//           name: `GST (${gstRateValue}%)`,
-//           type: "gst",
-//           unit: "Percentage",
-//           quantity: gstRateValue,
-//           rate: gstRateValue,
-//           amount: gstAmountValue,
-//         });
-//       }
-
-//       const challanPayload = {
-//         challan: {
-//           challanNo,
-//           orderNo,
-//           customerName: orderForm.customerName,
-//           challanDate: orderForm.orderDate,
-//           deliveryNote: orderForm.notes || "",
-//           challanTotal,
-//           status: "Delivered",
-//           hidePrice,
-//           gstRate: gstRateValue,
-//           gstAmount: gstAmountValue,
-//           subtotal: orderSubtotal,
-//           chargesTotal: chargesSubtotal,
-//         },
-//         items: challanPayloadItems,
-//         charges: challanChargesArray,
-//       };
-
-//       const challanResponse = await apiPost(
-//         "/api/billing-backend/challans",
-//         challanPayload,
-//       );
-//       if (!challanResponse.success) {
-//         throw new Error(challanResponse.error || "Failed to create challan");
-//       }
-
-//       // ✨ For print - regular charges only (GST shown separately in totals)
-//       const chargesForPrint = validCharges.map((ch) => ({
-//         name: ch.chargeName,
-//         amount: ch.amount,
-//       }));
-//       const html = getChallanPrintHTML(
-//         { ...orderForm, orderNo, vehicleNo: orderForm.vehicleNo },
-//         { ...challanPayload.challan, items: challanPayload.items },
-//         hidePrice,
-//         chargesForPrint,
-//         gstRateValue,
-//         gstAmountValue,
-//       );
-//       setLastChallanHTML(html);
-//       setLastChallanNo(challanNo);
-
-//       await apiPatch("/api/billing-backend/orders", {
-//         orderNo,
-//         status: "Completed",
-//       });
-//       await fetchData();
-//       setShowOrderForm(false);
-//       resetOrderForm();
-//       setShowChallanSuccess(true);
-//     } catch (err) {
-//       console.error("❌ Error in handleSubmitOrder:", err);
-//       setError("Error: " + err.message);
-//     } finally {
-//       setSaving(false);
-//     }
-//   };
-
-//   const getOrderChallans = (orderNo) =>
-//     challans.filter((c) => c.orderNo === orderNo);
-//   const getDeliveryProgress = (order) => {
-//     const sentMap = {};
-//     challans
-//       .filter((c) => c.orderNo === order.orderNo)
-//       .forEach((ch) =>
-//         ch.items
-//           ?.filter((i) => !i.isCharge)
-//           .forEach((i) => {
-//             sentMap[i.product] =
-//               (sentMap[i.product] || 0) +
-//               parseFloat(i.calculatedQty || i.sentQty || 0);
-//           }),
-//       );
-//     const items = (order.items || []).filter((i) => !i.isCharge);
-//     if (!items.length) return 0;
-//     const total = items.reduce(
-//       (s, it) => s + parseFloat(it.calculatedQty || it.quantity || 0),
-//       0,
-//     );
-//     const sent = items.reduce(
-//       (s, it) =>
-//         s +
-//         Math.min(
-//           parseFloat(it.calculatedQty || it.quantity || 0),
-//           sentMap[it.product] || 0,
-//         ),
-//       0,
-//     );
-//     return total ? Math.round((sent / total) * 100) : 0;
-//   };
-
-//   const openChallanForm = (order) => {
-//     setSelectedOrder(order);
-//     const sentMap = {};
-//     challans
-//       .filter((c) => c.orderNo === order.orderNo)
-//       .forEach((ch) =>
-//         ch.items
-//           ?.filter((i) => !i.isCharge)
-//           .forEach((i) => {
-//             sentMap[i.product] =
-//               (sentMap[i.product] || 0) +
-//               parseFloat(i.calculatedQty || i.sentQty || 0);
-//           }),
-//       );
-//     setChallanItems(
-//       (order.items || [])
-//         .filter((i) => !i.isCharge)
-//         .map((it) => ({
-//           uid: uid(),
-//           product: it.product,
-//           unit: it.unit,
-//           rate: parseFloat(it.rate || 0),
-//           orderedQty: parseFloat(it.calculatedQty || it.quantity || 0),
-//           alreadySent: sentMap[it.product] || 0,
-//           sendingPcs: "",
-//           sendingQty: 0,
-//           size: it.size || "",
-//           lengthFeet: it.lengthFeet || "",
-//           lengthInches: it.lengthInches || "",
-//           lengthDisplay: it.isWood
-//             ? `${it.lengthFeet || 0}'-${it.lengthInches || 0}"`
-//             : "",
-//           isWood: it.isWood || false,
-//           isSheet: it.isSheet || false,
-//           width: it.width || 0,
-//           thickness: it.thickness || 0,
-//           areaPerPiece: it.areaPerPiece || null,
-//         })),
-//     );
-//     setChallanDate(new Date().toISOString().split("T")[0]);
-//     setDeliveryNote("");
-//     setHidePriceOnChallan(order.hidePrice || false);
-//     setShowChallanForm(true);
-//   };
-
-//   const updateChallanItem = (iuid, field, value) => {
-//     setChallanItems((prev) =>
-//       prev.map((it) => {
-//         if (it.uid !== iuid) return it;
-//         const u = { ...it, [field]: value };
-//         if (field === "sendingPcs") {
-//           const pcs = parseFloat(value || 0);
-//           if (it.isSheet && it.areaPerPiece)
-//             u.sendingQty = it.areaPerPiece * pcs;
-//           else if (it.isWood)
-//             u.sendingQty = calculateByUnit({
-//               ...u,
-//               quantity: pcs,
-//               isWood: true,
-//               width: it.width,
-//               thickness: it.thickness,
-//               unit: it.unit,
-//               lengthFeet: it.lengthFeet,
-//               lengthInches: it.lengthInches,
-//             }).calculatedQty;
-//           else u.sendingQty = pcs;
-//         }
-//         return u;
-//       }),
-//     );
-//   };
-
 //   const handleSubmitChallan = async () => {
-//     const valid = challanItems.filter((i) => parseFloat(i.sendingPcs) > 0);
-//     if (!valid.length) {
-//       setError("Kam se kam ek item ki qty daalo");
+//     if (!challanForm.customerName || getAllItems().filter((i) => i.product).length === 0) {
+//       setError("Customer name aur at least ek item chahiye");
 //       return;
 //     }
 //     setSaving(true);
 //     setError(null);
 //     try {
 //       const challanNo = genChallanNo();
-//       const itemsSubTotal = valid.reduce(
-//         (s, it) =>
-//           s + parseFloat(it.sendingQty || 0) * parseFloat(it.rate || 0),
-//         0,
-//       );
-//       const challanGSTRate = parseFloat(selectedOrder.gstRate || 0);
-//       const challanGSTAmount =
-//         challanGSTRate > 0 ? (itemsSubTotal * challanGSTRate) / 100 : 0;
-//       const challanTotal = itemsSubTotal + challanGSTAmount;
-
-//       // ✨ Build charges array - GST added as a charge entry
-//       const challanChargesArray = [];
-//       if (challanGSTRate > 0 && challanGSTAmount > 0) {
-//         challanChargesArray.push({
-//           name: `GST (${challanGSTRate}%)`,
-//           type: "gst",
-//           unit: "Percentage",
-//           quantity: challanGSTRate,
-//           rate: challanGSTRate,
-//           amount: challanGSTAmount,
-//         });
-//       }
-
-//       const payload = {
-//         challan: {
-//           challanNo,
-//           orderNo: selectedOrder.orderNo,
-//           customerName: selectedOrder.customerName,
-//           challanDate,
-//           deliveryNote,
-//           challanTotal,
-//           status: "Delivered",
-//           hidePrice: hidePriceOnChallan,
-//           gstRate: challanGSTRate,
-//           gstAmount: challanGSTAmount,
-//           subtotal: itemsSubTotal,
-//           chargesTotal: 0,
-//         },
-//         items: valid.map((it) => ({
+//       const validItems = getAllItems()
+//         .filter((i) => i.product && (i.quantity || i.calculatedQty))
+//         .map((it) => ({
 //           product: it.product,
 //           unit: it.unit,
-//           orderedQty: it.orderedQty,
-//           pieces: parseFloat(it.sendingPcs),
-//           sentQty: parseFloat(it.sendingPcs),
-//           calculatedQty: it.sendingQty,
+//           quantity: it.quantity,
 //           rate: it.rate,
-//           amount: it.sendingQty * it.rate,
+//           amount: it.amount,
+//           calculatedQty: it.calculatedQty,
 //           size: it.size,
-//           lengthDisplay: it.lengthDisplay,
-//           isCharge: false,
-//           areaPerPiece: it.areaPerPiece,
+//           lengthDisplay: it.isWood ? `${it.lengthFeet || 0}'-${it.lengthInches || 0}"` : "",
+//           specification: it.specification || "",
 //           isSheet: it.isSheet,
-//           quantity: it.sendingPcs,
-//         })),
-//         charges: challanChargesArray,
-//       };
-//       const r = await apiPost("/api/billing-backend/challans", payload);
-//       if (!r.success) throw new Error(r.error);
-//       await fetchData();
+//           areaPerPiece: it.areaPerPiece,
+//           pieces: parseFloat(it.quantity || 0),
+//           sentQty: parseFloat(it.quantity || 0),
+//           orderedQty: it.calculatedQty,
+//         }));
+//       const validCharges = charges
+//         .filter((c) => c.chargeName && c.amount > 0)
+//         .map((ch) => ({
+//           name: ch.chargeName,
+//           type: ch.chargeType || "custom",
+//           unit: ch.unit || "Per Piece",
+//           quantity: ch.quantity || "",
+//           rate: ch.rate || "",
+//           amount: ch.amount,
+//         }));
+//       if (challanForm.gstRate > 0 && gstAmount > 0) {
+//         validCharges.push({
+//           name: `GST (${challanForm.gstRate}%)`,
+//           type: "gst",
+//           unit: "Percentage",
+//           quantity: challanForm.gstRate,
+//           rate: challanForm.gstRate,
+//           amount: gstAmount,
+//         });
+//       }
+//       const payload = {
+//   challan: {
+//     challanNo,
+//     orderNo: "",
+//     customerName: challanForm.customerName,
+//     customerPhone: challanForm.customerPhone,      // ✅ add
+//     customerAddress: challanForm.customerAddress,  // ✅ add
+//     vehicleNo: challanForm.vehicleNo,              // ✅ add
+//     poNumber: challanForm.poNumber,                // ✅ add
+//     gstCustomerName: challanForm.gstCustomerName,  // ✅ add
+//     challanDate: challanForm.challanDate,
+//     deliveryNote: challanForm.notes,
+//     challanTotal,
+//     status: "Delivered",
+//     hidePrice: challanForm.hidePrice,
+//     gstRate: challanForm.gstRate,
+//     gstAmount,
+//     subtotal: itemsSubtotal,
+//     chargesTotal: chargesSubtotal,
+//   },
+//   items: validItems,
+//   charges: validCharges,
+// };
+
+//       const res = await apiPost("/api/billing-backend/challans", payload);
+//       if (!res.success) throw new Error(res.error);
 //       const html = getChallanPrintHTML(
-//         selectedOrder,
-//         { ...payload.challan, items: payload.items },
-//         hidePriceOnChallan,
-//         [],
-//         challanGSTRate,
-//         challanGSTAmount,
+//         {
+//           customerName: challanForm.customerName,
+//           customerPhone: challanForm.customerPhone,
+//           customerAddress: challanForm.customerAddress,
+//           vehicleNo: challanForm.vehicleNo,
+//           poNumber: challanForm.poNumber,
+//           gstCustomerName: challanForm.gstCustomerName,
+//         },
+//         { ...payload.challan, items: validItems },
+//         challanForm.hidePrice,
+//         validCharges.filter((c) => c.type !== "gst"),
+//         challanForm.gstRate,
+//         gstAmount,
 //       );
 //       setLastChallanHTML(html);
 //       setLastChallanNo(challanNo);
+//       await fetchData();
 //       setShowChallanForm(false);
-//       setShowChallanSuccess(true);
+//       resetForm();
+//       setShowSuccess(true);
 //     } catch (err) {
-//       setError("Error: " + err.message);
+//       setError(err.message);
 //     } finally {
 //       setSaving(false);
 //     }
 //   };
 
-//   const filteredOrders = sortLatestFirst(
-//     orders.filter(
-//       (o) =>
-//         (!searchQuery ||
-//           o.customerName?.toLowerCase().includes(searchQuery) ||
-//           o.orderNo?.toLowerCase().includes(searchQuery) ||
-//           o.customerPhone?.toLowerCase().includes(searchQuery) ||
-//           o.poNumber?.toLowerCase().includes(searchQuery)) &&
-//         (filterStatus === "All" || o.status === filterStatus),
-//     ),
-//     "orderDate",
+//   const handleDeleteChallan = async (challanNo) => {
+//     if (!confirm(`Delete challan ${challanNo}?`)) return;
+//     try {
+//       const res = await apiDelete("/api/billing-backend/challans", { challanNo });
+//       if (res.success) await fetchData();
+//       else setError(res.error);
+//     } catch (err) {
+//       setError(err.message);
+//     }
+//   };
+
+//   const openPDFView = (html) => {
+//     const w = window.open("", "_blank");
+//     w.document.write(html);
+//     w.document.close();
+//   };
+//   const openPDFPrint = (html) => {
+//     const w = window.open("", "_blank");
+//     w.document.write(html);
+//     w.document.close();
+//     setTimeout(() => {
+//       w.focus();
+//       w.print();
+//     }, 600);
+//   };
+
+//   const filteredChallans = challans.filter(
+//     (ch) =>
+//       !searchQuery ||
+//       ch.challanNo?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+//       ch.customerName?.toLowerCase().includes(searchQuery.toLowerCase()),
 //   );
 
-//   const filteredChallans = sortLatestFirst(
-//     challans.filter(
-//       (ch) =>
-//         !challanSearchQuery ||
-//         ch.challanNo?.toLowerCase().includes(challanSearchQuery) ||
-//         ch.orderNo?.toLowerCase().includes(challanSearchQuery) ||
-//         ch.customerName?.toLowerCase().includes(challanSearchQuery),
-//     ),
-//     "challanDate",
-//   );
-
-//   const STATUS = darkMode
-//     ? {
-//         Active: {
-//           bg: "#2a1a1a",
-//           color: "#e8a0a0",
-//           dot: "#f0b8b8",
-//           border: "#3a3a55",
-//         },
-//         Completed: {
-//           bg: "#052e16",
-//           color: "#4ade80",
-//           dot: "#22c55e",
-//           border: "#166534",
-//         },
-//       }
-//     : {
-//         Active: {
-//           bg: "#FBF6F0",
-//           color: "#7B1E1E",
-//           dot: "#9a2828",
-//           border: "#E8DCC8",
-//         },
-//         Completed: {
-//           bg: "#dcfce7",
-//           color: "#166534",
-//           dot: "#22c55e",
-//           border: "#bbf7d0",
-//         },
-//       };
+//   // Helper for product filtering (for searchable selects)
+//   const getAllMaterialTypes = () => [...new Set(products.map((p) => p.materialType).filter(Boolean))];
+//   const getCategoriesFor = (mt) => [...new Set(products.filter((p) => !mt || p.materialType === mt).map((p) => p.category).filter(Boolean))];
+//   const getSubCategoriesFor = (mt, cat) => [...new Set(products.filter((p) => (!mt || p.materialType === mt) && (!cat || p.category === cat)).map((p) => p.subCategory).filter(Boolean))];
+//   const getFilteredProductsForGroup = (g) => products.filter((p) => (!g.filterMaterialType || p.materialType === g.filterMaterialType) && (!g.filterCategory || p.category === g.filterCategory) && (!g.filterSubCategory || p.subCategory === g.filterSubCategory));
 
 //   if (loading)
 //     return (
@@ -2249,14 +1541,8 @@
 //           minHeight: "100vh",
 //         }}
 //       >
-//         <Loader2
-//           className="animate-spin"
-//           style={{ color: T.maroon }}
-//           size={32}
-//         />
-//         <span style={{ marginLeft: 12, color: T.textDark, fontSize: 16 }}>
-//           Loading...
-//         </span>
+//         <Loader2 className="animate-spin" style={{ color: T.maroon }} size={32} />
+//         <span style={{ marginLeft: 12, color: T.textDark, fontSize: 16 }}>Loading...</span>
 //       </div>
 //     );
 
@@ -2285,12 +1571,6 @@
 //         .kt-card{background:${T.cardBg};border:1px solid ${T.borderSoft};border-radius:16px;box-shadow:0 1px 5px ${T.shadow}}
 //         .kt-tab{padding:8px 18px;border-radius:10px;font-size:13px;font-weight:500;border:none;background:transparent;color:${T.textMuted};cursor:pointer;transition:all 0.15s}
 //         .kt-tab.active{background:linear-gradient(135deg,${darkMode ? T.maroonDark : LIGHT.maroon},${T.maroon});color:${darkMode ? "#1a1a2e" : "#fff"}}
-//         .material-group{border:2px solid ${T.borderSoft};border-radius:16px;margin-bottom:16px;overflow:visible;background:${T.cardBg}}
-//         .material-group-header{background:${darkMode ? T.accent : `linear-gradient(135deg, ${LIGHT.cream}, ${LIGHT.creamDark})`};padding:14px 18px;border-bottom:1px solid ${T.borderSoft};display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;border-radius:14px 14px 0 0}
-//         .material-group-body{padding:18px 20px}
-//         .material-group-footer{padding:10px 18px;border-top:1px dashed ${T.borderSoft};background:${T.accent};display:flex;justify-content:space-between;align-items:center;border-radius:0 0 14px 14px}
-//         .item-subrow{background:${T.cardBg};border:1px solid ${T.borderSoft};border-radius:10px;padding:14px;margin-bottom:10px}
-//         .calc-display{background:${T.cream};border-radius:8px;padding:10px;margin-top:10px;font-size:13px}
 //         .status-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid transparent}
 //         .status-dot{width:6px;height:6px;border-radius:50%;display:inline-block}
 //         .total-box{border-radius:12px;padding:14px 18px;border:1px solid ${T.borderSoft};background:${T.cream}}
@@ -2312,6 +1592,12 @@
 //         .custom-badge{background:${T.amberBg};color:${T.amberColor}}
 //         .length-group{display:flex;gap:4px;align-items:center}
 //         .length-input{width:60px;text-align:center}
+//         .material-group{border:2px solid ${T.borderSoft};border-radius:16px;margin-bottom:16px;overflow:visible;background:${T.cardBg}}
+//         .material-group-header{background:${darkMode ? T.accent : `linear-gradient(135deg, ${LIGHT.cream}, ${LIGHT.creamDark})`};padding:14px 18px;border-bottom:1px solid ${T.borderSoft};display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;border-radius:14px 14px 0 0}
+//         .material-group-body{padding:18px 20px}
+//         .material-group-footer{padding:10px 18px;border-top:1px dashed ${T.borderSoft};background:${T.accent};display:flex;justify-content:space-between;align-items:center;border-radius:0 0 14px 14px}
+//         .item-subrow{background:${T.cardBg};border:1px solid ${T.borderSoft};border-radius:10px;padding:14px;margin-bottom:10px}
+//         .calc-display{background:${T.cream};border-radius:8px;padding:10px;margin-top:10px;font-size:13px}
 //       `}</style>
 
 //       {error && (
@@ -2353,432 +1639,179 @@
 //             margin: 0,
 //           }}
 //         >
-//           Order &amp; Challan
+//           Delivery Challans
 //         </h2>
-//         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-//           <button
-//             className={`kt-tab ${activeTab === "orders" ? "active" : ""}`}
-//             onClick={() => setActiveTab("orders")}
-//           >
-//             Orders
-//           </button>
-//           <button
-//             className={`kt-tab ${activeTab === "challans" ? "active" : ""}`}
-//             onClick={() => setActiveTab("challans")}
-//           >
-//             Challans
-//           </button>
-//           <button
-//             className="btn-maroon"
-//             onClick={() => {
-//               resetOrderForm();
-//               setShowOrderForm(true);
-//             }}
-//           >
-//             <Plus size={16} /> New Order
-//           </button>
-//         </div>
+//         <button
+//           className="btn-maroon"
+//           onClick={() => {
+//             resetForm();
+//             setShowChallanForm(true);
+//           }}
+//         >
+//           <Plus size={16} /> New Challan
+//         </button>
 //       </div>
 
-//       {activeTab === "orders" && (
-//         <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-//           <div style={{ display: "flex", flexWrap: "wrap", gap: 12 }}>
-//             <div style={{ position: "relative", flex: 1, minWidth: 200 }}>
-//               <Search
-//                 size={16}
-//                 style={{
-//                   position: "absolute",
-//                   left: 12,
-//                   top: "50%",
-//                   transform: "translateY(-50%)",
-//                   color: T.textMuted,
-//                 }}
-//               />
-//               <input
-//                 className="kt-input"
-//                 style={{ paddingLeft: 36 }}
-//                 placeholder="Search order..."
-//                 value={searchQuery}
-//                 onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
-//               />
-//             </div>
-//             <div style={{ display: "flex", gap: 4 }}>
-//               {["All", "Active", "Completed"].map((s) => (
-//                 <button
-//                   key={`filter-${s}`}
-//                   className={`kt-tab ${filterStatus === s ? "active" : ""}`}
-//                   onClick={() => setFilterStatus(s)}
-//                 >
-//                   {s}
-//                 </button>
-//               ))}
-//             </div>
-//           </div>
-//           {filteredOrders.map((order) => {
-//             const progress = getDeliveryProgress(order);
-//             const st = STATUS[order.status] || STATUS.Active;
-//             const challanCount = getOrderChallans(order.orderNo).length;
-//             return (
+//       {/* Challan List */}
+//       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+//         <div style={{ position: "relative" }}>
+//           <Search
+//             size={16}
+//             style={{
+//               position: "absolute",
+//               left: 12,
+//               top: "50%",
+//               transform: "translateY(-50%)",
+//               color: T.textMuted,
+//             }}
+//           />
+//           <input
+//             className="kt-input"
+//             style={{ paddingLeft: 36 }}
+//             placeholder="Search challan..."
+//             value={searchQuery}
+//             onChange={(e) => setSearchQuery(e.target.value.toLowerCase())}
+//           />
+//         </div>
+
+//         {filteredChallans.map((ch) => {
+//           const regularCharges = (ch.charges || []).filter((c) => c.type !== "gst");
+//           const gstEntry = (ch.charges || []).find((c) => c.type === "gst");
+//           const gstRate = parseFloat(ch.gstRate || gstEntry?.quantity || 0);
+//           const gstAmount = parseFloat(ch.gstAmount || gstEntry?.amount || 0);
+//           return (
+//             <div key={ch.challanNo} className="kt-card" style={{ padding: 16 }}>
 //               <div
-//                 key={`order-${order.orderNo}`}
-//                 className="kt-card"
-//                 style={{ padding: 20 }}
+//                 style={{
+//                   display: "flex",
+//                   flexWrap: "wrap",
+//                   justifyContent: "space-between",
+//                   alignItems: "flex-start",
+//                   gap: 12,
+//                 }}
 //               >
-//                 <div
-//                   style={{
-//                     display: "flex",
-//                     flexWrap: "wrap",
-//                     justifyContent: "space-between",
-//                     alignItems: "flex-start",
-//                     gap: 16,
-//                   }}
-//                 >
-//                   <div>
-//                     <div
-//                       style={{
-//                         display: "flex",
-//                         flexWrap: "wrap",
-//                         gap: 8,
-//                         marginBottom: 4,
-//                       }}
-//                     >
-//                       <span
-//                         style={{
-//                           fontFamily: "monospace",
-//                           fontWeight: "bold",
-//                           color: T.maroon,
-//                         }}
-//                       >
-//                         {order.orderNo}
-//                       </span>
-//                       <span
-//                         className="status-pill"
-//                         style={{
-//                           background: st.bg,
-//                           color: st.color,
-//                           borderColor: st.border,
-//                         }}
-//                       >
-//                         <span
-//                           className="status-dot"
-//                           style={{ background: st.dot }}
-//                         />
-//                         {order.status}
-//                       </span>
-//                       {order.hidePrice && (
-//                         <span
-//                           className="status-pill"
-//                           style={{
-//                             background: T.cream,
-//                             color: T.maroon,
-//                             borderColor: T.borderSoft,
-//                           }}
-//                         >
-//                           <EyeOff size={12} /> Hidden
-//                         </span>
-//                       )}
-//                       {order.gstRate > 0 && (
-//                         <span
-//                           className="status-pill"
-//                           style={{
-//                             background: T.infoBg,
-//                             color: T.infoColor,
-//                             borderColor: T.infoBorder,
-//                           }}
-//                         >
-//                           GST {order.gstRate}%
-//                         </span>
-//                       )}
-//                     </div>
-//                     <p
-//                       style={{
-//                         fontWeight: "bold",
-//                         fontSize: 18,
-//                         margin: "4px 0",
-//                         color: T.textDark,
-//                       }}
-//                     >
-//                       {order.customerName}
-//                     </p>
-//                     <p style={{ fontSize: 12, color: T.textMuted, margin: 0 }}>
-//                       {order.customerPhone && `${order.customerPhone} • `}
-//                       {order.vehicleNo && `🚛 ${order.vehicleNo} • `}
-//                       {new Date(order.orderDate).toLocaleDateString()} •{" "}
-//                       {(order.items || []).filter((i) => !i.isCharge).length}{" "}
-//                       items
-//                       {(order.charges || []).length > 0 &&
-//                         ` • ${(order.charges || []).length} charges`}
-//                     </p>
-//                   </div>
+//                 <div>
 //                   <div
 //                     style={{
 //                       display: "flex",
-//                       flexDirection: "column",
-//                       alignItems: "flex-end",
 //                       gap: 8,
+//                       alignItems: "center",
+//                       flexWrap: "wrap",
 //                     }}
 //                   >
-//                     <div style={{ width: 128 }}>
-//                       <div
-//                         style={{
-//                           height: 6,
-//                           background: T.creamDark,
-//                           borderRadius: 99,
-//                           overflow: "hidden",
-//                         }}
-//                       >
-//                         <div
-//                           style={{
-//                             width: `${progress}%`,
-//                             height: "100%",
-//                             borderRadius: 99,
-//                             background: T.maroon,
-//                             transition: "width 0.3s",
-//                           }}
-//                         />
-//                       </div>
-//                       <p
-//                         style={{
-//                           fontSize: 11,
-//                           marginTop: 4,
-//                           textAlign: "right",
-//                           color: T.textMuted,
-//                         }}
-//                       >
-//                         {progress}% • {challanCount} challan(s)
-//                       </p>
-//                     </div>
-//                     <div style={{ display: "flex", gap: 8 }}>
-//                       <button
-//                         className="btn-blue"
-//                         style={{ padding: "5px 12px", fontSize: 12 }}
-//                         onClick={() => openEditOrder(order)}
-//                       >
-//                         <Edit2 size={12} /> Edit
-//                       </button>
-//                       <button
-//                         className="btn-white"
-//                         style={{ padding: "5px 12px", fontSize: 12 }}
-//                         onClick={() => openChallanForm(order)}
-//                       >
-//                         <TruckIcon size={12} /> Partial
-//                       </button>
-//                     </div>
-//                   </div>
-//                 </div>
-//               </div>
-//             );
-//           })}
-//           {filteredOrders.length === 0 && (
-//             <div
-//               className="kt-card"
-//               style={{ padding: 56, textAlign: "center" }}
-//             >
-//               <p style={{ fontSize: 14, color: T.textMuted }}>
-//                 No orders found
-//               </p>
-//             </div>
-//           )}
-//         </div>
-//       )}
-
-//       {activeTab === "challans" && (
-//         <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-//           <div style={{ position: "relative" }}>
-//             <Search
-//               size={16}
-//               style={{
-//                 position: "absolute",
-//                 left: 12,
-//                 top: "50%",
-//                 transform: "translateY(-50%)",
-//                 color: T.textMuted,
-//               }}
-//             />
-//             <input
-//               className="kt-input"
-//               style={{ paddingLeft: 36 }}
-//               placeholder="Search challan..."
-//               value={challanSearchQuery}
-//               onChange={(e) =>
-//                 setChallanSearchQuery(e.target.value.toLowerCase())
-//               }
-//             />
-//           </div>
-//           {filteredChallans.map((ch) => {
-//             const order = orders.find((o) => o.orderNo === ch.orderNo);
-
-//             // ✨ Filter out GST from display charges (GST shown separately in totals)
-//             const allChargesFromChallan = (ch.charges || []).map((c) => ({
-//               name: c.name || c.chargeName || "",
-//               type: c.type || c.chargeType || "",
-//               amount: parseFloat(c.amount || 0),
-//             }));
-
-//             const gstChargeEntry = allChargesFromChallan.find(
-//               (c) => c.type === "gst" || c.name.toLowerCase().includes("gst"),
-//             );
-//             const regularCharges = allChargesFromChallan.filter(
-//               (c) => c.type !== "gst" && !c.name.toLowerCase().includes("gst"),
-//             );
-
-//             const challanGstRate = parseFloat(
-//               ch.gstRate || order?.gstRate || 0,
-//             );
-//             const challanGstAmount = parseFloat(
-//               ch.gstAmount || gstChargeEntry?.amount || order?.tax || 0,
-//             );
-
-//             const regularItemsCount = (ch.items || []).filter(
-//               (i) => !i.isCharge,
-//             ).length;
-//             const chargesCount = regularCharges.length;
-
-//             return (
-//               <div
-//                 key={`challan-${ch.challanNo}`}
-//                 className="kt-card"
-//                 style={{ padding: 16 }}
-//               >
-//                 <div
-//                   style={{
-//                     display: "flex",
-//                     flexWrap: "wrap",
-//                     justifyContent: "space-between",
-//                     alignItems: "flex-start",
-//                     gap: 12,
-//                   }}
-//                 >
-//                   <div>
-//                     <div
+//                     <span
 //                       style={{
-//                         display: "flex",
-//                         gap: 8,
-//                         alignItems: "center",
-//                         flexWrap: "wrap",
+//                         fontFamily: "monospace",
+//                         fontWeight: "bold",
+//                         color: T.maroon,
+//                       }}
+//                     >
+//                       {ch.challanNo}
+//                     </span>
+//                     <span
+//                       className="status-pill"
+//                       style={{
+//                         background: T.successBg,
+//                         color: T.successColor,
 //                       }}
 //                     >
 //                       <span
-//                         style={{
-//                           fontFamily: "monospace",
-//                           fontWeight: "bold",
-//                           color: T.maroon,
-//                         }}
-//                       >
-//                         {ch.challanNo}
-//                       </span>
-//                       <span style={{ fontSize: 12, color: T.textMuted }}>
-//                         → {ch.orderNo}
-//                       </span>
+//                         className="status-dot"
+//                         style={{ background: "#22c55e" }}
+//                       />
+//                       Delivered
+//                     </span>
+//                     {ch.hidePrice && (
 //                       <span
 //                         className="status-pill"
-//                         style={{
-//                           background: T.successBg,
-//                           color: T.successColor,
-//                         }}
+//                         style={{ background: T.cream, color: T.maroon }}
 //                       >
-//                         <span
-//                           className="status-dot"
-//                           style={{ background: "#22c55e" }}
-//                         />
-//                         Delivered
+//                         <EyeOff size={12} /> Hidden
 //                       </span>
-//                       {ch.hidePrice && (
-//                         <span
-//                           className="status-pill"
-//                           style={{ background: T.cream, color: T.maroon }}
-//                         >
-//                           <EyeOff size={12} /> Hidden
-//                         </span>
-//                       )}
-//                       {challanGstRate > 0 && (
-//                         <span
-//                           className="status-pill"
-//                           style={{ background: T.infoBg, color: T.infoColor }}
-//                         >
-//                           GST {challanGstRate}%
-//                         </span>
-//                       )}
-//                     </div>
-//                     <p
-//                       style={{
-//                         fontWeight: 600,
-//                         margin: "4px 0",
-//                         color: T.textDark,
-//                       }}
-//                     >
-//                       {ch.customerName}
-//                     </p>
-//                     <p style={{ fontSize: 12, color: T.textMuted, margin: 0 }}>
-//                       {new Date(ch.challanDate).toLocaleDateString()} •{" "}
-//                       {regularItemsCount} items
-//                       {chargesCount > 0 && ` • ${chargesCount} charge(s)`}
-//                       {!ch.hidePrice && (
-//                         <span style={{ fontWeight: 600 }}>
-//                           {" "}
-//                           ₹{parseFloat(ch.challanTotal || 0).toLocaleString()}
-//                         </span>
-//                       )}
-//                     </p>
+//                     )}
+//                     {gstRate > 0 && (
+//                       <span
+//                         className="status-pill"
+//                         style={{ background: T.infoBg, color: T.infoColor }}
+//                       >
+//                         GST {gstRate}%
+//                       </span>
+//                     )}
 //                   </div>
-//                   <div style={{ display: "flex", gap: 8 }}>
-//                     <button
-//                       className="btn-white"
-//                       style={{ padding: "5px 12px", fontSize: 12 }}
-//                       onClick={() => {
-//                         if (order)
-//                           openPDFView(
-//                             getChallanPrintHTML(
-//                               order,
-//                               ch,
-//                               ch.hidePrice,
-//                               regularCharges,
-//                               challanGstRate,
-//                               challanGstAmount,
-//                             ),
-//                           );
-//                       }}
-//                     >
-//                       <Eye size={12} /> View
-//                     </button>
-//                     <button
-//                       className="btn-maroon"
-//                       style={{ padding: "5px 12px", fontSize: 12 }}
-//                       onClick={() => {
-//                         if (order)
-//                           openPDFPrint(
-//                             getChallanPrintHTML(
-//                               order,
-//                               ch,
-//                               ch.hidePrice,
-//                               regularCharges,
-//                               challanGstRate,
-//                               challanGstAmount,
-//                             ),
-//                           );
-//                       }}
-//                     >
-//                       <Printer size={12} /> Print
-//                     </button>
-//                   </div>
+//                   <p
+//                     style={{
+//                       fontWeight: 600,
+//                       margin: "4px 0",
+//                       color: T.textDark,
+//                     }}
+//                   >
+//                     {ch.customerName}
+//                   </p>
+//                   <p style={{ fontSize: 12, color: T.textMuted, margin: 0 }}>
+//                     {new Date(ch.challanDate).toLocaleDateString()} •{" "}
+//                     {(ch.items || []).length} items
+//                     {!ch.hidePrice &&
+//                       ` • ₹${parseFloat(ch.challanTotal || 0).toLocaleString()}`}
+//                   </p>
 //                 </div>
+//                 <div style={{ display: "flex", gap: 8 }}>
+//   <button
+//     className="btn-white"
+//     style={{ padding: "5px 12px", fontSize: 12 }}
+//     onClick={() => {
+//       openPDFView(
+//         getChallanPrintHTML(
+//           ch,          // ✅ ab challan object hi bhejo (usme saare customer fields hain)
+//           ch,
+//           ch.hidePrice,
+//           regularCharges,
+//           gstRate,
+//           gstAmount,
+//         ),
+//       );
+//     }}
+//   >
+//     <Eye size={12} /> View
+//   </button>
+//   <button
+//     className="btn-maroon"
+//     style={{ padding: "5px 12px", fontSize: 12 }}
+//     onClick={() => {
+//       openPDFPrint(
+//         getChallanPrintHTML(
+//           ch,          // ✅ same here
+//           ch,
+//           ch.hidePrice,
+//           regularCharges,
+//           gstRate,
+//           gstAmount,
+//         ),
+//       );
+//     }}
+//   >
+//     <Printer size={12} /> Print
+//   </button>
+//   <button
+//     className="icon-btn"
+//     style={{ color: T.errorColor }}
+//     onClick={() => handleDeleteChallan(ch.challanNo)}
+//   >
+//     <Trash2 size={14} />
+//   </button>
+// </div>
 //               </div>
-//             );
-//           })}
-//           {filteredChallans.length === 0 && (
-//             <div
-//               className="kt-card"
-//               style={{ padding: 56, textAlign: "center" }}
-//             >
-//               <p style={{ fontSize: 14, color: T.textMuted }}>
-//                 No challans found
-//               </p>
 //             </div>
-//           )}
-//         </div>
-//       )}
+//           );
+//         })}
+//         {filteredChallans.length === 0 && (
+//           <div className="kt-card" style={{ padding: 56, textAlign: "center" }}>
+//             <p style={{ fontSize: 14, color: T.textMuted }}>No challans found</p>
+//           </div>
+//         )}
+//       </div>
 
-//       {showOrderForm && (
+//       {/* Challan Form Modal */}
+//       {showChallanForm && (
 //         <div
 //           style={{
 //             position: "fixed",
@@ -2820,21 +1853,21 @@
 //                   color: T.textDark,
 //                 }}
 //               >
-//                 {isEditMode
-//                   ? `Edit — ${editingOrder?.orderNo}`
-//                   : "New Order + Challan"}
+//                 New Delivery Challan
 //               </h3>
 //               <button
 //                 className="icon-btn"
 //                 onClick={() => {
-//                   setShowOrderForm(false);
-//                   resetOrderForm();
+//                   setShowChallanForm(false);
+//                   resetForm();
 //                 }}
 //               >
 //                 <X size={24} />
 //               </button>
 //             </div>
+
 //             <div style={{ padding: 20, maxHeight: "70vh", overflowY: "auto" }}>
+//               {/* Customer Details */}
 //               <div style={{ marginBottom: 24 }}>
 //                 <p
 //                   style={{
@@ -2858,10 +1891,10 @@
 //                   <input
 //                     className="kt-input"
 //                     placeholder="Customer Name *"
-//                     value={orderForm.customerName}
+//                     value={challanForm.customerName}
 //                     onChange={(e) =>
-//                       setOrderForm({
-//                         ...orderForm,
+//                       setChallanForm({
+//                         ...challanForm,
 //                         customerName: e.target.value,
 //                       })
 //                     }
@@ -2869,10 +1902,10 @@
 //                   <input
 //                     className="kt-input"
 //                     placeholder="Phone"
-//                     value={orderForm.customerPhone}
+//                     value={challanForm.customerPhone}
 //                     onChange={(e) =>
-//                       setOrderForm({
-//                         ...orderForm,
+//                       setChallanForm({
+//                         ...challanForm,
 //                         customerPhone: e.target.value,
 //                       })
 //                     }
@@ -2880,25 +1913,25 @@
 //                   <input
 //                     className="kt-input"
 //                     placeholder="Vehicle No."
-//                     value={orderForm.vehicleNo}
+//                     value={challanForm.vehicleNo}
 //                     onChange={(e) =>
-//                       setOrderForm({ ...orderForm, vehicleNo: e.target.value })
+//                       setChallanForm({ ...challanForm, vehicleNo: e.target.value })
 //                     }
 //                   />
 //                   <input
 //                     type="date"
 //                     className="kt-input"
-//                     value={orderForm.orderDate}
+//                     value={challanForm.challanDate}
 //                     onChange={(e) =>
-//                       setOrderForm({ ...orderForm, orderDate: e.target.value })
+//                       setChallanForm({ ...challanForm, challanDate: e.target.value })
 //                     }
 //                   />
 //                   <select
 //                     className="kt-input"
-//                     value={orderForm.gstRate}
+//                     value={challanForm.gstRate}
 //                     onChange={(e) =>
-//                       setOrderForm({
-//                         ...orderForm,
+//                       setChallanForm({
+//                         ...challanForm,
 //                         gstRate: parseFloat(e.target.value),
 //                       })
 //                     }
@@ -2912,18 +1945,18 @@
 //                   <input
 //                     className="kt-input"
 //                     placeholder="PO Number"
-//                     value={orderForm.poNumber}
+//                     value={challanForm.poNumber}
 //                     onChange={(e) =>
-//                       setOrderForm({ ...orderForm, poNumber: e.target.value })
+//                       setChallanForm({ ...challanForm, poNumber: e.target.value })
 //                     }
 //                   />
 //                   <input
 //                     className="kt-input"
 //                     placeholder="GST Customer Name"
-//                     value={orderForm.gstCustomerName}
+//                     value={challanForm.gstCustomerName}
 //                     onChange={(e) =>
-//                       setOrderForm({
-//                         ...orderForm,
+//                       setChallanForm({
+//                         ...challanForm,
 //                         gstCustomerName: e.target.value,
 //                       })
 //                     }
@@ -2932,10 +1965,10 @@
 //                     className="kt-input"
 //                     rows="2"
 //                     placeholder="Address"
-//                     value={orderForm.customerAddress}
+//                     value={challanForm.customerAddress}
 //                     onChange={(e) =>
-//                       setOrderForm({
-//                         ...orderForm,
+//                       setChallanForm({
+//                         ...challanForm,
 //                         customerAddress: e.target.value,
 //                       })
 //                     }
@@ -2956,14 +1989,15 @@
 //               >
 //                 <input
 //                   type="checkbox"
-//                   checked={orderForm.hidePrice}
+//                   checked={challanForm.hidePrice}
 //                   onChange={(e) =>
-//                     setOrderForm({ ...orderForm, hidePrice: e.target.checked })
+//                     setChallanForm({ ...challanForm, hidePrice: e.target.checked })
 //                   }
 //                 />
 //                 <EyeOff size={18} /> Hide Price on Challan
 //               </label>
 
+//               {/* Items Groups */}
 //               <div style={{ marginBottom: 24 }}>
 //                 <p
 //                   style={{
@@ -2977,7 +2011,7 @@
 //                 >
 //                   Items
 //                 </p>
-//                 {orderGroups.map((group, gIdx) => {
+//                 {itemGroups.map((group, gIdx) => {
 //                   const gp = getFilteredProductsForGroup(group);
 //                   const gc = getCategoriesFor(group.filterMaterialType);
 //                   const gsc = getSubCategoriesFor(
@@ -2985,10 +2019,7 @@
 //                     group.filterCategory,
 //                   );
 //                   return (
-//                     <div
-//                       key={`group-${group.groupId}`}
-//                       className="material-group"
-//                     >
+//                     <div key={`group-${group.groupId}`} className="material-group">
 //                       <div className="material-group-header">
 //                         <div
 //                           style={{
@@ -3024,7 +2055,7 @@
 //                             </div>
 //                           </div>
 //                         </div>
-//                         {orderGroups.length > 1 && (
+//                         {itemGroups.length > 1 && (
 //                           <button
 //                             className="icon-btn"
 //                             onClick={() => removeGroup(group.groupId)}
@@ -3190,25 +2221,6 @@
 //                                   )}
 //                               </div>
 //                               <div style={{ display: "flex", gap: 8 }}>
-//                                 {!item.skuCode && item.product && (
-//                                   <button
-//                                     className="btn-amber"
-//                                     onClick={() =>
-//                                       handleAddToSheet(group, item)
-//                                     }
-//                                     disabled={addingToSheet[item.uid]}
-//                                   >
-//                                     {addingToSheet[item.uid] ? (
-//                                       <Loader2
-//                                         size={12}
-//                                         className="animate-spin"
-//                                       />
-//                                     ) : (
-//                                       <Plus size={12} />
-//                                     )}{" "}
-//                                     Add to Sheet
-//                                   </button>
-//                                 )}
 //                                 <button
 //                                   className="icon-btn"
 //                                   onClick={() =>
@@ -3268,7 +2280,6 @@
 //                                   T={T}
 //                                 />
 //                               </div>
-
 
 //                               <div>
 //                                 {isDoorFrame(item) ? (
@@ -3442,7 +2453,7 @@
 //                                       )
 //                                     }
 //                                   >
-//                                     {["Per Piece", "Set"].map((u) => (
+//                                     {KITCHEN_UNIT_OPTIONS.map((u) => (
 //                                       <option key={`kit-u-${u}`} value={u}>
 //                                         {u}
 //                                       </option>
@@ -3467,7 +2478,7 @@
 //                                       )
 //                                     }
 //                                   >
-//                                     {["Per Piece"].map((u) => (
+//                                     {LOUVER_UNIT_OPTIONS.map((u) => (
 //                                       <option key={`lou-u-${u}`} value={u}>
 //                                         {u}
 //                                       </option>
@@ -3492,7 +2503,7 @@
 //                                       )
 //                                     }
 //                                   >
-//                                     {["Per Piece"].map((u) => (
+//                                     {LAMINATE_UNIT_OPTIONS.map((u) => (
 //                                       <option key={`lam-u-${u}`} value={u}>
 //                                         {u}
 //                                       </option>
@@ -3553,62 +2564,55 @@
 //                                 )}
 //                               </div>
 
-
-
-// {isDoorFrame(item) && (
-//   <div style={{ gridColumn: '1 / -1', display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', padding: '8px 0' }}>
-//    <span style={{ fontSize: 13, color: T.textMuted }}>in</span>
-// {/* ✅ Yeh add karo */}
-// <input type="number" className="kt-input" placeholder="V.Qty"
-//   value={item.dfVerticalQty}
-//   onChange={e => updateGroupItem(group.groupId, item.uid, 'dfVerticalQty', e.target.value)}
-//   style={{ width: 70 }}
-// />
-// <span style={{ fontSize: 13, color: T.textMuted }}>in</span>
-// {/* ✅ Yeh add karo */}
-// <input type="number" className="kt-input" placeholder="H.Qty"
-//   value={item.dfHorizontalQty}
-//   onChange={e => updateGroupItem(group.groupId, item.uid, 'dfHorizontalQty', e.target.value)}
-//   style={{ width: 70 }}
-// />
-//     <span style={{ color: T.textMuted, fontSize: 16, fontWeight: 'bold' }}>×</span>
-//     <input type="number" step="0.5" className="kt-input" placeholder='Thick (")' 
-//       value={item.dfSectionThickness}
-//       onChange={e => updateGroupItem(group.groupId, item.uid, 'dfSectionThickness', e.target.value)}
-//       style={{ width: 100 }}
-//     />
-//     <span style={{ fontSize: 13, color: T.textMuted, marginLeft: 8 }}>inches</span>
-
-//     <span style={{ fontSize: 13, color: T.textMuted, whiteSpace: 'nowrap', fontWeight: 600, marginLeft: 16 }}>Height:</span>
-//     <input type="number" className="kt-input" placeholder="Ft"
-//       value={item.dfHeightFt}
-//       onChange={e => updateGroupItem(group.groupId, item.uid, 'dfHeightFt', e.target.value)}
-//       style={{ width: 80 }}
-//     />
-//     <span style={{ fontSize: 13, color: T.textMuted }}>ft</span>
-//     <input type="number" className="kt-input" placeholder="In"
-//       value={item.dfHeightIn}
-//       onChange={e => updateGroupItem(group.groupId, item.uid, 'dfHeightIn', e.target.value)}
-//       style={{ width: 80 }}
-//     />
-//     <span style={{ fontSize: 13, color: T.textMuted }}>in</span>
-
-//     <span style={{ fontSize: 13, color: T.textMuted, whiteSpace: 'nowrap', fontWeight: 600, marginLeft: 16 }}>Door Width:</span>
-//     <input type="number" className="kt-input" placeholder="Ft"
-//       value={item.dfWidthFt}
-//       onChange={e => updateGroupItem(group.groupId, item.uid, 'dfWidthFt', e.target.value)}
-//       style={{ width: 80 }}
-//     />
-//     <span style={{ fontSize: 13, color: T.textMuted }}>ft</span>
-//     <input type="number" className="kt-input" placeholder="In"
-//       value={item.dfWidthIn}
-//       onChange={e => updateGroupItem(group.groupId, item.uid, 'dfWidthIn', e.target.value)}
-//       style={{ width: 80 }}
-//     />
-//     <span style={{ fontSize: 13, color: T.textMuted }}>in</span>
-//   </div>
-// )}
-
+//                               {isDoorFrame(item) && (
+//                                 <div style={{ gridColumn: '1 / -1', display: 'flex', flexWrap: 'wrap', gap: 10, alignItems: 'center', padding: '8px 0' }}>
+//                                   <span style={{ fontSize: 13, color: T.textMuted }}>V.Qty</span>
+//                                   <input type="number" className="kt-input" placeholder="V.Qty"
+//                                     value={item.dfVerticalQty}
+//                                     onChange={e => updateGroupItem(group.groupId, item.uid, 'dfVerticalQty', e.target.value)}
+//                                     style={{ width: 70 }}
+//                                   />
+//                                   <span style={{ fontSize: 13, color: T.textMuted }}>H.Qty</span>
+//                                   <input type="number" className="kt-input" placeholder="H.Qty"
+//                                     value={item.dfHorizontalQty}
+//                                     onChange={e => updateGroupItem(group.groupId, item.uid, 'dfHorizontalQty', e.target.value)}
+//                                     style={{ width: 70 }}
+//                                   />
+//                                   <span style={{ color: T.textMuted, fontSize: 16, fontWeight: 'bold' }}>×</span>
+//                                   <input type="number" step="0.5" className="kt-input" placeholder='Thick (")'
+//                                     value={item.dfSectionThickness}
+//                                     onChange={e => updateGroupItem(group.groupId, item.uid, 'dfSectionThickness', e.target.value)}
+//                                     style={{ width: 100 }}
+//                                   />
+//                                   <span style={{ fontSize: 13, color: T.textMuted, marginLeft: 8 }}>inches</span>
+//                                   <span style={{ fontSize: 13, color: T.textMuted, whiteSpace: 'nowrap', fontWeight: 600, marginLeft: 16 }}>Height:</span>
+//                                   <input type="number" className="kt-input" placeholder="Ft"
+//                                     value={item.dfHeightFt}
+//                                     onChange={e => updateGroupItem(group.groupId, item.uid, 'dfHeightFt', e.target.value)}
+//                                     style={{ width: 80 }}
+//                                   />
+//                                   <span style={{ fontSize: 13, color: T.textMuted }}>ft</span>
+//                                   <input type="number" className="kt-input" placeholder="In"
+//                                     value={item.dfHeightIn}
+//                                     onChange={e => updateGroupItem(group.groupId, item.uid, 'dfHeightIn', e.target.value)}
+//                                     style={{ width: 80 }}
+//                                   />
+//                                   <span style={{ fontSize: 13, color: T.textMuted }}>in</span>
+//                                   <span style={{ fontSize: 13, color: T.textMuted, whiteSpace: 'nowrap', fontWeight: 600, marginLeft: 16 }}>Door Width:</span>
+//                                   <input type="number" className="kt-input" placeholder="Ft"
+//                                     value={item.dfWidthFt}
+//                                     onChange={e => updateGroupItem(group.groupId, item.uid, 'dfWidthFt', e.target.value)}
+//                                     style={{ width: 80 }}
+//                                   />
+//                                   <span style={{ fontSize: 13, color: T.textMuted }}>ft</span>
+//                                   <input type="number" className="kt-input" placeholder="In"
+//                                     value={item.dfWidthIn}
+//                                     onChange={e => updateGroupItem(group.groupId, item.uid, 'dfWidthIn', e.target.value)}
+//                                     style={{ width: 80 }}
+//                                   />
+//                                   <span style={{ fontSize: 13, color: T.textMuted }}>in</span>
+//                                 </div>
+//                               )}
 
 //                               {(isTimberWood(item) ||
 //                                 isWoodenCladding(item) ||
@@ -3795,7 +2799,7 @@
 //                                 />
 //                               </div>
 //                             </div>
-//                             {item.product && !orderForm.hidePrice && (
+//                             {item.product && !challanForm.hidePrice && (
 //                               <div className="calc-display">
 //                                 {isDoorFrame(item) ? (
 //                                   <>
@@ -4009,7 +3013,7 @@
 //                         >
 //                           <Plus size={14} /> Add Item
 //                         </button>
-//                         {!orderForm.hidePrice && (
+//                         {!challanForm.hidePrice && (
 //                           <div
 //                             style={{
 //                               fontWeight: "bold",
@@ -4043,6 +3047,7 @@
 //                 </button>
 //               </div>
 
+//               {/* Additional Charges */}
 //               <div style={{ marginBottom: 24 }}>
 //                 <div
 //                   style={{
@@ -4072,136 +3077,132 @@
 //                     <Plus size={14} /> Add Charge
 //                   </button>
 //                 </div>
-//                 {orderCharges.map((ch, idx) => {
-//                   const ct = CHARGE_TYPES.find(
-//                     (t) => t.value === ch.chargeType,
-//                   );
-//                   return (
+//                 {charges.map((ch, idx) => (
+//                   <div
+//                     key={`charge-${ch.uid}`}
+//                     style={{
+//                       padding: 12,
+//                       border: `1px solid ${T.borderSoft}`,
+//                       borderRadius: 10,
+//                       marginBottom: 8,
+//                       background: T.accent,
+//                     }}
+//                   >
 //                     <div
-//                       key={`charge-${ch.uid}`}
 //                       style={{
-//                         padding: 12,
-//                         border: `1px solid ${T.borderSoft}`,
-//                         borderRadius: 10,
+//                         display: "flex",
+//                         justifyContent: "space-between",
+//                         alignItems: "center",
 //                         marginBottom: 8,
-//                         background: T.accent,
 //                       }}
 //                     >
-//                       <div
+//                       <span
 //                         style={{
-//                           display: "flex",
-//                           justifyContent: "space-between",
+//                           display: "inline-flex",
 //                           alignItems: "center",
-//                           marginBottom: 8,
+//                           gap: 4,
+//                           padding: "2px 8px",
+//                           borderRadius: 6,
+//                           fontSize: 12,
+//                           background: T.amberBg,
+//                           color: T.amberColor,
+//                           fontWeight: 600,
 //                         }}
 //                       >
-//                         <span
-//                           style={{
-//                             display: "inline-flex",
-//                             alignItems: "center",
-//                             gap: 4,
-//                             padding: "2px 8px",
-//                             borderRadius: 6,
-//                             fontSize: 12,
-//                             background: T.amberBg,
-//                             color: T.amberColor,
-//                             fontWeight: 600,
-//                           }}
-//                         >
-//                           {ct?.icon || "📋"} #{idx + 1}{" "}
-//                           {ch.chargeName || "New Charge"}
-//                         </span>
-//                         <button
-//                           className="icon-btn"
-//                           onClick={() => removeCharge(ch.uid)}
-//                         >
-//                           <Trash2 size={14} />
-//                         </button>
-//                       </div>
-//                       <div
-//                         style={{
-//                           display: "grid",
-//                           gridTemplateColumns:
-//                             "repeat(auto-fit, minmax(140px, 1fr))",
-//                           gap: 8,
-//                         }}
+//                         {CHARGE_TYPES.find((t) => t.value === ch.chargeType)?.icon || "📋"} #{idx + 1}{" "}
+//                         {ch.chargeName || "New Charge"}
+//                       </span>
+//                       <button
+//                         className="icon-btn"
+//                         onClick={() => removeCharge(ch.uid)}
 //                       >
-//                         <select
-//                           className="kt-input"
-//                           value={ch.chargeType}
-//                           onChange={(e) =>
-//                             updateCharge(ch.uid, "chargeType", e.target.value)
-//                           }
-//                         >
-//                           <option value="">Select type</option>
-//                           {CHARGE_TYPES.map((t) => (
-//                             <option key={`chtype-${t.value}`} value={t.value}>
-//                               {t.icon} {t.label}
-//                             </option>
-//                           ))}
-//                         </select>
-//                         <input
-//                           className="kt-input"
-//                           placeholder="Charge Name *"
-//                           value={ch.chargeName}
-//                           onChange={(e) =>
-//                             updateCharge(ch.uid, "chargeName", e.target.value)
-//                           }
-//                         />
-//                         <select
-//                           className="kt-input"
-//                           value={ch.unit}
-//                           onChange={(e) =>
-//                             updateCharge(ch.uid, "unit", e.target.value)
-//                           }
-//                         >
-//                           {CHARGE_UNIT_OPTIONS.map((u) => (
-//                             <option key={`chunit-${u}`} value={u}>
-//                               {u}
-//                             </option>
-//                           ))}
-//                         </select>
-//                         {ch.unit !== "Lump Sum" && (
-//                           <input
-//                             className="kt-input"
-//                             type="number"
-//                             placeholder="Quantity"
-//                             value={ch.quantity}
-//                             onChange={(e) =>
-//                               updateCharge(ch.uid, "quantity", e.target.value)
-//                             }
-//                           />
-//                         )}
+//                         <Trash2 size={14} />
+//                       </button>
+//                     </div>
+//                     <div
+//                       style={{
+//                         display: "grid",
+//                         gridTemplateColumns:
+//                           "repeat(auto-fit, minmax(140px, 1fr))",
+//                         gap: 8,
+//                       }}
+//                     >
+//                       <select
+//                         className="kt-input"
+//                         value={ch.chargeType}
+//                         onChange={(e) =>
+//                           updateCharge(ch.uid, "chargeType", e.target.value)
+//                         }
+//                       >
+//                         <option value="">Select type</option>
+//                         {CHARGE_TYPES.map((t) => (
+//                           <option key={`chtype-${t.value}`} value={t.value}>
+//                             {t.icon} {t.label}
+//                           </option>
+//                         ))}
+//                       </select>
+//                       <input
+//                         className="kt-input"
+//                         placeholder="Charge Name *"
+//                         value={ch.chargeName}
+//                         onChange={(e) =>
+//                           updateCharge(ch.uid, "chargeName", e.target.value)
+//                         }
+//                       />
+//                       <select
+//                         className="kt-input"
+//                         value={ch.unit}
+//                         onChange={(e) =>
+//                           updateCharge(ch.uid, "unit", e.target.value)
+//                         }
+//                       >
+//                         {CHARGE_UNIT_OPTIONS.map((u) => (
+//                           <option key={`chunit-${u}`} value={u}>
+//                             {u}
+//                           </option>
+//                         ))}
+//                       </select>
+//                       {ch.unit !== "Lump Sum" && (
 //                         <input
 //                           className="kt-input"
 //                           type="number"
-//                           placeholder={
-//                             ch.unit === "Lump Sum" ? "Amount" : "Rate"
-//                           }
-//                           value={ch.rate}
+//                           placeholder="Quantity"
+//                           value={ch.quantity}
 //                           onChange={(e) =>
-//                             updateCharge(ch.uid, "rate", e.target.value)
+//                             updateCharge(ch.uid, "quantity", e.target.value)
 //                           }
 //                         />
-//                       </div>
-//                       {ch.amount > 0 && (
-//                         <div
-//                           style={{
-//                             textAlign: "right",
-//                             marginTop: 6,
-//                             fontWeight: 600,
-//                             color: T.maroon,
-//                           }}
-//                         >
-//                           Amount: ₹{ch.amount.toLocaleString()}
-//                         </div>
 //                       )}
+//                       <input
+//                         className="kt-input"
+//                         type="number"
+//                         placeholder={
+//                           ch.unit === "Lump Sum" ? "Amount" : "Rate"
+//                         }
+//                         value={ch.rate}
+//                         onChange={(e) =>
+//                           updateCharge(ch.uid, "rate", e.target.value)
+//                         }
+//                       />
 //                     </div>
-//                   );
-//                 })}
+//                     {ch.amount > 0 && (
+//                       <div
+//                         style={{
+//                           textAlign: "right",
+//                           marginTop: 6,
+//                           fontWeight: 600,
+//                           color: T.maroon,
+//                         }}
+//                       >
+//                         Amount: ₹{ch.amount.toLocaleString()}
+//                       </div>
+//                     )}
+//                   </div>
+//                 ))}
 //               </div>
 
-//               {!orderForm.hidePrice && (
+//               {/* Totals */}
+//               {!challanForm.hidePrice && (
 //                 <div style={{ display: "flex", justifyContent: "flex-end" }}>
 //                   <div className="total-box" style={{ width: 320 }}>
 //                     <div
@@ -4213,7 +3214,7 @@
 //                       }}
 //                     >
 //                       <span>Materials</span>
-//                       <span>₹{orderSubtotal.toLocaleString()}</span>
+//                       <span>₹{itemsSubtotal.toLocaleString()}</span>
 //                     </div>
 //                     {chargesSubtotal > 0 && (
 //                       <div
@@ -4228,7 +3229,7 @@
 //                         <span>₹{chargesSubtotal.toLocaleString()}</span>
 //                       </div>
 //                     )}
-//                     {orderForm.gstRate > 0 && (
+//                     {challanForm.gstRate > 0 && (
 //                       <div
 //                         style={{
 //                           display: "flex",
@@ -4237,8 +3238,8 @@
 //                           color: T.textDark,
 //                         }}
 //                       >
-//                         <span>GST ({orderForm.gstRate}%)</span>
-//                         <span>₹{orderTax.toLocaleString()}</span>
+//                         <span>GST ({challanForm.gstRate}%)</span>
+//                         <span>₹{gstAmount.toLocaleString()}</span>
 //                       </div>
 //                     )}
 //                     <div
@@ -4254,12 +3255,13 @@
 //                       }}
 //                     >
 //                       <span>Grand Total</span>
-//                       <span>₹{orderTotal.toLocaleString()}</span>
+//                       <span>₹{challanTotal.toLocaleString()}</span>
 //                     </div>
 //                   </div>
 //                 </div>
 //               )}
 //             </div>
+
 //             <div
 //               style={{
 //                 padding: 20,
@@ -4272,8 +3274,8 @@
 //               <button
 //                 className="btn-white"
 //                 onClick={() => {
-//                   setShowOrderForm(false);
-//                   resetOrderForm();
+//                   setShowChallanForm(false);
+//                   resetForm();
 //                 }}
 //               >
 //                 Cancel
@@ -4281,292 +3283,7 @@
 //               <button
 //                 className="btn-maroon"
 //                 disabled={saving}
-//                 onClick={handleSubmitOrder}
-//               >
-//                 {saving ? (
-//                   <Loader2 size={16} className="animate-spin" />
-//                 ) : isEditMode ? (
-//                   "Update & Re-Generate"
-//                 ) : (
-//                   "Save & Generate Challan"
-//                 )}
-//               </button>
-//             </div>
-//           </div>
-//         </div>
-//       )}
-
-//       {showChallanForm && selectedOrder && (
-//         <div
-//           style={{
-//             position: "fixed",
-//             inset: 0,
-//             background: T.overlayBg,
-//             zIndex: 50,
-//             overflow: "auto",
-//             padding: 16,
-//             display: "flex",
-//             alignItems: "flex-start",
-//             justifyContent: "center",
-//           }}
-//         >
-//           <div
-//             style={{
-//               background: T.modalBg,
-//               border: `1px solid ${T.borderSoft}`,
-//               borderRadius: 16,
-//               maxWidth: 900,
-//               width: "100%",
-//               margin: "32px 0",
-//               boxShadow: `0 8px 32px ${T.shadowStrong}`,
-//             }}
-//           >
-//             <div
-//               style={{
-//                 padding: 20,
-//                 borderBottom: `1px solid ${T.borderSoft}`,
-//                 display: "flex",
-//                 justifyContent: "space-between",
-//                 alignItems: "center",
-//               }}
-//             >
-//               <h3
-//                 style={{
-//                   fontWeight: "bold",
-//                   fontSize: 18,
-//                   margin: 0,
-//                   color: T.textDark,
-//                 }}
-//               >
-//                 Additional Challan — {selectedOrder.orderNo}
-//               </h3>
-//               <button
-//                 className="icon-btn"
-//                 onClick={() => setShowChallanForm(false)}
-//               >
-//                 <X size={24} />
-//               </button>
-//             </div>
-//             <div style={{ padding: 20, maxHeight: "70vh", overflowY: "auto" }}>
-//               <div
-//                 style={{
-//                   display: "grid",
-//                   gridTemplateColumns: "repeat(3, 1fr)",
-//                   gap: 12,
-//                   marginBottom: 16,
-//                 }}
-//               >
-//                 <input
-//                   type="date"
-//                   className="kt-input"
-//                   value={challanDate}
-//                   onChange={(e) => setChallanDate(e.target.value)}
-//                 />
-//                 <input
-//                   className="kt-input"
-//                   placeholder="Note"
-//                   value={deliveryNote}
-//                   onChange={(e) => setDeliveryNote(e.target.value)}
-//                 />
-//                 <label
-//                   style={{
-//                     display: "flex",
-//                     alignItems: "center",
-//                     gap: 8,
-//                     color: T.textDark,
-//                   }}
-//                 >
-//                   <input
-//                     type="checkbox"
-//                     checked={hidePriceOnChallan}
-//                     onChange={(e) => setHidePriceOnChallan(e.target.checked)}
-//                   />{" "}
-//                   Hide Price
-//                 </label>
-//               </div>
-//               <div style={{ overflowX: "auto" }}>
-//                 <table
-//                   style={{
-//                     width: "100%",
-//                     borderCollapse: "collapse",
-//                     fontSize: 13,
-//                   }}
-//                 >
-//                   <thead>
-//                     <tr style={{ background: T.cream }}>
-//                       <th
-//                         style={{
-//                           padding: 8,
-//                           textAlign: "left",
-//                           borderBottom: `2px solid ${T.borderSoft}`,
-//                           color: T.textDark,
-//                         }}
-//                       >
-//                         Item
-//                       </th>
-//                       <th
-//                         style={{
-//                           padding: 8,
-//                           textAlign: "center",
-//                           borderBottom: `2px solid ${T.borderSoft}`,
-//                           color: T.textDark,
-//                         }}
-//                       >
-//                         Unit
-//                       </th>
-//                       <th
-//                         style={{
-//                           padding: 8,
-//                           textAlign: "right",
-//                           borderBottom: `2px solid ${T.borderSoft}`,
-//                           color: T.textDark,
-//                         }}
-//                       >
-//                         Ordered
-//                       </th>
-//                       <th
-//                         style={{
-//                           padding: 8,
-//                           textAlign: "right",
-//                           borderBottom: `2px solid ${T.borderSoft}`,
-//                           color: T.textDark,
-//                         }}
-//                       >
-//                         Sent
-//                       </th>
-//                       <th
-//                         style={{
-//                           padding: 8,
-//                           textAlign: "right",
-//                           borderBottom: `2px solid ${T.borderSoft}`,
-//                           color: T.textDark,
-//                         }}
-//                       >
-//                         Left
-//                       </th>
-//                       <th
-//                         style={{
-//                           padding: 8,
-//                           textAlign: "center",
-//                           borderBottom: `2px solid ${T.borderSoft}`,
-//                           color: T.textDark,
-//                         }}
-//                       >
-//                         Sending
-//                       </th>
-//                       <th
-//                         style={{
-//                           padding: 8,
-//                           textAlign: "right",
-//                           borderBottom: `2px solid ${T.borderSoft}`,
-//                           color: T.textDark,
-//                         }}
-//                       >
-//                         Total Qty
-//                       </th>
-//                     </tr>
-//                   </thead>
-//                   <tbody>
-//                     {challanItems.map((it) => {
-//                       const rem = it.orderedQty - it.alreadySent;
-//                       return (
-//                         <tr
-//                           key={`challan-item-${it.uid}`}
-//                           style={{ borderBottom: `1px solid ${T.borderSoft}` }}
-//                         >
-//                           <td style={{ padding: 8, color: T.textDark }}>
-//                             {it.product}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: 8,
-//                               textAlign: "center",
-//                               color: T.textMuted,
-//                             }}
-//                           >
-//                             {it.unit}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: 8,
-//                               textAlign: "right",
-//                               color: T.textDark,
-//                             }}
-//                           >
-//                             {it.orderedQty.toFixed(3)}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: 8,
-//                               textAlign: "right",
-//                               color: T.textMuted,
-//                             }}
-//                           >
-//                             {it.alreadySent.toFixed(3)}
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: 8,
-//                               textAlign: "right",
-//                               color: rem > 0 ? T.maroon : T.successColor,
-//                               fontWeight: 600,
-//                             }}
-//                           >
-//                             {rem.toFixed(3)}
-//                           </td>
-//                           <td style={{ padding: 8, textAlign: "center" }}>
-//                             <input
-//                               type="number"
-//                               min="0"
-//                               className="kt-input"
-//                               style={{ width: 80, textAlign: "center" }}
-//                               value={it.sendingPcs}
-//                               disabled={rem <= 0}
-//                               onChange={(e) =>
-//                                 updateChallanItem(
-//                                   it.uid,
-//                                   "sendingPcs",
-//                                   e.target.value,
-//                                 )
-//                               }
-//                             />
-//                           </td>
-//                           <td
-//                             style={{
-//                               padding: 8,
-//                               textAlign: "right",
-//                               fontWeight: 600,
-//                               color: T.textDark,
-//                             }}
-//                           >
-//                             {it.sendingQty.toFixed(3)}
-//                           </td>
-//                         </tr>
-//                       );
-//                     })}
-//                   </tbody>
-//                 </table>
-//               </div>
-//             </div>
-//             <div
-//               style={{
-//                 padding: 20,
-//                 borderTop: `1px solid ${T.borderSoft}`,
-//                 display: "flex",
-//                 justifyContent: "flex-end",
-//                 gap: 12,
-//               }}
-//             >
-//               <button
-//                 className="btn-white"
-//                 onClick={() => setShowChallanForm(false)}
-//               >
-//                 Cancel
-//               </button>
-//               <button
-//                 className="btn-maroon"
 //                 onClick={handleSubmitChallan}
-//                 disabled={saving}
 //               >
 //                 {saving ? (
 //                   <Loader2 size={16} className="animate-spin" />
@@ -4579,7 +3296,8 @@
 //         </div>
 //       )}
 
-//       {showChallanSuccess && (
+//       {/* Success Modal */}
+//       {showSuccess && (
 //         <div
 //           style={{
 //             position: "fixed",
@@ -4679,7 +3397,7 @@
 //             <button
 //               className="btn-white"
 //               style={{ width: "100%", justifyContent: "center" }}
-//               onClick={() => setShowChallanSuccess(false)}
+//               onClick={() => setShowSuccess(false)}
 //             >
 //               Close
 //             </button>
@@ -4693,10 +3411,11 @@
 
 
 
+// ///////////////////////////
 
 
 
-///////// testing ///////////////////////
+
 
 
 
@@ -5656,6 +4375,22 @@ const apiPost = async (url, body) => {
   }
 };
 
+
+const apiPut = async (url, body) => {
+  try {
+    const r = await fetch(url, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    return await r.json();
+  } catch (e) {
+    return { success: false, error: e.message };
+  }
+};
+
+
+
 const apiDelete = async (url, body) => {
   try {
     const r = await fetch(url, {
@@ -5681,6 +4416,8 @@ export default function ChallanOnlyBilling() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [lastChallanHTML, setLastChallanHTML] = useState("");
   const [lastChallanNo, setLastChallanNo] = useState("");
+const [editingChallan, setEditingChallan] = useState(null);
+
 
   // Challan form state
   const [challanForm, setChallanForm] = useState({
@@ -6090,106 +4827,121 @@ export default function ChallanOnlyBilling() {
     );
   };
 
-  const handleSubmitChallan = async () => {
-    if (!challanForm.customerName || getAllItems().filter((i) => i.product).length === 0) {
-      setError("Customer name aur at least ek item chahiye");
-      return;
-    }
-    setSaving(true);
-    setError(null);
-    try {
-      const challanNo = genChallanNo();
-      const validItems = getAllItems()
-        .filter((i) => i.product && (i.quantity || i.calculatedQty))
-        .map((it) => ({
-          product: it.product,
-          unit: it.unit,
-          quantity: it.quantity,
-          rate: it.rate,
-          amount: it.amount,
-          calculatedQty: it.calculatedQty,
-          size: it.size,
-          lengthDisplay: it.isWood ? `${it.lengthFeet || 0}'-${it.lengthInches || 0}"` : "",
-          specification: it.specification || "",
-          isSheet: it.isSheet,
-          areaPerPiece: it.areaPerPiece,
-          pieces: parseFloat(it.quantity || 0),
-          sentQty: parseFloat(it.quantity || 0),
-          orderedQty: it.calculatedQty,
-        }));
-      const validCharges = charges
-        .filter((c) => c.chargeName && c.amount > 0)
-        .map((ch) => ({
-          name: ch.chargeName,
-          type: ch.chargeType || "custom",
-          unit: ch.unit || "Per Piece",
-          quantity: ch.quantity || "",
-          rate: ch.rate || "",
-          amount: ch.amount,
-        }));
-      if (challanForm.gstRate > 0 && gstAmount > 0) {
-        validCharges.push({
-          name: `GST (${challanForm.gstRate}%)`,
-          type: "gst",
-          unit: "Percentage",
-          quantity: challanForm.gstRate,
-          rate: challanForm.gstRate,
-          amount: gstAmount,
-        });
-      }
-      const payload = {
-  challan: {
-    challanNo,
-    orderNo: "",
-    customerName: challanForm.customerName,
-    customerPhone: challanForm.customerPhone,      // ✅ add
-    customerAddress: challanForm.customerAddress,  // ✅ add
-    vehicleNo: challanForm.vehicleNo,              // ✅ add
-    poNumber: challanForm.poNumber,                // ✅ add
-    gstCustomerName: challanForm.gstCustomerName,  // ✅ add
-    challanDate: challanForm.challanDate,
-    deliveryNote: challanForm.notes,
-    challanTotal,
-    status: "Delivered",
-    hidePrice: challanForm.hidePrice,
-    gstRate: challanForm.gstRate,
-    gstAmount,
-    subtotal: itemsSubtotal,
-    chargesTotal: chargesSubtotal,
-  },
-  items: validItems,
-  charges: validCharges,
-};
+const handleSubmitChallan = async () => {
+  if (!challanForm.customerName || getAllItems().filter((i) => i.product).length === 0) {
+    setError("Customer name aur at least ek item chahiye");
+    return;
+  }
+  setSaving(true);
+  setError(null);
+  try {
+    // If editing use same challanNo, else generate new
+    const challanNo = editingChallan ? editingChallan.challanNo : genChallanNo();
 
-      const res = await apiPost("/api/billing-backend/challans", payload);
-      if (!res.success) throw new Error(res.error);
-      const html = getChallanPrintHTML(
-        {
-          customerName: challanForm.customerName,
-          customerPhone: challanForm.customerPhone,
-          customerAddress: challanForm.customerAddress,
-          vehicleNo: challanForm.vehicleNo,
-          poNumber: challanForm.poNumber,
-          gstCustomerName: challanForm.gstCustomerName,
-        },
-        { ...payload.challan, items: validItems },
-        challanForm.hidePrice,
-        validCharges.filter((c) => c.type !== "gst"),
-        challanForm.gstRate,
-        gstAmount,
-      );
-      setLastChallanHTML(html);
-      setLastChallanNo(challanNo);
-      await fetchData();
-      setShowChallanForm(false);
-      resetForm();
-      setShowSuccess(true);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setSaving(false);
+    const validItems = getAllItems()
+      .filter((i) => i.product && (i.quantity || i.calculatedQty))
+      .map((it) => ({
+        product: it.product,
+        unit: it.unit,
+        quantity: it.quantity,
+        rate: it.rate,
+        amount: it.amount,
+        calculatedQty: it.calculatedQty,
+        size: it.size,
+        lengthDisplay: it.isWood ? `${it.lengthFeet || 0}'-${it.lengthInches || 0}"` : "",
+        specification: it.specification || "",
+        isSheet: it.isSheet,
+        areaPerPiece: it.areaPerPiece,
+        pieces: parseFloat(it.quantity || 0),
+        sentQty: parseFloat(it.quantity || 0),
+        orderedQty: it.calculatedQty,
+      }));
+
+    const validCharges = charges
+      .filter((c) => c.chargeName && c.amount > 0)
+      .map((ch) => ({
+        name: ch.chargeName,
+        type: ch.chargeType || "custom",
+        unit: ch.unit || "Per Piece",
+        quantity: ch.quantity || "",
+        rate: ch.rate || "",
+        amount: ch.amount,
+      }));
+
+    if (challanForm.gstRate > 0 && gstAmount > 0) {
+      validCharges.push({
+        name: `GST (${challanForm.gstRate}%)`,
+        type: "gst",
+        unit: "Percentage",
+        quantity: challanForm.gstRate,
+        rate: challanForm.gstRate,
+        amount: gstAmount,
+      });
     }
-  };
+
+    const payload = {
+      challan: {
+        challanNo,
+        orderNo: "",
+        customerName: challanForm.customerName,
+        customerPhone: challanForm.customerPhone,
+        customerAddress: challanForm.customerAddress,
+        vehicleNo: challanForm.vehicleNo,
+        poNumber: challanForm.poNumber,
+        gstCustomerName: challanForm.gstCustomerName,
+        challanDate: challanForm.challanDate,
+        deliveryNote: challanForm.notes,
+        challanTotal,
+        status: "Delivered",
+        hidePrice: challanForm.hidePrice,
+        gstRate: challanForm.gstRate,
+        gstAmount,
+        subtotal: itemsSubtotal,
+        chargesTotal: chargesSubtotal,
+      },
+      items: validItems,
+      charges: validCharges,
+    };
+
+    // If editing use PUT, else use POST
+    let res;
+    if (editingChallan) {
+      res = await apiPut("/api/billing-backend/challans", payload);
+    } else {
+      res = await apiPost("/api/billing-backend/challans", payload);
+    }
+
+    if (!res.success) throw new Error(res.error);
+
+    const html = getChallanPrintHTML(
+      {
+        customerName: challanForm.customerName,
+        customerPhone: challanForm.customerPhone,
+        customerAddress: challanForm.customerAddress,
+        vehicleNo: challanForm.vehicleNo,
+        poNumber: challanForm.poNumber,
+        gstCustomerName: challanForm.gstCustomerName,
+      },
+      { ...payload.challan, items: validItems },
+      challanForm.hidePrice,
+      validCharges.filter((c) => c.type !== "gst"),
+      challanForm.gstRate,
+      gstAmount,
+    );
+
+    setLastChallanHTML(html);
+    setLastChallanNo(challanNo);
+    await fetchData();
+    setShowChallanForm(false);
+    setEditingChallan(null);
+    resetForm();
+    setShowSuccess(true);
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    setSaving(false);
+  }
+};
 
   const handleDeleteChallan = async (challanNo) => {
     if (!confirm(`Delete challan ${challanNo}?`)) return;
@@ -6201,6 +4953,97 @@ export default function ChallanOnlyBilling() {
       setError(err.message);
     }
   };
+
+
+  const handleEditChallan = (ch) => {
+  // Fill form with existing challan data
+  setChallanForm({
+    customerName: ch.customerName || "",
+    customerPhone: ch.customerPhone || "",
+    customerAddress: ch.customerAddress || "",
+    vehicleNo: ch.vehicleNo || "",
+    challanDate: ch.challanDate || new Date().toISOString().split("T")[0],
+    gstRate: parseFloat(ch.gstRate) || 0,
+    notes: ch.deliveryNote || "",
+    poNumber: ch.poNumber || "",
+    gstCustomerName: ch.gstCustomerName || "",
+    hidePrice: ch.hidePrice || false,
+  });
+
+  // Build item groups from saved items
+  const savedItems = (ch.items || []).filter(it => !it.isCharge);
+  if (savedItems.length > 0) {
+    const groupItems = savedItems.map(it => {
+      const isSheet = isSheetMaterial(it.product);
+      const isWood = isTimberWood(it) && !isSheet;
+      const woodDims = isWood ? parseWoodDimensions(it.product) : null;
+      const sheetDims = isSheet ? parseSheetDimensions(it.product) : null;
+
+      // Parse length display back to feet and inches
+      let lFeet = "";
+      let lInches = "";
+      if (it.lengthDisplay) {
+        const lm = it.lengthDisplay.match(/(\d+(?:\.\d+)?)'-(\d+(?:\.\d+)?)"/);
+        if (lm) {
+          lFeet = lm[1] || "";
+          lInches = lm[2] || "";
+        }
+      }
+
+      return createEmptyItem({
+        product: it.product || "",
+        unit: it.unit || "",
+        quantity: it.sentQty || it.quantity || "",
+        rate: it.rate || "",
+        amount: parseFloat(it.amount) || 0,
+        calculatedQty: parseFloat(it.calculatedQty) || 0,
+        size: it.size || "",
+        lengthFeet: lFeet,
+        lengthInches: lInches,
+        isWood,
+        isSheet,
+        width: woodDims?.width || sheetDims?.widthFeet || 0,
+        thickness: woodDims?.thickness || sheetDims?.thickness || 0,
+        areaPerPiece: sheetDims?.areaPerPiece || null,
+        customLength: sheetDims?.widthFeet || "",
+        customWidth: sheetDims?.heightFeet || "",
+        lengthDisplay: it.lengthDisplay || "",
+        specification: it.specification || "",
+      });
+    });
+
+    setItemGroups([{
+      groupId: uid(),
+      filterMaterialType: "",
+      filterCategory: "",
+      filterSubCategory: "",
+      items: groupItems,
+    }]);
+  } else {
+    setItemGroups([createEmptyGroup()]);
+  }
+
+  // Build charges from saved charges (exclude GST)
+  const savedCharges = (ch.charges || []).filter(c => c.type !== "gst");
+  if (savedCharges.length > 0) {
+    const chargeItems = savedCharges.map(c => ({
+      uid: uid(),
+      chargeType: c.type || "",
+      chargeName: c.name || "",
+      chargeDescription: "",
+      unit: c.unit || "Per Piece",
+      quantity: c.quantity || "",
+      rate: c.rate || "",
+      amount: parseFloat(c.amount) || 0,
+    }));
+    setCharges(chargeItems);
+  } else {
+    setCharges([]);
+  }
+
+  setEditingChallan(ch);
+  setShowChallanForm(true);
+};
 
   const openPDFView = (html) => {
     const w = window.open("", "_blank");
@@ -6343,14 +5186,15 @@ export default function ChallanOnlyBilling() {
           Delivery Challans
         </h2>
         <button
-          className="btn-maroon"
-          onClick={() => {
-            resetForm();
-            setShowChallanForm(true);
-          }}
-        >
-          <Plus size={16} /> New Challan
-        </button>
+  className="btn-maroon"
+  onClick={() => {
+    setEditingChallan(null);  // ← yeh add karo
+    resetForm();
+    setShowChallanForm(true);
+  }}
+>
+  <Plus size={16} /> New Challan
+</button>
       </div>
 
       {/* Challan List */}
@@ -6475,6 +5319,14 @@ export default function ChallanOnlyBilling() {
     <Eye size={12} /> View
   </button>
   <button
+  className="btn-amber"
+  style={{ padding: "5px 12px", fontSize: 12 }}
+  onClick={() => handleEditChallan(ch)}
+>
+  ✏️ Edit
+</button>
+
+  <button
     className="btn-maroon"
     style={{ padding: "5px 12px", fontSize: 12 }}
     onClick={() => {
@@ -6547,22 +5399,23 @@ export default function ChallanOnlyBilling() {
               }}
             >
               <h3
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 20,
-                  margin: 0,
-                  color: T.textDark,
-                }}
-              >
-                New Delivery Challan
-              </h3>
-              <button
-                className="icon-btn"
-                onClick={() => {
-                  setShowChallanForm(false);
-                  resetForm();
-                }}
-              >
+  style={{
+    fontWeight: "bold",
+    fontSize: 20,
+    margin: 0,
+    color: T.textDark,
+  }}
+>
+  {editingChallan ? `Edit Challan - ${editingChallan.challanNo}` : "New Delivery Challan"}
+</h3>
+                <button
+    className="icon-btn"
+    onClick={() => {
+      setShowChallanForm(false);
+      setEditingChallan(null);  // ← yeh add karo
+      resetForm();
+    }}
+  >
                 <X size={24} />
               </button>
             </div>
@@ -7971,16 +6824,16 @@ export default function ChallanOnlyBilling() {
                 justifyContent: "flex-end",
                 gap: 12,
               }}
-            >
-              <button
-                className="btn-white"
-                onClick={() => {
-                  setShowChallanForm(false);
-                  resetForm();
-                }}
-              >
-                Cancel
-              </button>
+            ><button
+    className="btn-white"
+    onClick={() => {
+      setShowChallanForm(false);
+      setEditingChallan(null);  // ← yeh add karo
+      resetForm();
+    }}
+  >
+    Cancel
+  </button>
               <button
                 className="btn-maroon"
                 disabled={saving}
@@ -8036,15 +6889,15 @@ export default function ChallanOnlyBilling() {
               <CheckCircle size={32} style={{ color: T.successColor }} />
             </div>
             <h3
-              style={{
-                fontSize: 22,
-                fontWeight: "bold",
-                marginBottom: 4,
-                color: T.textDark,
-              }}
-            >
-              Challan Generated!
-            </h3>
+  style={{
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 4,
+    color: T.textDark,
+  }}
+>
+  {editingChallan ? "Challan Updated!" : "Challan Generated!"}
+</h3>
             <p
               style={{
                 fontFamily: "monospace",
@@ -8108,3 +6961,11 @@ export default function ChallanOnlyBilling() {
     </div>
   );
 }
+
+
+
+
+///////////////////////////
+
+
+

@@ -173,6 +173,151 @@ export async function GET() {
   }
 }
 
+
+
+export async function PUT(request) {
+  try {
+    const { challan, items, charges } = await request.json();
+
+    if (!challan?.challanNo) {
+      return NextResponse.json({ success: false, error: 'Challan number required' }, { status: 400 });
+    }
+
+    const challanNo = challan.challanNo;
+
+    // Step 1: Find and update challan row in Challans_Data
+    const challansRes = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Challans_Data!A2:P',
+    });
+    const challanRows = challansRes.data.values || [];
+    let challanRowIndex = -1;
+    challanRows.forEach((row, idx) => {
+      if (row[0]?.trim() === challanNo) challanRowIndex = idx;
+    });
+
+    if (challanRowIndex === -1) {
+      return NextResponse.json({ success: false, error: 'Challan not found' }, { status: 404 });
+    }
+
+    // Update challan row (row index + 2 because header is row 1, data starts at row 2)
+    const actualRow = challanRowIndex + 2;
+    const challanRow = [
+      challan.challanNo,
+      challan.customerName || '',
+      challan.customerPhone || '',
+      challan.customerAddress || '',
+      challan.vehicleNo || '',
+      challan.poNumber || '',
+      challan.gstCustomerName || '',
+      challan.challanDate || '',
+      challan.deliveryNote || '',
+      (challan.challanTotal || 0).toFixed(2),
+      challan.status || 'Delivered',
+      challan.hidePrice ? 'TRUE' : 'FALSE',
+      (challan.gstRate || 0).toFixed(2),
+      (challan.gstAmount || 0).toFixed(2),
+      (challan.subtotal || 0).toFixed(2),
+      (challan.chargesTotal || 0).toFixed(2),
+    ];
+
+    await sheets.spreadsheets.values.update({
+      spreadsheetId,
+      range: `Challans_Data!A${actualRow}:P${actualRow}`,
+      valueInputOption: 'USER_ENTERED',
+      requestBody: { values: [challanRow] },
+    });
+    console.log('✓ Challan updated');
+
+    // Step 2: Delete old items for this challan and add new ones
+    const sheetMeta = await sheets.spreadsheets.get({ spreadsheetId });
+
+    const deleteRowsFromSheet = async (sheetName, matchChallanNo) => {
+      const res = await sheets.spreadsheets.values.get({
+        spreadsheetId,
+        range: `${sheetName}!A2:A`,
+      });
+      const rows = res.data.values || [];
+      const sheet = sheetMeta.data.sheets.find(s => s.properties.title === sheetName);
+      if (!sheet) return;
+      const indices = [];
+      rows.forEach((r, idx) => {
+        if (r[0]?.trim() === matchChallanNo) indices.push(idx);
+      });
+      for (const idx of indices.reverse()) {
+        await sheets.spreadsheets.batchUpdate({
+          spreadsheetId,
+          requestBody: {
+            requests: [{
+              deleteDimension: {
+                range: {
+                  sheetId: sheet.properties.sheetId,
+                  dimension: 'ROWS',
+                  startIndex: idx + 1,
+                  endIndex: idx + 2,
+                },
+              },
+            }],
+          },
+        });
+      }
+    };
+
+    // Delete old items and charges
+    await deleteRowsFromSheet('Challan_Items', challanNo);
+    await deleteRowsFromSheet('Challan_Charges', challanNo);
+
+    // Step 3: Add new items
+    const regularItems = (items || []).filter(it => !it.isCharge && it.product);
+    const itemRows = regularItems.map(it => [
+      challanNo,
+      it.product || '',
+      it.unit || '',
+      it.quantity || it.sentQty || '',
+      it.rate || '',
+      (it.amount || 0).toFixed(2),
+      (it.calculatedQty || 0).toFixed(3),
+      (it.orderedQty || 0).toFixed(3),
+      (it.sentQty || it.pieces || 0).toString(),
+      it.size || '',
+      it.lengthDisplay || '',
+    ]);
+    if (itemRows.length > 0) {
+      await sheets.spreadsheets.values.append({
+        spreadsheetId,
+        range: 'Challan_Items!A2',
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: itemRows },
+      });
+    }
+
+    // Step 4: Add new charges
+    const validCharges = (charges || []).filter(ch => (ch.name || ch.chargeName) && ch.amount > 0);
+    const chargeRows = validCharges.map(ch => [
+      challanNo,
+      ch.name || ch.chargeName || '',
+      (ch.amount || 0).toFixed(2),
+      ch.type || ch.chargeType || 'custom',
+      ch.unit || 'Per Piece',
+      (ch.quantity || 0).toString(),
+      (ch.rate || 0).toString(),
+    ]);
+    if (chargeRows.length > 0) {
+      await sheets.spreadsheets.values.append({
+        spreadsheetId,
+        range: 'Challan_Charges!A2',
+        valueInputOption: 'USER_ENTERED',
+        requestBody: { values: chargeRows },
+      });
+    }
+
+    return NextResponse.json({ success: true, message: `Challan ${challanNo} updated`, challanNo });
+  } catch (error) {
+    console.error('PUT /challans error:', error);
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+  }
+}
+
 // DELETE unchanged (same as before)
 export async function DELETE(request) {
   try {
