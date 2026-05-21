@@ -804,7 +804,7 @@ const printReturnPrint = (ret) => {
                     <th style={{ padding: 10, textAlign: 'right', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Sent Qty</th>
                     <th style={{ padding: 10, textAlign: 'right', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Already Returned</th>
                     <th style={{ padding: 10, textAlign: 'right', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Max Returnable</th>
-                    <th style={{ padding: 10, textAlign: 'center', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Return Pcs</th>
+                    <th style={{ padding: 10, textAlign: 'center', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Return Qty</th>
                     <th style={{ padding: 10, textAlign: 'right', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Return Qty</th>
                     <th style={{ padding: 10, textAlign: 'right', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Rate</th>
                     <th style={{ padding: 10, textAlign: 'right', borderBottom: `2px solid ${T.borderSoft}`, color: T.textDark }}>Credit ₹</th>
