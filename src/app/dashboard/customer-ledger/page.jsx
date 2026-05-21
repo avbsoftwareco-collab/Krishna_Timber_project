@@ -1738,9 +1738,14 @@ export default function CustomerLedger() {
                                         )}
                                       </td>
                                       <td style={{ padding: '5px 8px', color: T.textMuted }}>{item.size || '—'}</td>
-                                      <td style={{ padding: '5px 8px', textAlign: 'right', color: '#B91C1C', fontWeight: 600 }}>
-                                        {parseFloat(item.returnQty).toFixed(3)} {item.unit}
-                                      </td>
+                                     <td style={{ padding: '5px 8px', textAlign: 'right', color: '#B91C1C', fontWeight: 600 }}>
+  {parseFloat(item.returnQty).toFixed(3)} {item.unit}
+  {item.returnPcs && parseFloat(item.returnPcs) !== parseFloat(item.returnQty) && (
+    <div style={{ fontSize: 10, color: T.textMuted, fontWeight: 400, marginTop: 2 }}>
+      ({parseFloat(item.returnPcs)} pcs)
+    </div>
+  )}
+</td>
                                       <td style={{ padding: '5px 8px', textAlign: 'right', color: T.textDark }}>₹{parseFloat(item.rate).toLocaleString()}</td>
                                       <td style={{ padding: '5px 8px', textAlign: 'right', fontWeight: 700, color: '#B91C1C' }}>-₹{parseFloat(item.returnAmount).toFixed(2)}</td>
                                     </tr>

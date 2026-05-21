@@ -428,79 +428,179 @@ export default function GoodsReturnPage() {
     return `${prefix}${String(max + 1).padStart(4, '0')}`;
   };
 
-  const getReturnedQtyForChallanItem = (challanNo, product) => {
-    return returns
-      .filter(r => r.challanNo === challanNo)
-      .flatMap(r => r.items || [])
-      .filter(i => i.product === product)
-      .reduce((sum, i) => sum + (i.returnQty || 0), 0);
-  };
+
+const getReturnedQtyForChallanItem = (challanNo, product) => {
+  return returns
+    .filter(r => r.challanNo === challanNo)
+    .flatMap(r => r.items || [])
+    .filter(i => i.product === product)
+    .reduce((sum, i) => {
+      // returnPcs = actual pcs returned
+      // agar returnPcs nahi hai to returnQty fallback
+      const pcs = parseFloat(i.returnPcs) || parseFloat(i.returnQty) || 0;
+      return sum + pcs;
+    }, 0);
+};
+
+
+
+  // const getReturnedQtyForChallanItem = (challanNo, product) => {
+  //   return returns
+  //     .filter(r => r.challanNo === challanNo)
+  //     .flatMap(r => r.items || [])
+  //     .filter(i => i.product === product)
+  //     .reduce((sum, i) => sum + (i.returnQty || 0), 0);
+  // };
 
   const getReturnsForChallan = (challanNo) => returns.filter(r => r.challanNo === challanNo);
 
   // ── Select Challan for Return ──
-  const selectChallanForReturn = (challan) => {
-    setSelectedChallan(challan);
-    const regularItems = (challan.items || []).filter(i => !i.isCharge);
+  // const selectChallanForReturn = (challan) => {
+  //   setSelectedChallan(challan);
+  //   const regularItems = (challan.items || []).filter(i => !i.isCharge);
 
-    setReturnItems(regularItems.map(it => {
-      const sentQty = parseFloat(it.calculatedQty || it.sentQty || 0);
-      const sentPcs = parseFloat(it.sentQty || it.quantity || 0);
-      const alreadyReturned = getReturnedQtyForChallanItem(challan.challanNo, it.product);
-      const maxReturnable = Math.max(0, sentQty - alreadyReturned);
+  //   setReturnItems(regularItems.map(it => {
+  //     const sentQty = parseFloat(it.calculatedQty || it.sentQty || 0);
+  //     const sentPcs = parseFloat(it.sentQty || it.quantity || 0);
+  //     const alreadyReturned = getReturnedQtyForChallanItem(challan.challanNo, it.product);
+  //     const maxReturnable = Math.max(0, sentQty - alreadyReturned);
 
-      return {
-        uid: uid(),
-        product: it.product || '',
-        unit: it.unit || '',
-        sentQty,
-        sentPcs,
-        alreadyReturned,
-        maxReturnable,
-        returnPcs: '',
-        returnQty: 0,
-        rate: parseFloat(it.rate || 0),
-        returnAmount: 0,
-        size: it.size || '',
-        lengthDisplay: it.lengthDisplay || '',
-        isSheet: it.isSheet || false,
-        areaPerPiece: it.areaPerPiece || null,
-      };
-    }));
+  //     return {
+  //       uid: uid(),
+  //       product: it.product || '',
+  //       unit: it.unit || '',
+  //       sentQty,
+  //       sentPcs,
+  //       alreadyReturned,
+  //       maxReturnable,
+  //       returnPcs: '',
+  //       returnQty: 0,
+  //       rate: parseFloat(it.rate || 0),
+  //       returnAmount: 0,
+  //       size: it.size || '',
+  //       lengthDisplay: it.lengthDisplay || '',
+  //       isSheet: it.isSheet || false,
+  //       areaPerPiece: it.areaPerPiece || null,
+  //     };
+  //   }));
 
-    setReturnDate(new Date().toISOString().split('T')[0]);
-    setReturnReason('');
-    setReturnNotes('');
-    setShowChallanPicker(false);
-    setShowReturnForm(true);
-  };
+  //   setReturnDate(new Date().toISOString().split('T')[0]);
+  //   setReturnReason('');
+  //   setReturnNotes('');
+  //   setShowChallanPicker(false);
+  //   setShowReturnForm(true);
+  // };
+
+
+const selectChallanForReturn = (challan) => {
+  setSelectedChallan(challan);
+  const regularItems = (challan.items || []).filter(i => !i.isCharge);
+
+  setReturnItems(regularItems.map(it => {
+
+    // ✅ D column - actual qty (pcs)
+    const sentQty = parseFloat(it.quantity || it.sentQty || 0);
+
+    // ✅ G column - calculated measurement (sqft/cft/rft)
+    const calculatedQty = parseFloat(it.calculatedQty || 0);
+
+    // Already returned (D column basis)
+    const alreadyReturned = getReturnedQtyForChallanItem(
+      challan.challanNo, 
+      it.product
+    );
+
+    // Max returnable in actual qty
+    const maxReturnable = Math.max(0, sentQty - alreadyReturned);
+
+    return {
+      uid: uid(),
+      product: it.product || '',
+      unit: it.unit || '',
+      sentQty,            // ✅ D column actual qty
+      calculatedQty,      // ✅ G column calc qty
+      alreadyReturned,
+      maxReturnable,
+      returnPcs: '',      // user input - actual qty return
+      returnQty: 0,       // calculated return measurement
+      rate: parseFloat(it.rate || 0),
+      returnAmount: 0,
+      size: it.size || '',
+      lengthDisplay: it.lengthDisplay || '',
+      isSheet: it.isSheet || false,
+      areaPerPiece: it.areaPerPiece || null,
+    };
+  }));
+
+  setReturnDate(new Date().toISOString().split('T')[0]);
+  setReturnReason('');
+  setReturnNotes('');
+  setShowChallanPicker(false);
+  setShowReturnForm(true);
+};
 
   // ── Update Return Item ──
-  const updateReturnItem = (iuid, field, value) => {
-    setReturnItems(prev => prev.map(it => {
-      if (it.uid !== iuid) return it;
-      const u = { ...it, [field]: value };
+  // const updateReturnItem = (iuid, field, value) => {
+  //   setReturnItems(prev => prev.map(it => {
+  //     if (it.uid !== iuid) return it;
+  //     const u = { ...it, [field]: value };
 
-      if (field === 'returnPcs') {
-        const pcs = parseFloat(value || 0);
-        if (it.isSheet && it.areaPerPiece) {
-          u.returnQty = it.areaPerPiece * pcs;
-        } else {
-          u.returnQty = pcs;
-        }
-        u.returnAmount = Math.round(u.returnQty * u.rate * 100) / 100;
+  //     if (field === 'returnPcs') {
+  //       const pcs = parseFloat(value || 0);
+  //       if (it.isSheet && it.areaPerPiece) {
+  //         u.returnQty = it.areaPerPiece * pcs;
+  //       } else {
+  //         u.returnQty = pcs;
+  //       }
+  //       u.returnAmount = Math.round(u.returnQty * u.rate * 100) / 100;
 
-        // Can't return more than max
-        if (u.returnQty > it.maxReturnable) {
-          u.returnQty = it.maxReturnable;
-          u.returnPcs = it.isSheet && it.areaPerPiece ? Math.floor(it.maxReturnable / it.areaPerPiece) : it.maxReturnable;
-          u.returnAmount = Math.round(u.returnQty * u.rate * 100) / 100;
-        }
+  //       // Can't return more than max
+  //       if (u.returnQty > it.maxReturnable) {
+  //         u.returnQty = it.maxReturnable;
+  //         u.returnPcs = it.isSheet && it.areaPerPiece ? Math.floor(it.maxReturnable / it.areaPerPiece) : it.maxReturnable;
+  //         u.returnAmount = Math.round(u.returnQty * u.rate * 100) / 100;
+  //       }
+  //     }
+  //     return u;
+  //   }));
+  // };
+
+const updateReturnItem = (iuid, field, value) => {
+  setReturnItems(prev => prev.map(it => {
+    if (it.uid !== iuid) return it;
+    const u = { ...it, [field]: value };
+
+    if (field === 'returnPcs') {
+      const pcs = parseFloat(value || 0);
+      const unit = (it.unit || '').trim().toLowerCase();
+      const isMeasureUnit = ['sqft', 'rft', 'cft'].includes(unit);
+
+      // Max check - D column qty se zyada nahi
+      let actualReturn = pcs;
+      if (actualReturn > it.maxReturnable) {
+        actualReturn = it.maxReturnable;
+        u.returnPcs = it.maxReturnable;
       }
-      return u;
-    }));
-  };
 
+      if (isMeasureUnit && it.sentQty > 0 && it.calculatedQty > 0) {
+        // Per piece measurement nikalo
+        // G column / D column = per piece sqft/cft/rft
+        const perPieceMeasure = it.calculatedQty / it.sentQty;
+        u.returnQty = actualReturn * perPieceMeasure;
+      } else {
+        // Normal unit - direct
+        u.returnQty = actualReturn;
+      }
+
+      // Amount calculate (rate calculated qty pe lagta hai)
+      u.returnAmount = Math.round(u.returnQty * u.rate * 100) / 100;
+    }
+
+    return u;
+  }));
+};
+
+  
   // ── Submit Return ──
  // ── Submit Return ──
 const handleSubmitReturn = async () => {
