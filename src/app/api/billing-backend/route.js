@@ -347,6 +347,7 @@ export async function GET() {
         customerPhone: row[2] || '',
         customerAddress: row[3] || '',
         billDate: row[4] || '',
+        gstCustomerName: row[6] || '',
         items: items,
         subtotal: parseFloat(row[6]) || 0,
         tax: parseFloat(row[7]) || 0,

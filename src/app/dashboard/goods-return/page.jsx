@@ -258,8 +258,8 @@ const consigneeHTML = `
       <span class="ktp-compact-value">${returnData.customerName || ''}</span>
     </div>
     <div class="ktp-compact-field">
-      <span class="ktp-compact-label">Order No.:</span>
-      <span class="ktp-compact-value">${returnData.orderNo || ''}</span>
+    <span class="ktp-compact-label">GST No.:</span>
+      <span class="ktp-compact-value">${challan?.gstCustomerName || ''}</span>
     </div>
   </div>
   <div class="ktp-compact-row">
