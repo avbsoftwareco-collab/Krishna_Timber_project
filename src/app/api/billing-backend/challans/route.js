@@ -1,4 +1,3 @@
-
 import { NextResponse } from 'next/server';
 import { sheets, spreadsheetId } from '../../config/googleSheet.js';
 
