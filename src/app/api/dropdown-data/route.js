@@ -181,9 +181,52 @@ export async function GET() {
   }
 }
 
+
+
+
+// ============================================
+// ✅ First Empty Row Finder
+// ============================================
+async function findFirstEmptyRow() {
+  try {
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId,
+      range: 'Dropdown_data!A2:A5000', // Row 2 se start (Row 1 = Header)
+      valueRenderOption: 'UNFORMATTED_VALUE',
+    });
+
+    const rows = response.data.values || [];
+    
+    console.log(`Total rows with data in column A: ${rows.length}`);
+
+    // ✅ Pehli empty row dhundho
+    for (let i = 0; i < rows.length; i++) {
+      const cellValue = rows[i]?.[0]?.toString().trim();
+      
+      if (!cellValue) {
+        // +2 isliye: i=0 means row 2 (header skip), 0-indexed to 1-indexed
+        const emptyRowNumber = i + 2;
+        console.log(`First empty row found at: ${emptyRowNumber}`);
+        return emptyRowNumber;
+      }
+    }
+
+    // Agar koi empty row nahi mili to next row return karo
+    const nextRow = rows.length + 2;
+    console.log(`No empty row found, next row: ${nextRow}`);
+    return nextRow;
+
+  } catch (error) {
+    console.error('Error finding empty row:', error.message);
+    throw error;
+  }
+}
+
 // ============================================
 // ✅ POST - Products add karo
 // ============================================
+
+
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -253,16 +296,29 @@ export async function POST(request) {
       savedProducts.push(product);
     }
 
-    // ✅ Append karo - next empty row mein automatically
+    // ✅ Pehli empty row dhundho aur wahan se data daalo
     if (newRows.length > 0) {
-      await sheets.spreadsheets.values.append({
+      
+      // 🔍 Step 1: Pehli empty row find karo
+      const startRow = await findFirstEmptyRow();
+      const endRow = startRow + newRows.length - 1;
+      
+      // 📝 Step 2: Exact range banao - jaise A5:F7
+      const targetRange = `Dropdown_data!A${startRow}:F${endRow}`;
+      
+      console.log(`Writing ${newRows.length} rows to range: ${targetRange}`);
+
+      // ✅ Step 3: UPDATE use karo (append nahi) - exact position pe likhega
+      await sheets.spreadsheets.values.update({
         spreadsheetId,
-        range: 'Dropdown_data!A:F',
+        range: targetRange,
         valueInputOption: 'USER_ENTERED',
-        insertDataOption: 'INSERT_ROWS',
-        requestBody: { values: newRows },
+        requestBody: { 
+          values: newRows 
+        },
       });
-      console.log(`Added ${newRows.length} new products`);
+      
+      console.log(`✅ Successfully added ${newRows.length} products starting from row ${startRow}`);
     }
 
     return NextResponse.json({
@@ -279,3 +335,102 @@ export async function POST(request) {
     }, { status: 500 });
   }
 }
+
+
+
+
+// export async function POST(request) {
+//   try {
+//     const body = await request.json();
+//     const incomingProducts = Array.isArray(body.products)
+//       ? body.products
+//       : body.product ? [body.product] : [];
+
+//     if (!incomingProducts.length) {
+//       return NextResponse.json({ success: true, data: [], added: 0 });
+//     }
+
+//     // Existing data fetch karo
+//     const rows = await fetchAllDropdownData();
+//     const existingMap = new Map();
+
+//     rows.forEach(row => {
+//       if (row[3] && row[3].toString().trim() !== '') {
+//         const item = {
+//           materialType: row[0]?.toString().trim() || '',
+//           category: row[1]?.toString().trim() || '',
+//           subCategory: row[2]?.toString().trim() || '',
+//           materialName: row[3]?.toString().trim() || '',
+//           unit: row[4]?.toString().trim() || 'Pcs',
+//           skuCode: row[5]?.toString().trim() || '',
+//         };
+//         existingMap.set(makeKey(item), item);
+//       }
+//     });
+
+//     const newRows = [];
+//     const savedProducts = [];
+
+//     for (const raw of incomingProducts) {
+//       const product = {
+//         materialType: normalizeText(raw.materialType) || 'Custom',
+//         category: normalizeText(raw.category) || 'Custom',
+//         subCategory: normalizeText(raw.subCategory),
+//         materialName: normalizeText(raw.materialName),
+//         unit: normalizeText(raw.unit) || 'Pcs',
+//         skuCode: normalizeText(raw.skuCode),
+//       };
+
+//       if (!product.materialName) continue;
+
+//       const key = makeKey(product);
+//       const existing = existingMap.get(key);
+
+//       if (existing) {
+//         savedProducts.push(existing);
+//         continue;
+//       }
+
+//       if (!product.skuCode) {
+//         product.skuCode = await generateUniqueSku();
+//       }
+
+//       newRows.push([
+//         product.materialType,
+//         product.category,
+//         product.subCategory,
+//         product.materialName,
+//         product.unit,
+//         product.skuCode,
+//       ]);
+
+//       existingMap.set(key, product);
+//       savedProducts.push(product);
+//     }
+
+//     // ✅ Append karo - next empty row mein automatically
+//     if (newRows.length > 0) {
+//       await sheets.spreadsheets.values.append({
+//         spreadsheetId,
+//         range: 'Dropdown_data!A:F',
+//         valueInputOption: 'USER_ENTERED',
+//         insertDataOption: 'INSERT_ROWS',
+//         requestBody: { values: newRows },
+//       });
+//       console.log(`Added ${newRows.length} new products`);
+//     }
+
+//     return NextResponse.json({
+//       success: true,
+//       data: savedProducts,
+//       added: newRows.length,
+//     });
+
+//   } catch (error) {
+//     console.error('POST /dropdown-data error:', error);
+//     return NextResponse.json({
+//       success: false,
+//       error: error.message,
+//     }, { status: 500 });
+//   }
+// }

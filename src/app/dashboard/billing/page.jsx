@@ -38,10 +38,8 @@ const HARDWARE_UNIT_OPTIONS = [
   "Pcs",
   "Pkt",
   "Set",
-  "Dozen",
-  "Box",
   "Kg",
-  "Meter",
+ 
 ];
 const CUSTOM_UNIT_OPTIONS = [
   "Pcs",

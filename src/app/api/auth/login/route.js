@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { sheets, spreadsheetId } from '../../config/googleSheet';
 
-const ALLOWED_USER_TYPES = ['ADMIN', 'VIJAY', 'Approvel2', 'RICHA'];
+const ALLOWED_USER_TYPES = ['ADMIN',];
 
 export async function POST(request) {
   try {
@@ -50,9 +50,7 @@ export async function POST(request) {
     // Normalize user type
     let userType = userTypeRaw;
     if (userType.includes('ADMIN')) userType = 'ADMIN';
-    if (userType.includes('VIJAY')) userType = 'VIJAY';
-    if (userType.includes('APPROVEL')) userType = 'APPROVEL2';
-    if (userType.includes('RICHA')) userType = 'RICHA';
+    
 
     if (!ALLOWED_USER_TYPES.includes(userType)) {
       return NextResponse.json(
