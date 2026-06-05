@@ -905,7 +905,7 @@ function getQuotationPrintHTML(
   // ✅ Quotation Terms (Challan terms ki jagah)
   const quotationTerms = `
     <ul class="ktp-terms-list">
-      <li>This quotation is valid for 30 days from the date of issue.</li>
+      <li>This quotation is valid for 15 days from the date of issue.</li>
       <li>Prices are subject to change without prior notice after validity period.</li>
       <li>GST will be charged extra as applicable at the time of billing.</li>
       <li>50% advance payment required to confirm the order.</li>

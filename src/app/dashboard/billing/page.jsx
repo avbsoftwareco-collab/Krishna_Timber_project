@@ -686,10 +686,317 @@ function SearchableSelect({
 
 
 
+// const PRINT_CSS = `
+// *{box-sizing:border-box;margin:0;padding:0}
+// body{font-family:'Segoe UI',Arial,sans-serif;font-size:15px;color:#000;background:#f5f5f5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+// .page-wrapper{width:210mm;min-height:297mm;margin:10px auto;background:#fff;box-shadow:0 0 10px rgba(0,0,0,0.1);display:flex;flex-direction:column;}
+// .page-content{padding:0;flex:1;display:flex;flex-direction:column;}
+// .action-bar{display:flex;gap:12px;justify-content:center;padding:14px 20px;background:linear-gradient(135deg,#FBF6F0,#F0E6DA);border-bottom:2px solid #E8DCC8;}
+// .action-btn{padding:10px 28px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;letter-spacing:0.3px;}
+// .btn-print{background:linear-gradient(135deg,#5a1515,#7B1E1E);color:#fff;box-shadow:0 2px 8px rgba(123,30,30,0.3)}
+// .btn-print:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(123,30,30,0.4)}
+// .btn-save{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,0.3)}
+// .btn-save:hover{transform:translateY(-1px)}
+// .btn-close{background:#fff;color:#333;border:1px solid #ddd;box-shadow:0 1px 4px rgba(0,0,0,0.1)}
+// .ktp-header{background:linear-gradient(135deg,#5a1515,#7B1E1E,#9a2828);color:#fff;padding:22px 30px 20px;display:flex;align-items:center;gap:24px;}
+// .ktp-logo-circle{width:100px;height:100px;border-radius:50%;border:4px solid rgba(255,255,255,0.95);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,0.3);}
+// .ktp-logo-circle img{width:100%;height:100%;object-fit:cover}
+// .ktp-header-center{flex:1;text-align:center}
+// .ktp-brand-name{font-size:54px;font-style:italic;font-weight:bold;font-family:Georgia,'Times New Roman',serif;line-height:1;text-shadow:2px 2px 3px rgba(0,0,0,0.25);letter-spacing:1px}
+// .ktp-brand-sub{font-size:26px;font-family:Georgia,'Times New Roman',serif;font-style:italic;letter-spacing:4px;opacity:0.98;margin-top:4px}
+// .ktp-brand-addr{font-size:12.5px;margin-top:8px;opacity:1;letter-spacing:0.2px;font-weight:600;white-space:nowrap;}
+// .ktp-header-right-space{width:100px;flex-shrink:0}
+// .ktp-meta{display:flex;justify-content:space-between;align-items:flex-start;border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:7px 18px;background:#FBF6F0;}
+// .ktp-meta-left{display:flex;flex-direction:column;gap:2px}
+// .ktp-since{font-size:11.5px;font-style:italic;color:#5a4040;font-weight:500}
+// .ktp-gstin{font-size:13.5px;font-weight:bold;color:#7B1E1E;letter-spacing:0.5px}
+// .ktp-cust-gst{font-size:12px;font-weight:600;color:#000;margin-top:2px;}
+// .ktp-cust-gst-value{border-bottom:1px solid #555;display:inline-block;min-width:160px;padding-bottom:1px;font-weight:700;}
+// .ktp-dc-box{text-align:right}
+// .ktp-dc-title{font-size:20px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:2px;padding:2px 12px;display:inline-block;}
+// .ktp-dc-details{font-size:13px;margin-top:3px;color:#222;font-weight:500}
+// .ktp-info{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:8px 14px 10px;background:#fff;}
+// .ktp-info-title-box{font-size:13px;font-weight:bold;color:#7B1E1E;letter-spacing:0.3px;display:inline-block;border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;padding:2px 10px;white-space:nowrap;}
+// .ktp-compact-row{display:flex;align-items:baseline;gap:18px;margin-bottom:7px;}
+// .ktp-compact-row:last-child{margin-bottom:0;}
+// .ktp-compact-field{display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;}
+// .ktp-compact-field.flex-name{flex:2;}
+// .ktp-compact-label{font-size:12.5px;font-weight:600;color:#555;white-space:nowrap;}
+// .ktp-compact-value{font-size:13.5px;font-weight:700;color:#000;border-bottom:1px solid #777;flex:1;padding-bottom:1px;min-width:60px;line-height:1.3;min-height:16px;word-break:break-word;padding-left:3px;}
+// .ktp-table-wrap{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;flex:1;}
+// table.items{width:100%;border-collapse:collapse}
+// table.items thead tr{background:linear-gradient(135deg,#5a1515,#7B1E1E)}
+// table.items th{padding:8px 10px;font-size:13px;font-weight:bold;color:#fff;text-align:center;border-right:1px solid rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.5px;}
+// table.items th:last-child{border-right:none}
+// table.items th.tl{text-align:left}
+// table.items tbody tr{border-bottom:1px solid #ddd}
+// table.items tbody tr:nth-child(even){background:#FAFAFA}
+// table.items tbody tr:nth-child(odd){background:#fff}
+// table.items td{padding:6px 10px;font-size:14px;border-right:1px solid #d8d8d8;vertical-align:top;line-height:1.4;color:#000;font-weight:500}
+// table.items td:last-child{border-right:none}
+// table.items td.r{text-align:right;font-variant-numeric:tabular-nums}
+// table.items td.c{text-align:center}
+// table.items .item-detail{font-size:11.5px;color:#444;font-style:italic;font-weight:400;display:inline !important;}
+// table.items .erow td{height:18px;border-right:1px solid #e0e0e0}
+// table.items .erow td:last-child{border-right:none}
+// .ktp-words{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-top:2px solid #7B1E1E;padding:6px 18px;background:#FDF8F2;}
+// .ktp-words-label{font-size:10.5px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:1px}
+// .ktp-words-text{font-size:13px;font-weight:700;color:#222;margin-top:1px}
+// .ktp-footer{border:2px solid #7B1E1E;border-top:2px solid #7B1E1E;display:flex;background:#fff;page-break-inside:avoid;}
+// .ktp-footer-left{flex:1;padding:6px 14px;border-right:2px solid #7B1E1E;display:flex;flex-direction:column;justify-content:space-between;}
+// .ktp-footer-cert{font-size:10px;color:#7B1E1E;line-height:1.3;font-weight:700;margin-bottom:2px;}
+// .ktp-footer-for{font-size:12px;font-weight:bold;color:#7B1E1E;margin-top:4px}
+// .ktp-footer-terms{display:none;}
+// .ktp-terms-section{}
+// .ktp-terms-list{list-style:none;padding:0;margin:4px 0 0 0;}
+// .ktp-terms-list li{font-size:9px;color:#222;line-height:1.2;padding-left:12px;position:relative;font-weight:600;letter-spacing:0.2px;margin-bottom:2px;}
+// .ktp-terms-list li:last-child{margin-bottom:0;}
+// .ktp-terms-list li:before{content:"•";color:#7B1E1E;font-weight:bold;font-size:13px;position:absolute;left:2px;top:-1px;}
+// .ktp-sig-area{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px;gap:10px;padding-bottom:20px;}
+// .ktp-sig-box{text-align:center;flex:1;}
+// .ktp-sig-line{width:100%;max-width:120px;border-top:1.5px solid #000;margin:0 auto 2px;}
+// .ktp-sig-label{font-size:9px;color:#222;font-weight:700;}
+// .ktp-footer-for-inline{font-size:12px;font-weight:bold;color:#7B1E1E;margin-bottom:30px;text-align:center;}
+// .ktp-footer-right{width:240px;display:flex;flex-direction:column;justify-content:space-between;}
+// .ktp-charge-section{border-bottom:1.5px solid #7B1E1E}
+// .ktp-charge-header{padding:3px 12px;font-size:10px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:0.5px;background:#FDF8F2;border-bottom:1px solid #E8DCC8;}
+// .ktp-charge-row{display:flex;justify-content:space-between;padding:3px 12px;font-size:11px;color:#222;border-bottom:1px solid #f0e6da;font-weight:500}
+// .ktp-charge-row:last-child{border-bottom:none}
+// .ktp-charge-name{max-width:150px;overflow:hidden;text-overflow:ellipsis}
+// .ktp-charge-amt{font-weight:700;font-variant-numeric:tabular-nums}
+// .ktp-total-row{display:flex;justify-content:space-between;padding:4px 12px;font-size:12px;border-bottom:1px solid #E8DCC8;color:#222;}
+// .ktp-total-row .ktp-total-label{font-weight:600}
+// .ktp-total-row .ktp-total-val{font-weight:700;font-variant-numeric:tabular-nums}
+// .ktp-total-row.grand{background:linear-gradient(135deg,#5a1515,#7B1E1E);color:#fff;font-size:14px;font-weight:bold;border-bottom:none;padding:6px 12px;}
+// .ktp-total-row.grand .ktp-total-val{letter-spacing:0.5px}
+// .ktp-sig-right{display:none;}
+// .ktp-eoe-line{padding:2px 12px;font-size:9px;color:#666;text-align:right;border-top:1px solid #E8DCC8;letter-spacing:0.5px;font-weight:500}
+// .ktp-no-price-box{padding:22px 14px;text-align:center;color:#7B1E1E;font-weight:bold;font-size:14px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+// @media print{
+// html{margin:0!important;padding:0!important}
+// body{margin:0!important;padding:0!important;background:#fff!important;font-size:15px!important}
+// .action-bar{display:none!important}
+// .page-wrapper{width:100%!important;min-height:100%!important;margin:0!important;padding:0!important;box-shadow:none!important}
+// .page-content{min-height:100%!important}
+// .ktp-header{background:#7B1E1E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+// table.items thead tr{background:#7B1E1E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+// table.items th{color:#fff!important}
+// .ktp-total-row.grand{background:#7B1E1E!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+// .ktp-charge-header{background:#FDF8F2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+// .ktp-table-wrap{flex:1!important}
+// }
+// @page{size:A4;margin:0}
+// `;
+
+
+
+
+
+
+
+// function getChallanPrintHTML(
+//   order,
+//   challan,
+//   hidePrice = false,
+//   chargesList = [],
+//   gstRate = 0,
+//   gstAmount = 0,
+// ) {
+//   const regularItems = (challan.items || []).filter((it) => !it.isCharge);
+//   const itemsTotal = regularItems.reduce(
+//     (s, it) => s + parseFloat(it.amount || 0),
+//     0,
+//   );
+//   const chargesTotal = chargesList.reduce((s, ch) => s + ch.amount, 0);
+//   const subTotalWithCharges = itemsTotal + chargesTotal;
+//   const calculatedGST =
+//     gstRate > 0 ? (subTotalWithCharges * gstRate) / 100 : gstAmount || 0;
+//   const finalGrandTotal = subTotalWithCharges + calculatedGST;
+//   const challanTotal = hidePrice ? 0 : finalGrandTotal;
+
+//   let sno = 0;
+//   const formatQty = (val) => {
+//     const num = parseFloat(val || 0);
+//     if (isNaN(num)) return val || "0";
+//     return num % 1 === 0 ? num.toString() : parseFloat(num.toFixed(3)).toString();
+//   };
+//   const itemRows = regularItems.map((it) => {
+//     sno++;
+//     // let qtyVal = formatQty(it.calculatedQty || it.sentQty);
+//     // let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
+//     // if (
+//     //   it.isSheet &&
+//     //   it.unit === "SQFT" &&
+//     //   parseFloat(it.sentQty || it.quantity || 0) > 0
+//     // ) {
+//     //   const pcs = formatQty(it.sentQty || it.quantity || 0);
+//     //   qtyWithUnit = `${qtyVal} ${it.unit} <span class="item-detail">(${pcs} pcs)</span>`;
+//     // }
+
+//     let qtyVal = formatQty(it.calculatedQty || it.sentQty);
+// let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
+
+// // ✅ FIX: Column D (quantity) se pieces dikhao - CFT, RFT, SQFT sab mein
+// const pieces = parseFloat(it.quantity || 0);
+// const showPiecesUnits = ["CFT", "RFT", "SQFT"];
+
+// if (
+//   showPiecesUnits.includes(it.unit) &&
+//   pieces > 0
+// ) {
+//   const pcs = formatQty(pieces);
+//   qtyWithUnit = `${qtyVal} ${it.unit} <span class="item-detail">(${pcs} pcs)</span>`;
+// }
+//     let descText = `<strong>${it.product}</strong>`;
+//     let details = [];
+
+//     // ✅ FIX: Size sirf tab add karo jab product name mein already nahi hai
+//     if (it.size) {
+//       const sizeWithoutSpaces = it.size.replace(/\s/g, '').toLowerCase();
+//       const productLower = (it.product || '').replace(/\s/g, '').toLowerCase();
+
+//       // Different size formats check karo (5.5x1.5, 5.5×1.5, etc.)
+//       const sizeVariations = [
+//         sizeWithoutSpaces,
+//         sizeWithoutSpaces.replace(/×/g, 'x'),
+//         sizeWithoutSpaces.replace(/x/g, '×'),
+//         sizeWithoutSpaces.replace(/"/g, ''),
+//         sizeWithoutSpaces.replace(/×/g, 'x').replace(/"/g, ''),
+//         sizeWithoutSpaces.replace(/x/g, '×').replace(/"/g, ''),
+//       ];
+
+//       const sizeAlreadyInName = sizeVariations.some(v => v && productLower.includes(v));
+
+//       if (!sizeAlreadyInName) {
+//         details.push(it.size);
+//       }
+//     }
+
+//     if (it.specification?.trim()) details.push(`(${it.specification})`);
+//     const ld = it.lengthDisplay || "";
+//     if (ld && ld !== "0'-0\"" && ld !== "'-\"" && ld !== "-") details.push(ld);
+//     if (details.length)
+//       descText += ` <span class="item-detail" style="display:inline;">${details.join(" · ")}</span>`;
+//     return `<tr>
+//       <td class="c">${sno}</td>
+//       <td class="tl">${descText}</td>
+//       ${
+//         !hidePrice
+//           ? `
+//         <td class="r">${qtyWithUnit}</td>
+//         <td class="r">₹${parseFloat(it.rate || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
+//         <td class="r"><strong>₹${parseFloat(it.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</strong></td>
+//       `
+//           : `<td class="r">${qtyWithUnit}</td>`
+//       }
+//     </tr>`;
+//   });
+
+//   const minRows = 15;
+
+//   const emptyCount = Math.max(0, minRows - itemRows.length);
+//   const colCount = hidePrice ? 3 : 5;
+//   let emptyRows = "";
+//   for (let i = 0; i < emptyCount; i++) {
+//     let cells = "";
+//     for (let j = 0; j < colCount; j++) cells += `<td>&nbsp;</td>`;
+//     emptyRows += `<tr class="erow">${cells}</tr>`;
+//   }
+
+//   let chargesHtml = "";
+//   if (chargesList.length > 0 && !hidePrice) {
+//     chargesHtml = `<div class="ktp-charge-section"><div class="ktp-charge-header">ADDITIONAL CHARGES</div>${chargesList.map((ch) => `<div class="ktp-charge-row"><span class="ktp-charge-name">${ch.name}</span><span class="ktp-charge-amt">₹${ch.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>`).join("")}</div>`;
+//   }
+
+//   let footerRightContent = "";
+//   if (!hidePrice) {
+//     footerRightContent = `
+//       ${chargesHtml}
+//       <div class="ktp-total-row">
+//         <span class="ktp-total-label">Items Total</span>
+//         <span class="ktp-total-val">₹${itemsTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+//       </div>
+//       ${
+//         chargesTotal > 0
+//           ? `
+//         <div class="ktp-total-row">
+//           <span class="ktp-total-label">Charges Total</span>
+//           <span class="ktp-total-val">₹${chargesTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+//         </div>
+//       `
+//           : ""
+//       }
+//       ${
+//         gstRate > 0
+//           ? `
+//         <div class="ktp-total-row">
+//           <span class="ktp-total-label">Sub Total</span>
+//           <span class="ktp-total-val">₹${subTotalWithCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+//         </div>
+//         <div class="ktp-total-row">
+//           <span class="ktp-total-label">GST (${gstRate}%)</span>
+//           <span class="ktp-total-val">₹${calculatedGST.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+//         </div>
+//       `
+//           : ""
+//       }
+//       <div class="ktp-total-row grand">
+//         <span class="ktp-total-label">GRAND TOTAL</span>
+//         <span class="ktp-total-val">₹${challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+//       </div>
+//       <div class="ktp-eoe-line">E. &amp; O.E.</div>
+//     `;
+//   } else {
+//     footerRightContent = `<div class="ktp-no-price-box"><div style="font-size:22px;">📋</div><div>DELIVERY CHALLAN</div><div style="font-size:9px;font-weight:normal;color:#999;">For Goods Reference Only</div></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
+//   }
+
+//   const consigneeInfoHTML = `
+//     <div class="ktp-compact-row">
+//       <span class="ktp-info-title-box">CONSIGNOR (DETAILS OF RECEIVER)</span>
+//       <div class="ktp-compact-field">
+//         <span class="ktp-compact-label">Phone No.:</span>
+//         <span class="ktp-compact-value">${order.customerPhone || ""}</span>
+//       </div>
+//       <div class="ktp-compact-field">
+//         <span class="ktp-compact-label">Vehicle No.:</span>
+//         <span class="ktp-compact-value">${order.vehicleNo || ""}</span>
+//       </div>
+//     </div>
+//     <div class="ktp-compact-row">
+//       <div class="ktp-compact-field flex-name">
+//         <span class="ktp-compact-label">Name:</span>
+//         <span class="ktp-compact-value">${order.customerName || ""}</span>
+//       </div>
+//       <div class="ktp-compact-field">
+//         <span class="ktp-compact-label">PO No.:</span>
+//         <span class="ktp-compact-value">${order.poNumber || ""}</span>
+//       </div>
+//     </div>
+//     <div class="ktp-compact-row">
+//       <div class="ktp-compact-field" style="flex:1;">
+//         <span class="ktp-compact-label">Address:</span>
+//         <span class="ktp-compact-value">${order.customerAddress || ""}</span>
+//       </div>
+//     </div>
+//   `;
+
+//   return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Challan ${challan.challanNo}</title><style>${PRINT_CSS}</style></head><body><div class="action-bar"><button class="action-btn btn-print" onclick="window.print()">🖨️ Print Challan</button><button class="action-btn btn-save" onclick="savePDF()">💾 Save as PDF</button><button class="action-btn btn-close" onclick="window.close()">✕ Close</button></div><div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title">DELIVERY CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${itemRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRightContent}</div></div></div></div><script>function savePDF(){var ab=document.querySelector('.action-bar');if(ab)ab.style.display='none';window.print();setTimeout(function(){if(ab)ab.style.display='flex';},1200);}</script></body></html>`;
+// }
+
+
+
+
+
+////////////////////////////////////////////////
+
+
+
+
 const PRINT_CSS = `
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Segoe UI',Arial,sans-serif;font-size:15px;color:#000;background:#f5f5f5;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.page-wrapper{width:210mm;min-height:297mm;margin:10px auto;background:#fff;box-shadow:0 0 10px rgba(0,0,0,0.1);display:flex;flex-direction:column;}
+.page-wrapper{width:210mm;min-height:297mm;margin:10px auto;background:#fff;box-shadow:0 0 10px rgba(0,0,0,0.1);display:flex;flex-direction:column;page-break-after:always;}
+.page-wrapper:last-child{page-break-after:auto;margin-bottom:10px;}
 .page-content{padding:0;flex:1;display:flex;flex-direction:column;}
 .action-bar{display:flex;gap:12px;justify-content:center;padding:14px 20px;background:linear-gradient(135deg,#FBF6F0,#F0E6DA);border-bottom:2px solid #E8DCC8;}
 .action-btn{padding:10px 28px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s;letter-spacing:0.3px;}
@@ -698,98 +1005,130 @@ body{font-family:'Segoe UI',Arial,sans-serif;font-size:15px;color:#000;backgroun
 .btn-save{background:linear-gradient(135deg,#1d4ed8,#3b82f6);color:#fff;box-shadow:0 2px 8px rgba(59,130,246,0.3)}
 .btn-save:hover{transform:translateY(-1px)}
 .btn-close{background:#fff;color:#333;border:1px solid #ddd;box-shadow:0 1px 4px rgba(0,0,0,0.1)}
-.ktp-header{background:linear-gradient(135deg,#5a1515,#7B1E1E,#9a2828);color:#fff;padding:22px 30px 20px;display:flex;align-items:center;gap:24px;}
-.ktp-logo-circle{width:100px;height:100px;border-radius:50%;border:4px solid rgba(255,255,255,0.95);background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 3px 12px rgba(0,0,0,0.3);}
+
+/* ===== HEADER ===== */
+.ktp-header{background:#fff;color:#000;padding:14px 24px 12px;display:flex;align-items:center;gap:20px;border-bottom:2px solid #000;}
+.ktp-logo-circle{width:80px;height:80px;border-radius:50%;border:3px solid #000;background:#fff;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,0.15);}
 .ktp-logo-circle img{width:100%;height:100%;object-fit:cover}
 .ktp-header-center{flex:1;text-align:center}
-.ktp-brand-name{font-size:54px;font-style:italic;font-weight:bold;font-family:Georgia,'Times New Roman',serif;line-height:1;text-shadow:2px 2px 3px rgba(0,0,0,0.25);letter-spacing:1px}
-.ktp-brand-sub{font-size:26px;font-family:Georgia,'Times New Roman',serif;font-style:italic;letter-spacing:4px;opacity:0.98;margin-top:4px}
-.ktp-brand-addr{font-size:12.5px;margin-top:8px;opacity:1;letter-spacing:0.2px;font-weight:600;white-space:nowrap;}
-.ktp-header-right-space{width:100px;flex-shrink:0}
-.ktp-meta{display:flex;justify-content:space-between;align-items:flex-start;border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:7px 18px;background:#FBF6F0;}
+.ktp-brand-name{font-size:54px;font-style:italic;font-weight:bold;font-family:Georgia,'Times New Roman',serif;line-height:1;letter-spacing:1px;color:#7B1E1E;}
+.ktp-brand-sub{font-size:26px;font-family:Georgia,'Times New Roman',serif;font-style:italic;letter-spacing:4px;margin-top:4px;color:#000;}
+.ktp-brand-addr{font-size:12.5px;margin-top:8px;letter-spacing:0.2px;font-weight:600;white-space:nowrap;color:#000;}
+.ktp-header-right-space{width:80px;flex-shrink:0}
+
+/* ===== META ===== */
+.ktp-meta{display:flex;justify-content:space-between;align-items:flex-start;border-left:2px solid #000;border-right:2px solid #000;border-bottom:2px solid #000;padding:7px 18px;background:#fff;}
 .ktp-meta-left{display:flex;flex-direction:column;gap:2px}
-.ktp-since{font-size:11.5px;font-style:italic;color:#5a4040;font-weight:500}
-.ktp-gstin{font-size:13.5px;font-weight:bold;color:#7B1E1E;letter-spacing:0.5px}
+.ktp-since{font-size:11.5px;font-style:italic;color:#555;font-weight:500}
+.ktp-gstin{font-size:13.5px;font-weight:bold;color:#000;letter-spacing:0.5px}
 .ktp-cust-gst{font-size:12px;font-weight:600;color:#000;margin-top:2px;}
-.ktp-cust-gst-value{border-bottom:1px solid #555;display:inline-block;min-width:160px;padding-bottom:1px;font-weight:700;}
+.ktp-cust-gst-value{display:inline-block;min-width:160px;padding-bottom:1px;font-weight:700;}
 .ktp-dc-box{text-align:right}
-.ktp-dc-title{font-size:20px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:2px;padding:2px 12px;display:inline-block;}
-.ktp-dc-details{font-size:13px;margin-top:3px;color:#222;font-weight:500}
-.ktp-info{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-bottom:1.5px solid #7B1E1E;padding:8px 14px 10px;background:#fff;}
-.ktp-info-title-box{font-size:13px;font-weight:bold;color:#7B1E1E;letter-spacing:0.3px;display:inline-block;border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;padding:2px 10px;white-space:nowrap;}
+.ktp-dc-title{font-size:20px;font-weight:bold;color:#000;text-transform:uppercase;letter-spacing:2px;padding:2px 12px;display:inline-block;}
+.ktp-dc-details{font-size:13px;margin-top:3px;color:#000;font-weight:500}
+
+/* ===== CONSIGNOR INFO ===== */
+.ktp-info{border-left:2px solid #000;border-right:2px solid #000;border-bottom:2px solid #000;padding:8px 14px 10px;background:#fff;}
+.ktp-info-title-box{font-size:13px;font-weight:bold;color:#000;letter-spacing:0.3px;display:inline-block;border-left:2px solid #000;border-right:2px solid #000;padding:2px 10px;white-space:nowrap;}
 .ktp-compact-row{display:flex;align-items:baseline;gap:18px;margin-bottom:7px;}
 .ktp-compact-row:last-child{margin-bottom:0;}
 .ktp-compact-field{display:flex;align-items:baseline;gap:6px;flex:1;min-width:0;}
 .ktp-compact-field.flex-name{flex:2;}
 .ktp-compact-label{font-size:12.5px;font-weight:600;color:#555;white-space:nowrap;}
-.ktp-compact-value{font-size:13.5px;font-weight:700;color:#000;border-bottom:1px solid #777;flex:1;padding-bottom:1px;min-width:60px;line-height:1.3;min-height:16px;word-break:break-word;padding-left:3px;}
-.ktp-table-wrap{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;flex:1;}
-table.items{width:100%;border-collapse:collapse}
-table.items thead tr{background:linear-gradient(135deg,#5a1515,#7B1E1E)}
-table.items th{padding:8px 10px;font-size:13px;font-weight:bold;color:#fff;text-align:center;border-right:1px solid rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:0.5px;}
+.ktp-compact-value{font-size:13.5px;font-weight:700;color:#000;flex:1;padding-bottom:1px;min-width:60px;line-height:1.3;min-height:16px;word-break:break-word;padding-left:3px;border-bottom:none !important;}
+
+/* ===== TABLE - flex grow to fill space ===== */
+.ktp-table-wrap{border-left:2px solid #000;border-right:2px solid #000;flex:1;display:flex;flex-direction:column;}
+table.items{width:100%;border-collapse:collapse;flex:1;height:100%;}
+table.items thead tr{background:#fff !important;}
+table.items th{padding:9px 10px;font-size:14px;font-weight:bold;color:#000;text-align:center;border-right:1.5px solid #000;border-bottom:2px solid #000;border-top:1.5px solid #000;text-transform:uppercase;letter-spacing:0.5px;background:#fff;}
 table.items th:last-child{border-right:none}
 table.items th.tl{text-align:left}
+table.items tbody{height:100%;}
 table.items tbody tr{border-bottom:1px solid #ddd}
 table.items tbody tr:nth-child(even){background:#FAFAFA}
 table.items tbody tr:nth-child(odd){background:#fff}
-table.items td{padding:6px 10px;font-size:14px;border-right:1px solid #d8d8d8;vertical-align:top;line-height:1.4;color:#000;font-weight:500}
+table.items td{padding:7px 10px;font-size:13.5px;border-right:1px solid #000;vertical-align:top;line-height:1.4;color:#000;font-weight:500}
 table.items td:last-child{border-right:none}
 table.items td.r{text-align:right;font-variant-numeric:tabular-nums}
 table.items td.c{text-align:center}
 table.items .item-detail{font-size:11.5px;color:#444;font-style:italic;font-weight:400;display:inline !important;}
-table.items .erow td{height:18px;border-right:1px solid #e0e0e0}
+table.items .erow td{height:38px;border-right:1px solid #000}
 table.items .erow td:last-child{border-right:none}
-.ktp-words{border-left:2px solid #7B1E1E;border-right:2px solid #7B1E1E;border-top:2px solid #7B1E1E;padding:6px 18px;background:#FDF8F2;}
-.ktp-words-label{font-size:10.5px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:1px}
-.ktp-words-text{font-size:13px;font-weight:700;color:#222;margin-top:1px}
-.ktp-footer{border:2px solid #7B1E1E;border-top:2px solid #7B1E1E;display:flex;background:#fff;page-break-inside:avoid;}
-.ktp-footer-left{flex:1;padding:6px 14px;border-right:2px solid #7B1E1E;display:flex;flex-direction:column;justify-content:space-between;}
-.ktp-footer-cert{font-size:10px;color:#7B1E1E;line-height:1.3;font-weight:700;margin-bottom:2px;}
-.ktp-footer-for{font-size:12px;font-weight:bold;color:#7B1E1E;margin-top:4px}
-.ktp-footer-terms{display:none;}
-.ktp-terms-section{}
+
+/* ===== SPACER ROW - fills all remaining height ===== */
+table.items .spacer-row{height:100%;}
+table.items .spacer-row td{height:100%;border-right:1px solid #000;border-bottom:none!important;}
+table.items .spacer-row td:last-child{border-right:none!important;}
+
+/* ===== FOOTER ===== */
+.ktp-footer{border:2px solid #000;display:flex;background:#fff;page-break-inside:avoid;margin-bottom:20px;}
+.ktp-footer-left{flex:1;padding:6px 14px;border-right:2px solid #000;display:flex;flex-direction:column;justify-content:space-between;}
+.ktp-footer-cert{font-size:10px;color:#000;line-height:1.3;font-weight:700;margin-bottom:2px;}
+.ktp-footer-for{font-size:12px;font-weight:bold;color:#000;margin-top:4px}
 .ktp-terms-list{list-style:none;padding:0;margin:4px 0 0 0;}
 .ktp-terms-list li{font-size:9px;color:#222;line-height:1.2;padding-left:12px;position:relative;font-weight:600;letter-spacing:0.2px;margin-bottom:2px;}
 .ktp-terms-list li:last-child{margin-bottom:0;}
-.ktp-terms-list li:before{content:"•";color:#7B1E1E;font-weight:bold;font-size:13px;position:absolute;left:2px;top:-1px;}
+.ktp-terms-list li:before{content:"•";color:#000;font-weight:bold;font-size:13px;position:absolute;left:2px;top:-1px;}
 .ktp-sig-area{display:flex;justify-content:space-between;align-items:flex-end;margin-top:6px;gap:10px;padding-bottom:20px;}
 .ktp-sig-box{text-align:center;flex:1;}
 .ktp-sig-line{width:100%;max-width:120px;border-top:1.5px solid #000;margin:0 auto 2px;}
 .ktp-sig-label{font-size:9px;color:#222;font-weight:700;}
-.ktp-footer-for-inline{font-size:12px;font-weight:bold;color:#7B1E1E;margin-bottom:30px;text-align:center;}
+.ktp-footer-for-inline{font-size:12px;font-weight:bold;color:#000;margin-bottom:30px;text-align:center;}
 .ktp-footer-right{width:240px;display:flex;flex-direction:column;justify-content:space-between;}
-.ktp-charge-section{border-bottom:1.5px solid #7B1E1E}
-.ktp-charge-header{padding:3px 12px;font-size:10px;font-weight:bold;color:#7B1E1E;text-transform:uppercase;letter-spacing:0.5px;background:#FDF8F2;border-bottom:1px solid #E8DCC8;}
-.ktp-charge-row{display:flex;justify-content:space-between;padding:3px 12px;font-size:11px;color:#222;border-bottom:1px solid #f0e6da;font-weight:500}
+.ktp-charge-section{border-bottom:1.5px solid #000}
+.ktp-charge-header{padding:3px 12px;font-size:10px;font-weight:bold;color:#000;text-transform:uppercase;letter-spacing:0.5px;background:#FDF8F2;border-bottom:1px solid #ccc;}
+.ktp-charge-row{display:flex;justify-content:space-between;padding:3px 12px;font-size:11px;color:#222;border-bottom:1px solid #e0e0e0;font-weight:500}
 .ktp-charge-row:last-child{border-bottom:none}
 .ktp-charge-name{max-width:150px;overflow:hidden;text-overflow:ellipsis}
 .ktp-charge-amt{font-weight:700;font-variant-numeric:tabular-nums}
-.ktp-total-row{display:flex;justify-content:space-between;padding:4px 12px;font-size:12px;border-bottom:1px solid #E8DCC8;color:#222;}
+.ktp-total-row{display:flex;justify-content:space-between;padding:4px 12px;font-size:12px;border-bottom:1px solid #ccc;color:#222;}
 .ktp-total-row .ktp-total-label{font-weight:600}
 .ktp-total-row .ktp-total-val{font-weight:700;font-variant-numeric:tabular-nums}
-.ktp-total-row.grand{background:linear-gradient(135deg,#5a1515,#7B1E1E);color:#fff;font-size:14px;font-weight:bold;border-bottom:none;padding:6px 12px;}
+.ktp-total-row.grand{background:#000;color:#fff;font-size:14px;font-weight:bold;border-bottom:none;padding:6px 12px;}
 .ktp-total-row.grand .ktp-total-val{letter-spacing:0.5px}
-.ktp-sig-right{display:none;}
-.ktp-eoe-line{padding:2px 12px;font-size:9px;color:#666;text-align:right;border-top:1px solid #E8DCC8;letter-spacing:0.5px;font-weight:500}
-.ktp-no-price-box{padding:22px 14px;text-align:center;color:#7B1E1E;font-weight:bold;font-size:14px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+.ktp-eoe-line{padding:2px 12px;font-size:9px;color:#666;text-align:right;border-top:1px solid #ccc;letter-spacing:0.5px;font-weight:500}
+.ktp-no-price-box{padding:22px 14px;text-align:center;color:#000;font-weight:bold;font-size:14px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
+
+/* ===== PRINT ===== */
 @media print{
-html{margin:0!important;padding:0!important}
-body{margin:0!important;padding:0!important;background:#fff!important;font-size:15px!important}
+html,body{margin:0!important;padding:0!important;background:#fff!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
 .action-bar{display:none!important}
-.page-wrapper{width:100%!important;min-height:100%!important;margin:0!important;padding:0!important;box-shadow:none!important}
-.page-content{min-height:100%!important}
-.ktp-header{background:#7B1E1E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-table.items thead tr{background:#7B1E1E!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-table.items th{color:#fff!important}
-.ktp-total-row.grand{background:#7B1E1E!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.ktp-charge-header{background:#FDF8F2!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-.ktp-table-wrap{flex:1!important}
+.page-wrapper{width:195mm!important;height:282mm!important;min-height:282mm!important;max-height:282mm!important;margin:0!important;padding:0!important;box-shadow:none!important;page-break-after:always!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;}
+.page-wrapper:last-child{page-break-after:auto!important;}
+.page-content{height:288mm!important;min-height:288mm!important;max-height:288mm!important;display:flex!important;flex-direction:column!important;overflow:hidden!important;}
+.ktp-table-wrap{flex:1!important;border-left:2px solid #000!important;border-right:2px solid #000!important;overflow:hidden!important;display:flex!important;flex-direction:column!important;}
+
+table.items{height:100%!important;flex:1!important;}
+table.items tbody{height:100%!important;}
+table.items .spacer-row{height:100%!important;}
+table.items .spacer-row td{height:100%!important;border-bottom:none!important;}
+table.items .erow td{height:32px!important;}
+
+*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
+
+.ktp-header{background:#fff!important;border-bottom:2px solid #000!important;}
+.ktp-brand-name{color:#7B1E1E!important;}
+.ktp-meta{border-left:2px solid #000!important;border-right:2px solid #000!important;border-bottom:2px solid #000!important;background:#fff!important;}
+.ktp-info{border-left:2px solid #000!important;border-right:2px solid #000!important;border-bottom:2px solid #000!important;background:#fff!important;}
+.ktp-info-title-box{border-left:2px solid #000!important;border-right:2px solid #000!important;}
+.ktp-footer{border:2px solid #000!important;page-break-inside:avoid!important;}
+.ktp-footer-left{border-right:2px solid #000!important;}
+
+table.items thead tr{background:#fff!important;}
+table.items th{background:#fff!important;color:#000!important;border-right:1.5px solid #000!important;border-bottom:2px solid #000!important;border-top:1.5px solid #000!important;}
+table.items th:last-child{border-right:none!important;}
+table.items td{border-right:1px solid #000!important;}
+table.items td:last-child{border-right:none!important;}
+table.items tbody tr{border-bottom:1px solid #000!important;}
+
+.ktp-total-row.grand{background:#000!important;color:#fff!important;}
+.ktp-charge-header{background:#FDF8F2!important;}
+.ktp-logo-circle{border:3px solid #000!important;}
+.ktp-footer{margin-bottom:22px!important;}
 }
-@page{size:A4;margin:0}
+@page{size:A4;margin:5mm 5mm 5mm 5mm;}
 `;
-
-
-
 
 
 function getChallanPrintHTML(
@@ -818,42 +1157,26 @@ function getChallanPrintHTML(
     if (isNaN(num)) return val || "0";
     return num % 1 === 0 ? num.toString() : parseFloat(num.toFixed(3)).toString();
   };
-  const itemRows = regularItems.map((it) => {
+
+  const itemRowsArr = regularItems.map((it) => {
     sno++;
-    // let qtyVal = formatQty(it.calculatedQty || it.sentQty);
-    // let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
-    // if (
-    //   it.isSheet &&
-    //   it.unit === "SQFT" &&
-    //   parseFloat(it.sentQty || it.quantity || 0) > 0
-    // ) {
-    //   const pcs = formatQty(it.sentQty || it.quantity || 0);
-    //   qtyWithUnit = `${qtyVal} ${it.unit} <span class="item-detail">(${pcs} pcs)</span>`;
-    // }
-
     let qtyVal = formatQty(it.calculatedQty || it.sentQty);
-let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
+    let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
 
-// ✅ FIX: Column D (quantity) se pieces dikhao - CFT, RFT, SQFT sab mein
-const pieces = parseFloat(it.quantity || 0);
-const showPiecesUnits = ["CFT", "RFT", "SQFT"];
+    const pieces = parseFloat(it.quantity || 0);
+    const showPiecesUnits = ["CFT", "RFT", "SQFT"];
 
-if (
-  showPiecesUnits.includes(it.unit) &&
-  pieces > 0
-) {
-  const pcs = formatQty(pieces);
-  qtyWithUnit = `${qtyVal} ${it.unit} <span class="item-detail">(${pcs} pcs)</span>`;
-}
+    if (showPiecesUnits.includes(it.unit) && pieces > 0) {
+      const pcs = formatQty(pieces);
+      qtyWithUnit = `${qtyVal} ${it.unit} <span class="item-detail">(${pcs} pcs)</span>`;
+    }
+
     let descText = `<strong>${it.product}</strong>`;
     let details = [];
 
-    // ✅ FIX: Size sirf tab add karo jab product name mein already nahi hai
     if (it.size) {
       const sizeWithoutSpaces = it.size.replace(/\s/g, '').toLowerCase();
       const productLower = (it.product || '').replace(/\s/g, '').toLowerCase();
-
-      // Different size formats check karo (5.5x1.5, 5.5×1.5, etc.)
       const sizeVariations = [
         sizeWithoutSpaces,
         sizeWithoutSpaces.replace(/×/g, 'x'),
@@ -862,9 +1185,7 @@ if (
         sizeWithoutSpaces.replace(/×/g, 'x').replace(/"/g, ''),
         sizeWithoutSpaces.replace(/x/g, '×').replace(/"/g, ''),
       ];
-
       const sizeAlreadyInName = sizeVariations.some(v => v && productLower.includes(v));
-
       if (!sizeAlreadyInName) {
         details.push(it.size);
       }
@@ -875,112 +1196,70 @@ if (
     if (ld && ld !== "0'-0\"" && ld !== "'-\"" && ld !== "-") details.push(ld);
     if (details.length)
       descText += ` <span class="item-detail" style="display:inline;">${details.join(" · ")}</span>`;
-    return `<tr>
-      <td class="c">${sno}</td>
-      <td class="tl">${descText}</td>
-      ${
-        !hidePrice
-          ? `
-        <td class="r">${qtyWithUnit}</td>
-        <td class="r">₹${parseFloat(it.rate || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td>
-        <td class="r"><strong>₹${parseFloat(it.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</strong></td>
-      `
-          : `<td class="r">${qtyWithUnit}</td>`
-      }
-    </tr>`;
+
+    return `<tr><td class="c">${sno}</td><td class="tl">${descText}</td>${!hidePrice ? `<td class="r">${qtyWithUnit}</td><td class="r">₹${parseFloat(it.rate || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td><td class="r"><strong>₹${parseFloat(it.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</strong></td>` : `<td class="r">${qtyWithUnit}</td>`}</tr>`;
   });
 
-  const minRows = 15;
-
-  const emptyCount = Math.max(0, minRows - itemRows.length);
   const colCount = hidePrice ? 3 : 5;
-  let emptyRows = "";
-  for (let i = 0; i < emptyCount; i++) {
-    let cells = "";
-    for (let j = 0; j < colCount; j++) cells += `<td>&nbsp;</td>`;
-    emptyRows += `<tr class="erow">${cells}</tr>`;
+
+  // ===== 12 items per page =====
+  const ITEMS_PER_PAGE = 12;
+  const pages = [];
+  if (itemRowsArr.length === 0) {
+    pages.push([]);
+  } else {
+    for (let i = 0; i < itemRowsArr.length; i += ITEMS_PER_PAGE) {
+      pages.push(itemRowsArr.slice(i, i + ITEMS_PER_PAGE));
+    }
   }
 
+  // Charges HTML
   let chargesHtml = "";
   if (chargesList.length > 0 && !hidePrice) {
     chargesHtml = `<div class="ktp-charge-section"><div class="ktp-charge-header">ADDITIONAL CHARGES</div>${chargesList.map((ch) => `<div class="ktp-charge-row"><span class="ktp-charge-name">${ch.name}</span><span class="ktp-charge-amt">₹${ch.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>`).join("")}</div>`;
   }
 
-  let footerRightContent = "";
+  // Footer right for LAST page (with totals)
+  let footerRightLast = "";
   if (!hidePrice) {
-    footerRightContent = `
-      ${chargesHtml}
-      <div class="ktp-total-row">
-        <span class="ktp-total-label">Items Total</span>
-        <span class="ktp-total-val">₹${itemsTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-      </div>
-      ${
-        chargesTotal > 0
-          ? `
-        <div class="ktp-total-row">
-          <span class="ktp-total-label">Charges Total</span>
-          <span class="ktp-total-val">₹${chargesTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-        </div>
-      `
-          : ""
-      }
-      ${
-        gstRate > 0
-          ? `
-        <div class="ktp-total-row">
-          <span class="ktp-total-label">Sub Total</span>
-          <span class="ktp-total-val">₹${subTotalWithCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-        </div>
-        <div class="ktp-total-row">
-          <span class="ktp-total-label">GST (${gstRate}%)</span>
-          <span class="ktp-total-val">₹${calculatedGST.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-        </div>
-      `
-          : ""
-      }
-      <div class="ktp-total-row grand">
-        <span class="ktp-total-label">GRAND TOTAL</span>
-        <span class="ktp-total-val">₹${challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
-      </div>
-      <div class="ktp-eoe-line">E. &amp; O.E.</div>
-    `;
+    footerRightLast = `${chargesHtml}<div class="ktp-total-row"><span class="ktp-total-label">Items Total</span><span class="ktp-total-val">₹${itemsTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>${chargesTotal > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Charges Total</span><span class="ktp-total-val">₹${chargesTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}${gstRate > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Sub Total</span><span class="ktp-total-val">₹${subTotalWithCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-total-row"><span class="ktp-total-label">GST (${gstRate}%)</span><span class="ktp-total-val">₹${calculatedGST.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}<div class="ktp-total-row grand"><span class="ktp-total-label">GRAND TOTAL</span><span class="ktp-total-val">₹${challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
   } else {
-    footerRightContent = `<div class="ktp-no-price-box"><div style="font-size:22px;">📋</div><div>DELIVERY CHALLAN</div><div style="font-size:9px;font-weight:normal;color:#999;">For Goods Reference Only</div></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
+    footerRightLast = `<div class="ktp-no-price-box"><div style="font-size:22px;">📋</div><div>DELIVERY CHALLAN</div><div style="font-size:9px;font-weight:normal;color:#999;">For Goods Reference Only</div></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
   }
 
-  const consigneeInfoHTML = `
-    <div class="ktp-compact-row">
-      <span class="ktp-info-title-box">CONSIGNOR (DETAILS OF RECEIVER)</span>
-      <div class="ktp-compact-field">
-        <span class="ktp-compact-label">Phone No.:</span>
-        <span class="ktp-compact-value">${order.customerPhone || ""}</span>
-      </div>
-      <div class="ktp-compact-field">
-        <span class="ktp-compact-label">Vehicle No.:</span>
-        <span class="ktp-compact-value">${order.vehicleNo || ""}</span>
-      </div>
-    </div>
-    <div class="ktp-compact-row">
-      <div class="ktp-compact-field flex-name">
-        <span class="ktp-compact-label">Name:</span>
-        <span class="ktp-compact-value">${order.customerName || ""}</span>
-      </div>
-      <div class="ktp-compact-field">
-        <span class="ktp-compact-label">PO No.:</span>
-        <span class="ktp-compact-value">${order.poNumber || ""}</span>
-      </div>
-    </div>
-    <div class="ktp-compact-row">
-      <div class="ktp-compact-field" style="flex:1;">
-        <span class="ktp-compact-label">Address:</span>
-        <span class="ktp-compact-value">${order.customerAddress || ""}</span>
-      </div>
-    </div>
-  `;
+  // Footer right for CONTINUED pages
+  const footerRightContinued = `<div class="ktp-no-price-box"><div style="font-size:13px;color:#666;">Continued on next page...</div></div>`;
 
-  return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Challan ${challan.challanNo}</title><style>${PRINT_CSS}</style></head><body><div class="action-bar"><button class="action-btn btn-print" onclick="window.print()">🖨️ Print Challan</button><button class="action-btn btn-save" onclick="savePDF()">💾 Save as PDF</button><button class="action-btn btn-close" onclick="window.close()">✕ Close</button></div><div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title">DELIVERY CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${itemRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRightContent}</div></div></div></div><script>function savePDF(){var ab=document.querySelector('.action-bar');if(ab)ab.style.display='none';window.print();setTimeout(function(){if(ab)ab.style.display='flex';},1200);}</script></body></html>`;
+  const consigneeInfoHTML = `<div class="ktp-compact-row"><span class="ktp-info-title-box">CONSIGNOR (DETAILS OF RECEIVER)</span><div class="ktp-compact-field"><span class="ktp-compact-label">Phone No.:</span><span class="ktp-compact-value">${order.customerPhone || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">Vehicle No.:</span><span class="ktp-compact-value">${order.vehicleNo || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field flex-name"><span class="ktp-compact-label">Name:</span><span class="ktp-compact-value">${order.customerName || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">PO No.:</span><span class="ktp-compact-value">${order.poNumber || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field" style="flex:1;"><span class="ktp-compact-label">Address:</span><span class="ktp-compact-value">${order.customerAddress || ""}</span></div></div>`;
+
+  // Build each page HTML
+  const pagesHTML = pages.map((pageRows, pageIdx) => {
+    const isLastPage = pageIdx === pages.length - 1;
+    const footerRight = isLastPage ? footerRightLast : footerRightContinued;
+
+    // Fill empty rows
+    const emptyCount = Math.max(0, ITEMS_PER_PAGE - pageRows.length);
+    let emptyRows = "";
+    for (let i = 0; i < emptyCount; i++) {
+      let cells = "";
+      for (let j = 0; j < colCount; j++) cells += `<td>&nbsp;</td>`;
+      emptyRows += `<tr class="erow">${cells}</tr>`;
+    }
+
+    // ✅ Add spacer row that fills remaining vertical space
+    let spacerCells = "";
+    for (let j = 0; j < colCount; j++) spacerCells += `<td>&nbsp;</td>`;
+    const spacerRow = `<tr class="spacer-row">${spacerCells}</tr>`;
+    emptyRows += spacerRow;
+
+    return `<div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title">CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${pageRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRight}</div></div></div></div>`;
+  }).join("");
+
+  return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Challan ${challan.challanNo}</title><style>${PRINT_CSS}</style></head><body><div class="action-bar"><button class="action-btn btn-print" onclick="window.print()">🖨️ Print Challan</button><button class="action-btn btn-save" onclick="savePDF()">💾 Save as PDF</button><button class="action-btn btn-close" onclick="window.close()">✕ Close</button></div>${pagesHTML}<script>function savePDF(){var ab=document.querySelector('.action-bar');if(ab)ab.style.display='none';window.print();setTimeout(function(){if(ab)ab.style.display='flex';},1200);}</script></body></html>`;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////
 
 const apiGet = async (url) => {
   try {
@@ -1332,104 +1611,7 @@ const [savingToSheet, setSavingToSheet] = useState(null)
             }
           }
 
-          // if (field === "customProductName" && val?.trim()) {
-          //   // ✅ FIX: tempItem mein materialType, category, subCategory bhi include karo
-          //   const tempItem = {
-          //     product: val,
-          //     materialType: g.filterMaterialType || "",
-          //     category: g.filterCategory || "",
-          //     subCategory: g.filterSubCategory || "",
-          //   };
-            
-          //   const isSheet = isSheetMaterial(val);
-          //   const isWood = isTimberWood(tempItem) && !isSheet;
-            
-          //   u.product = val;
-          //   u.skuCode = "";
-          //   u.materialType = g.filterMaterialType || "Custom";
-          //   u.category = g.filterCategory || "Custom";
-          //   u.subCategory = g.filterSubCategory || "";
-          //   u.isWood = isWood;
-          //   u.isSheet = isSheet;
-
-          //   // ✅ FIX: Saari check functions mein tempItem use karo (u ki jagah)
-          //   if (isSolidSurface(tempItem)) {
-          //     u.unit = "SQFT";
-          //     const dims = parseSolidSurfaceDimensions(val);
-          //     if (dims) {
-          //       u.areaPerPiece = dims.areaPerPiece;
-          //       u.width = dims.widthFeet;
-          //       u.thickness = dims.thickness;
-          //       u.size = `${dims.widthOrig}"×${dims.heightOrig}"`;
-          //       u.customLength = dims.widthFeet;
-          //       u.customWidth = dims.heightFeet;
-          //     }
-          //   } else if (isCeilingPlank(tempItem)) {
-          //     u.unit = "SQFT";
-          //     const dims = parseSheetDimensions(val);
-          //     if (dims) {
-          //       u.areaPerPiece = dims.areaPerPiece;
-          //       u.width = dims.widthFeet;
-          //       u.thickness = dims.thickness;
-          //       u.size = `${dims.widthFeet}'×${dims.heightFeet}'`;
-          //       u.customLength = dims.widthFeet;
-          //       u.customWidth = dims.heightFeet;
-          //     }
-          //   } else if (isWoodenBaluster(tempItem)) {
-          //     u.unit = "Per Piece";
-          //     const dims = parseBalusterDimensions(val);
-          //     if (dims) {
-          //       u.width = dims.width;
-          //       u.thickness = dims.thickness;
-          //       u.lengthFeet = dims.lengthFeet;
-          //       u.lengthInches = "";
-          //       u.size = `${dims.width}"×${dims.thickness}" - ${dims.lengthFeet} ft`;
-          //     }
-          //   } else if (isWoodenCladding(tempItem)) {
-          //     u.unit = "Per Piece";
-          //     const dims = parseWoodDimensions(val);
-          //     if (dims) {
-          //       u.width = dims.width;
-          //       u.thickness = dims.thickness;
-          //       u.size = `${dims.width}×${dims.thickness}"`;
-          //     }
-          //   } else if (isDoorFrame(tempItem)) {
-          //     u.unit = "CFT";
-          //     const dims = parseDoorFrameDimensions(val);
-          //     if (dims) {
-          //       u.dfSectionWidth = dims.sectionWidth;
-          //       u.dfSectionThickness = dims.sectionThickness;
-          //       u.dfHeightFt = dims.heightFt;
-          //       u.dfHeightIn = dims.heightIn;
-          //       u.dfWidthFt = dims.widthFt;
-          //       u.dfWidthIn = dims.widthIn;
-          //     }
-          //   } else if (isSheet) {
-          //     u.unit = "SQFT";
-          //     const dims = parseSheetDimensions(val);
-          //     if (dims) {
-          //       u.areaPerPiece = dims.areaPerPiece;
-          //       u.width = dims.widthFeet;
-          //       u.thickness = dims.thickness;
-          //       u.size = dims.isInches
-          //         ? `${dims.widthOrig}"×${dims.heightOrig}"`
-          //         : `${dims.widthFeet}'×${dims.heightFeet}'`;
-          //       u.customLength = dims.widthFeet;
-          //       u.customWidth = dims.heightFeet;
-          //     }
-          //   } else if (isWood) {
-          //     u.unit = /railing/i.test(val) ? "RFT" : "CFT";
-          //     const dims = parseWoodDimensions(val);
-          //     if (dims) {
-          //       u.width = dims.width;
-          //       u.thickness = dims.thickness;
-          //       u.size = `${dims.width}×${dims.thickness}"`;
-          //     }
-          //   } else {
-          //     if (!u.unit) u.unit = "Pcs";
-          //   }
-          // }
-
+         
 
           if (field === "customProductName" && val?.trim()) {
   // ✅ FIX: tempItem mein materialType, category, subCategory bhi include karo
