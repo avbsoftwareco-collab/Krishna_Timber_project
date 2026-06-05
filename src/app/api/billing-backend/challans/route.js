@@ -164,7 +164,17 @@ export async function GET() {
       };
     }).filter(Boolean);
 
-    challans.sort((a, b) => new Date(b.challanDate) - new Date(a.challanDate));
+  challans.sort((a, b) => {
+  // Pehle date se compare karo
+  const dateA = new Date(a.challanDate);
+  const dateB = new Date(b.challanDate);
+  if (dateB - dateA !== 0) return dateB - dateA;
+  
+  // Same date ho to challan number se compare karo (latest = bigger number)
+  const numA = parseInt(a.challanNo?.replace(/\D/g, '') || 0);
+  const numB = parseInt(b.challanNo?.replace(/\D/g, '') || 0);
+  return numB - numA;
+});
     return NextResponse.json({ success: true, data: challans, total: challans.length });
   } catch (error) {
     console.error('GET /challans error:', error);

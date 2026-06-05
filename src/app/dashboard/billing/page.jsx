@@ -1085,7 +1085,7 @@ table.items .spacer-row td:last-child{border-right:none!important;}
 .ktp-total-row{display:flex;justify-content:space-between;padding:4px 12px;font-size:12px;border-bottom:1px solid #ccc;color:#222;}
 .ktp-total-row .ktp-total-label{font-weight:600}
 .ktp-total-row .ktp-total-val{font-weight:700;font-variant-numeric:tabular-nums}
-.ktp-total-row.grand{background:#000;color:#fff;font-size:14px;font-weight:bold;border-bottom:none;padding:6px 12px;}
+.ktp-total-row.grand{background:#fff;color:#000;font-size:14px;font-weight:bold;border-bottom:none;padding:6px 12px;border-top:2px solid #000;}
 .ktp-total-row.grand .ktp-total-val{letter-spacing:0.5px}
 .ktp-eoe-line{padding:2px 12px;font-size:9px;color:#666;text-align:right;border-top:1px solid #ccc;letter-spacing:0.5px;font-weight:500}
 .ktp-no-price-box{padding:22px 14px;text-align:center;color:#000;font-weight:bold;font-size:14px;flex:1;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;}
@@ -1122,7 +1122,7 @@ table.items td{border-right:1px solid #000!important;}
 table.items td:last-child{border-right:none!important;}
 table.items tbody tr{border-bottom:1px solid #000!important;}
 
-.ktp-total-row.grand{background:#000!important;color:#fff!important;}
+.ktp-total-row.grand{background:#fff!important;color:#000!important;border-top:2px solid #000!important;}
 .ktp-charge-header{background:#FDF8F2!important;}
 .ktp-logo-circle{border:3px solid #000!important;}
 .ktp-footer{margin-bottom:22px!important;}
@@ -1252,7 +1252,7 @@ function getChallanPrintHTML(
     const spacerRow = `<tr class="spacer-row">${spacerCells}</tr>`;
     emptyRows += spacerRow;
 
-    return `<div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title">CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${pageRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRight}</div></div></div></div>`;
+    return `<div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title"> Delivery CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${pageRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRight}</div></div></div></div>`;
   }).join("");
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Challan ${challan.challanNo}</title><style>${PRINT_CSS}</style></head><body><div class="action-bar"><button class="action-btn btn-print" onclick="window.print()">🖨️ Print Challan</button><button class="action-btn btn-save" onclick="savePDF()">💾 Save as PDF</button><button class="action-btn btn-close" onclick="window.close()">✕ Close</button></div>${pagesHTML}<script>function savePDF(){var ab=document.querySelector('.action-bar');if(ab)ab.style.display='none';window.print();setTimeout(function(){if(ab)ab.style.display='flex';},1200);}</script></body></html>`;
@@ -1718,8 +1718,35 @@ const [savingToSheet, setSavingToSheet] = useState(null)
           if (field === "lengthFeet") u.lengthFeet = val;
           if (field === "lengthInches") u.lengthInches = val;
           if (field === "specification") u.specification = val;
-          if (field === "customLength") u.customLength = val;
-          if (field === "customWidth") u.customWidth = val;
+
+          // if (field === "customLength") u.customLength = val;
+          // if (field === "customWidth") u.customWidth = val;
+
+
+          ////////////////////////////////
+
+
+if (field === "customLength") {
+  u.customLength = val;
+  const cl = parseFloat(val || 0);
+  const cw = parseFloat(u.customWidth || 0);
+  if (cl > 0 && cw > 0) {
+    u.size = `${cl}'×${cw}'`;
+    u.areaPerPiece = cl * cw;
+  }
+}
+if (field === "customWidth") {
+  u.customWidth = val;
+  const cl = parseFloat(u.customLength || 0);
+  const cw = parseFloat(val || 0);
+  if (cl > 0 && cw > 0) {
+    u.size = `${cl}'×${cw}'`;
+    u.areaPerPiece = cl * cw;
+  }
+}
+
+         ///////////////////////////////////////////
+
           if (['dfSectionWidth','dfSectionThickness','dfHeightFt','dfHeightIn','dfWidthFt','dfWidthIn','dfVerticalQty','dfHorizontalQty'].includes(field)) {
             u[field] = val;
           }
@@ -2032,12 +2059,19 @@ const handleSaveToSheet = async (item, group) => {
     }, 600);
   };
 
-  const filteredChallans = challans.filter(
+ const filteredChallans = challans
+  .filter(
     (ch) =>
       !searchQuery ||
       ch.challanNo?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ch.customerName?.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+  )
+  .sort((a, b) => {
+    // Latest challan number upar
+    const numA = parseInt(a.challanNo?.replace(/\D/g, '') || 0);
+    const numB = parseInt(b.challanNo?.replace(/\D/g, '') || 0);
+    return numB - numA;
+  });
 
   // Helper for product filtering (for searchable selects)
   const getAllMaterialTypes = () => [...new Set(products.map((p) => p.materialType).filter(Boolean))];
