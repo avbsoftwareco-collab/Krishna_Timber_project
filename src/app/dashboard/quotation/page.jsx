@@ -1235,7 +1235,7 @@ function getQuotationPrintHTML(
   const colCount = hidePrice ? 3 : 5;
 
   // ===== 12 items per page =====
-  const ITEMS_PER_PAGE = 12;
+  const ITEMS_PER_PAGE = 15;
   const pages = [];
   if (itemRowsArr.length === 0) {
     pages.push([]);
