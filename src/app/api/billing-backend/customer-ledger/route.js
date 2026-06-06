@@ -1,8 +1,9 @@
 
 
-
 // import { NextResponse } from 'next/server';
 // import { sheets, spreadsheetId } from '../../config/googleSheet.js';
+
+
 
 // export async function GET(request) {
 //   try {
@@ -35,7 +36,7 @@
 
 //     const challanNos = new Set(customerChallans.map(c => c.challanNo));
 
-//     // 2. Fetch Returns (Return_Data!A2:I)
+//     // 2. Fetch Returns
 //     const returnsRes = await sheets.spreadsheets.values.get({
 //       spreadsheetId,
 //       range: 'Return_Data!A2:I',
@@ -141,7 +142,27 @@
 //       console.warn('Payments sheet error:', err.message);
 //     }
 
-//     // 5. Build Ledger
+//     // 5. Fetch OLD Amount Ledger
+//     let oldAmount = 0;
+//     try {
+//       const oldLedgerRes = await sheets.spreadsheets.values.get({
+//         spreadsheetId,
+//         range: 'OLD_Amount_Ledger!A2:C',
+//       });
+//       const oldLedgerRows = oldLedgerRes.data.values || [];
+
+//       oldLedgerRows.forEach(row => {
+//         if (!row || !row[0]) return;
+//         const rowName = row[0].toString().trim().toLowerCase();
+//         if (rowName === normalizedCustomer) {
+//           oldAmount += parseFloat(row[1]) || 0;
+//         }
+//       });
+//     } catch (err) {
+//       console.warn('OLD_Amount_Ledger sheet error:', err.message);
+//     }
+
+//     // 6. Build Ledger
 //     const ledger = customerChallans
 //       .map(ch => {
 //         const returns = returnMap[ch.challanNo] || 0;
@@ -158,14 +179,28 @@
 //       })
 //       .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-//     // 6. Totals
+//     // 7. Totals
 //     const totalBulkPayments = paymentMap['bulk'] || 0;
 
+//     // Total payments including bulk
+//     const totalPaymentsAll =
+//       ledger.reduce((s, r) => s + r.payments, 0) + totalBulkPayments;
+
+//     // Outstanding = oldAmount + newBilled - returns - payments
+//     const totalBilled = ledger.reduce((s, r) => s + r.amount, 0);
+//     const totalReturns = ledger.reduce((s, r) => s + r.returns, 0);
+
+//     // We need to figure out how much of payments go toward old amount
+//     // Simple approach: all payments reduce total outstanding (old + new)
+//     // outstanding = oldAmount + totalBilled - totalReturns - totalPaymentsAll
+//     const totalDue = oldAmount + totalBilled - totalReturns - totalPaymentsAll;
+
 //     const totals = {
-//       totalBilled: ledger.reduce((s, r) => s + r.amount, 0),
-//       totalReturns: ledger.reduce((s, r) => s + r.returns, 0),
-//       totalPayments: ledger.reduce((s, r) => s + r.payments, 0) + totalBulkPayments,
-//       totalDue: ledger.reduce((s, r) => s + r.due, 0) - totalBulkPayments,
+//       totalBilled,
+//       totalReturns,
+//       totalPayments: totalPaymentsAll,
+//       totalDue,
+//       oldAmount,
 //     };
 
 //     paymentTransactions.sort(
@@ -179,6 +214,7 @@
 //         totals,
 //         payments: paymentTransactions,
 //         returns: returnsList,
+//         oldAmount,
 //       },
 //     });
 //   } catch (error) {
@@ -191,9 +227,6 @@
 // }
 
 
-
-
-///////////
 
 
 
@@ -215,7 +248,9 @@ export async function GET(request) {
 
     const normalizedCustomer = customerName.toLowerCase().trim();
 
+    // ════════════════════════════════════════
     // 1. Fetch Challans
+    // ════════════════════════════════════════
     const challansRes = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: 'Challans_Data!A2:P',
@@ -232,7 +267,9 @@ export async function GET(request) {
 
     const challanNos = new Set(customerChallans.map(c => c.challanNo));
 
+    // ════════════════════════════════════════
     // 2. Fetch Returns
+    // ════════════════════════════════════════
     const returnsRes = await sheets.spreadsheets.values.get({
       spreadsheetId,
       range: 'Return_Data!A2:I',
@@ -269,7 +306,9 @@ export async function GET(request) {
       }
     });
 
+    // ════════════════════════════════════════
     // 3. Fetch Return Items
+    // ════════════════════════════════════════
     let returnItemsRes;
     try {
       returnItemsRes = await sheets.spreadsheets.values.get({
@@ -305,7 +344,9 @@ export async function GET(request) {
 
     returnsList.sort((a, b) => new Date(b.returnDate) - new Date(a.returnDate));
 
+    // ════════════════════════════════════════
     // 4. Fetch Payments
+    // ════════════════════════════════════════
     let paymentMap = {};
     let paymentTransactions = [];
 
@@ -338,12 +379,15 @@ export async function GET(request) {
       console.warn('Payments sheet error:', err.message);
     }
 
-    // 5. Fetch OLD Amount Ledger
+    // ════════════════════════════════════════
+    // 5. Fetch OLD Amount Ledger (✅ with date)
+    // ════════════════════════════════════════
     let oldAmount = 0;
+    let oldAmountDate = ''; // ✅ NEW - C column ki date
     try {
       const oldLedgerRes = await sheets.spreadsheets.values.get({
         spreadsheetId,
-        range: 'OLD_Amount_Ledger!A2:B',
+        range: 'OLD_Amount_Ledger!A2:C',
       });
       const oldLedgerRows = oldLedgerRes.data.values || [];
 
@@ -352,13 +396,31 @@ export async function GET(request) {
         const rowName = row[0].toString().trim().toLowerCase();
         if (rowName === normalizedCustomer) {
           oldAmount += parseFloat(row[1]) || 0;
+
+          // ✅ Pickup latest date from C column
+          if (row[2]) {
+            const currentDate = row[2].toString().trim();
+            if (!oldAmountDate) {
+              oldAmountDate = currentDate;
+            } else {
+              try {
+                if (new Date(currentDate) > new Date(oldAmountDate)) {
+                  oldAmountDate = currentDate;
+                }
+              } catch (e) {
+                // If date parsing fails, keep current
+              }
+            }
+          }
         }
       });
     } catch (err) {
       console.warn('OLD_Amount_Ledger sheet error:', err.message);
     }
 
+    // ════════════════════════════════════════
     // 6. Build Ledger
+    // ════════════════════════════════════════
     const ledger = customerChallans
       .map(ch => {
         const returns = returnMap[ch.challanNo] || 0;
@@ -375,20 +437,17 @@ export async function GET(request) {
       })
       .sort((a, b) => new Date(a.date) - new Date(b.date));
 
+    // ════════════════════════════════════════
     // 7. Totals
+    // ════════════════════════════════════════
     const totalBulkPayments = paymentMap['bulk'] || 0;
 
-    // Total payments including bulk
     const totalPaymentsAll =
       ledger.reduce((s, r) => s + r.payments, 0) + totalBulkPayments;
 
-    // Outstanding = oldAmount + newBilled - returns - payments
     const totalBilled = ledger.reduce((s, r) => s + r.amount, 0);
     const totalReturns = ledger.reduce((s, r) => s + r.returns, 0);
 
-    // We need to figure out how much of payments go toward old amount
-    // Simple approach: all payments reduce total outstanding (old + new)
-    // outstanding = oldAmount + totalBilled - totalReturns - totalPaymentsAll
     const totalDue = oldAmount + totalBilled - totalReturns - totalPaymentsAll;
 
     const totals = {
@@ -403,6 +462,9 @@ export async function GET(request) {
       (a, b) => new Date(b.paymentDate) - new Date(a.paymentDate)
     );
 
+    // ════════════════════════════════════════
+    // 8. Return Response (✅ with oldAmountDate)
+    // ════════════════════════════════════════
     return NextResponse.json({
       success: true,
       data: {
@@ -411,6 +473,7 @@ export async function GET(request) {
         payments: paymentTransactions,
         returns: returnsList,
         oldAmount,
+        oldAmountDate,  // ✅ NEW - C column ki date
       },
     });
   } catch (error) {
