@@ -888,7 +888,8 @@ table.items tbody{height:100%;}
 table.items tbody tr{border-bottom:1px solid #ddd}
 table.items tbody tr:nth-child(even){background:#FAFAFA}
 table.items tbody tr:nth-child(odd){background:#fff}
-table.items td{padding:7px 10px;font-size:13.5px;border-right:1px solid #000;vertical-align:top;line-height:1.4;color:#000;font-weight:500}
+table.items td{padding:6px 8px;font-size:13px;border-right:1px solid #000;vertical-align:middle;line-height:1.3;color:#000;font-weight:500}
+table.items td.r{white-space:nowrap;}
 table.items td:last-child{border-right:none}
 table.items td.r{text-align:right;font-variant-numeric:tabular-nums}
 table.items td.c{text-align:center}
@@ -898,7 +899,7 @@ table.items .erow td:last-child{border-right:none}
 
 /* ===== SPACER ROW - fills all remaining height ===== */
 table.items .spacer-row{height:100%;}
-table.items .spacer-row td{height:100%;border-right:1px solid #000;border-bottom:none!important;}
+table.items .spacer-row td{ height: auto !important;border-right:1px solid #000;border-bottom:none!important;}
 table.items .spacer-row td:last-child{border-right:none!important;}
 
 /* ===== FOOTER ===== */
@@ -966,9 +967,147 @@ table.items tbody tr{border-bottom:1px solid #000!important;}
 .ktp-charge-header{background:#FDF8F2!important;}
 .ktp-logo-circle{border:3px solid #000!important;}
 .ktp-footer{margin-bottom:22px!important;}
+table.items tbody tr {
+  page-break-inside: avoid;
+  break-inside: avoid;
+}
 }
 @page{size:A4;margin:5mm 5mm 5mm 5mm;}
 `;
+
+
+// function getChallanPrintHTML(
+//   order,
+//   challan,
+//   hidePrice = false,
+//   chargesList = [],
+//   gstRate = 0,
+//   gstAmount = 0,
+// ) {
+//   const regularItems = (challan.items || []).filter((it) => !it.isCharge);
+//   const itemsTotal = regularItems.reduce(
+//     (s, it) => s + parseFloat(it.amount || 0),
+//     0,
+//   );
+//   const chargesTotal = chargesList.reduce((s, ch) => s + ch.amount, 0);
+//   const subTotalWithCharges = itemsTotal + chargesTotal;
+//   const calculatedGST =
+//     gstRate > 0 ? (subTotalWithCharges * gstRate) / 100 : gstAmount || 0;
+//   const finalGrandTotal = subTotalWithCharges + calculatedGST;
+//   const challanTotal = hidePrice ? 0 : finalGrandTotal;
+
+//   let sno = 0;
+//   const formatQty = (val) => {
+//     const num = parseFloat(val || 0);
+//     if (isNaN(num)) return val || "0";
+//     return num % 1 === 0 ? num.toString() : parseFloat(num.toFixed(3)).toString();
+//   };
+
+//   const itemRowsArr = regularItems.map((it) => {
+//     sno++;
+//     let qtyVal = formatQty(it.calculatedQty || it.sentQty);
+//     let qtyWithUnit = it.unit ? `${qtyVal} ${it.unit}` : qtyVal;
+
+//     const pieces = parseFloat(it.quantity || 0);
+//     const showPiecesUnits = ["CFT", "RFT", "SQFT"];
+
+//     if (showPiecesUnits.includes(it.unit) && pieces > 0) {
+//       const pcs = formatQty(pieces);
+//       qtyWithUnit = `${qtyVal} ${it.unit} <span class="item-detail">(${pcs} pcs)</span>`;
+//     }
+
+//     let descText = `<strong>${it.product}</strong>`;
+//     let details = [];
+
+//     if (it.size) {
+//       const sizeWithoutSpaces = it.size.replace(/\s/g, '').toLowerCase();
+//       const productLower = (it.product || '').replace(/\s/g, '').toLowerCase();
+//       const sizeVariations = [
+//         sizeWithoutSpaces,
+//         sizeWithoutSpaces.replace(/×/g, 'x'),
+//         sizeWithoutSpaces.replace(/x/g, '×'),
+//         sizeWithoutSpaces.replace(/"/g, ''),
+//         sizeWithoutSpaces.replace(/×/g, 'x').replace(/"/g, ''),
+//         sizeWithoutSpaces.replace(/x/g, '×').replace(/"/g, ''),
+//       ];
+//       const sizeAlreadyInName = sizeVariations.some(v => v && productLower.includes(v));
+//       if (!sizeAlreadyInName) {
+//         details.push(it.size);
+//       }
+//     }
+
+//     if (it.specification?.trim()) details.push(`(${it.specification})`);
+//     const ld = it.lengthDisplay || "";
+//     if (ld && ld !== "0'-0\"" && ld !== "'-\"" && ld !== "-") details.push(ld);
+//     if (details.length)
+//       descText += ` <span class="item-detail" style="display:inline;">${details.join(" · ")}</span>`;
+
+//     return `<tr><td class="c">${sno}</td><td class="tl">${descText}</td>${!hidePrice ? `<td class="r">${qtyWithUnit}</td><td class="r">₹${parseFloat(it.rate || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</td><td class="r"><strong>₹${parseFloat(it.amount || 0).toLocaleString("en-IN", { minimumFractionDigits: 2 })}</strong></td>` : `<td class="r">${qtyWithUnit}</td>`}</tr>`;
+//   });
+
+//   const colCount = hidePrice ? 3 : 5;
+
+//   // ===== 12 items per page =====
+//   const ITEMS_PER_PAGE = 19;
+
+//   const pages = [];
+//   if (itemRowsArr.length === 0) {
+//     pages.push([]);
+//   } else {
+//     for (let i = 0; i < itemRowsArr.length; i += ITEMS_PER_PAGE) {
+//       pages.push(itemRowsArr.slice(i, i + ITEMS_PER_PAGE));
+//     }
+//   }
+
+//   // Charges HTML
+//   let chargesHtml = "";
+//   if (chargesList.length > 0 && !hidePrice) {
+//     chargesHtml = `<div class="ktp-charge-section"><div class="ktp-charge-header">ADDITIONAL CHARGES</div>${chargesList.map((ch) => `<div class="ktp-charge-row"><span class="ktp-charge-name">${ch.name}</span><span class="ktp-charge-amt">₹${ch.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>`).join("")}</div>`;
+//   }
+
+//   // Footer right for LAST page (with totals)
+//   let footerRightLast = "";
+//   if (!hidePrice) {
+//     footerRightLast = `${chargesHtml}<div class="ktp-total-row"><span class="ktp-total-label">Items Total</span><span class="ktp-total-val">₹${itemsTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>${chargesTotal > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Charges Total</span><span class="ktp-total-val">₹${chargesTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}${gstRate > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Sub Total</span><span class="ktp-total-val">₹${subTotalWithCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-total-row"><span class="ktp-total-label">GST (${gstRate}%)</span><span class="ktp-total-val">₹${calculatedGST.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}<div class="ktp-total-row grand"><span class="ktp-total-label">GRAND TOTAL</span><span class="ktp-total-val">₹${challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
+//   } else {
+//     footerRightLast = `<div class="ktp-no-price-box"><div style="font-size:22px;">📋</div><div>DELIVERY CHALLAN</div><div style="font-size:9px;font-weight:normal;color:#999;">For Goods Reference Only</div></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
+//   }
+
+//   // Footer right for CONTINUED pages
+//   const footerRightContinued = `<div class="ktp-no-price-box"><div style="font-size:13px;color:#666;">Continued on next page...</div></div>`;
+
+//   const consigneeInfoHTML = `<div class="ktp-compact-row"><span class="ktp-info-title-box">CONSIGNOR (DETAILS OF RECEIVER)</span><div class="ktp-compact-field"><span class="ktp-compact-label">Phone No.:</span><span class="ktp-compact-value">${order.customerPhone || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">Vehicle No.:</span><span class="ktp-compact-value">${order.vehicleNo || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field flex-name"><span class="ktp-compact-label">Name:</span><span class="ktp-compact-value">${order.customerName || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">PO No.:</span><span class="ktp-compact-value">${order.poNumber || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field" style="flex:1;"><span class="ktp-compact-label">Address:</span><span class="ktp-compact-value">${order.customerAddress || ""}</span></div></div>`;
+
+//   // Build each page HTML
+//   const pagesHTML = pages.map((pageRows, pageIdx) => {
+//     const isLastPage = pageIdx === pages.length - 1;
+//     const footerRight = isLastPage ? footerRightLast : footerRightContinued;
+
+//     // Fill empty rows
+//     const emptyCount = Math.max(0, ITEMS_PER_PAGE - pageRows.length);
+//     let emptyRows = "";
+//     for (let i = 0; i < emptyCount; i++) {
+//       let cells = "";
+//       for (let j = 0; j < colCount; j++) cells += `<td>&nbsp;</td>`;
+//       emptyRows += `<tr class="erow">${cells}</tr>`;
+//     }
+
+//     // ✅ Add spacer row that fills remaining vertical space
+//     let spacerCells = "";
+//     for (let j = 0; j < colCount; j++) spacerCells += `<td>&nbsp;</td>`;
+//     const spacerRow = `<tr class="spacer-row">${spacerCells}</tr>`;
+//     emptyRows += spacerRow;
+
+//     return `<div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title"> Delivery CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${pageRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRight}</div></div></div></div>`;
+//   }).join("");
+
+//   return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Challan ${challan.challanNo}</title><style>${PRINT_CSS}</style></head><body><div class="action-bar"><button class="action-btn btn-print" onclick="window.print()">🖨️ Print Challan</button><button class="action-btn btn-save" onclick="savePDF()">💾 Save as PDF</button><button class="action-btn btn-close" onclick="window.close()">✕ Close</button></div>${pagesHTML}<script>function savePDF(){var ab=document.querySelector('.action-bar');if(ab)ab.style.display='none';window.print();setTimeout(function(){if(ab)ab.style.display='flex';},1200);}</script></body></html>`;
+// }
+
+
+/////////////////////////////////////////////////////////////////////////
+
+
 
 
 function getChallanPrintHTML(
@@ -1042,17 +1181,15 @@ function getChallanPrintHTML(
 
   const colCount = hidePrice ? 3 : 5;
 
-  // ===== 12 items per page =====
-  const ITEMS_PER_PAGE = 13;
+  // ✅ Fixed number of items per page (18 works well for A4)
+  // Agar aap chahe to is value ko 19 ya 20 kar sakte hain, lekin 18 safe hai.
+  const ITEMS_PER_PAGE = 18;
 
   const pages = [];
-  if (itemRowsArr.length === 0) {
-    pages.push([]);
-  } else {
-    for (let i = 0; i < itemRowsArr.length; i += ITEMS_PER_PAGE) {
-      pages.push(itemRowsArr.slice(i, i + ITEMS_PER_PAGE));
-    }
+  for (let i = 0; i < itemRowsArr.length; i += ITEMS_PER_PAGE) {
+    pages.push(itemRowsArr.slice(i, i + ITEMS_PER_PAGE));
   }
+  if (pages.length === 0) pages.push([]);
 
   // Charges HTML
   let chargesHtml = "";
@@ -1060,15 +1197,12 @@ function getChallanPrintHTML(
     chargesHtml = `<div class="ktp-charge-section"><div class="ktp-charge-header">ADDITIONAL CHARGES</div>${chargesList.map((ch) => `<div class="ktp-charge-row"><span class="ktp-charge-name">${ch.name}</span><span class="ktp-charge-amt">₹${ch.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>`).join("")}</div>`;
   }
 
-  // Footer right for LAST page (with totals)
   let footerRightLast = "";
   if (!hidePrice) {
     footerRightLast = `${chargesHtml}<div class="ktp-total-row"><span class="ktp-total-label">Items Total</span><span class="ktp-total-val">₹${itemsTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>${chargesTotal > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Charges Total</span><span class="ktp-total-val">₹${chargesTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}${gstRate > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Sub Total</span><span class="ktp-total-val">₹${subTotalWithCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-total-row"><span class="ktp-total-label">GST (${gstRate}%)</span><span class="ktp-total-val">₹${calculatedGST.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}<div class="ktp-total-row grand"><span class="ktp-total-label">GRAND TOTAL</span><span class="ktp-total-val">₹${challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
   } else {
     footerRightLast = `<div class="ktp-no-price-box"><div style="font-size:22px;">📋</div><div>DELIVERY CHALLAN</div><div style="font-size:9px;font-weight:normal;color:#999;">For Goods Reference Only</div></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
   }
-
-  // Footer right for CONTINUED pages
   const footerRightContinued = `<div class="ktp-no-price-box"><div style="font-size:13px;color:#666;">Continued on next page...</div></div>`;
 
   const consigneeInfoHTML = `<div class="ktp-compact-row"><span class="ktp-info-title-box">CONSIGNOR (DETAILS OF RECEIVER)</span><div class="ktp-compact-field"><span class="ktp-compact-label">Phone No.:</span><span class="ktp-compact-value">${order.customerPhone || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">Vehicle No.:</span><span class="ktp-compact-value">${order.vehicleNo || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field flex-name"><span class="ktp-compact-label">Name:</span><span class="ktp-compact-value">${order.customerName || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">PO No.:</span><span class="ktp-compact-value">${order.poNumber || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field" style="flex:1;"><span class="ktp-compact-label">Address:</span><span class="ktp-compact-value">${order.customerAddress || ""}</span></div></div>`;
@@ -1078,34 +1212,16 @@ function getChallanPrintHTML(
     const isLastPage = pageIdx === pages.length - 1;
     const footerRight = isLastPage ? footerRightLast : footerRightContinued;
 
-    // Fill empty rows
-    const emptyCount = Math.max(0, ITEMS_PER_PAGE - pageRows.length);
-    let emptyRows = "";
-    for (let i = 0; i < emptyCount; i++) {
-      let cells = "";
-      for (let j = 0; j < colCount; j++) cells += `<td>&nbsp;</td>`;
-      emptyRows += `<tr class="erow">${cells}</tr>`;
-    }
-
-    // ✅ Add spacer row that fills remaining vertical space
+    // Spacer row to fill remaining vertical space (ensures footer stays at bottom)
     let spacerCells = "";
     for (let j = 0; j < colCount; j++) spacerCells += `<td>&nbsp;</td>`;
     const spacerRow = `<tr class="spacer-row">${spacerCells}</tr>`;
-    emptyRows += spacerRow;
 
-    return `<div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title"> Delivery CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${pageRows.join("")}${emptyRows}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRight}</div></div></div></div>`;
+    return `<div class="page-wrapper"><div class="page-content"><div class="ktp-header"><div class="ktp-logo-circle"><img src="/logo.jpeg" alt="KTP" /></div><div class="ktp-header-center"><div class="ktp-brand-name">Krishna</div><div class="ktp-brand-sub">Timber &amp; Plywoods</div><div class="ktp-brand-addr">${SHOP_INFO.address} &nbsp;|&nbsp; Ph.: ${SHOP_INFO.phone}, ${SHOP_INFO.phone2}</div></div><div class="ktp-header-right-space"></div></div><div class="ktp-meta"><div class="ktp-meta-left"><div class="ktp-since">Chhabra's Since 1979</div><div class="ktp-gstin">GSTIN : ${SHOP_INFO.gstin}</div><div class="ktp-cust-gst">Cust. GST No.: <span class="ktp-cust-gst-value">${order.gstCustomerName || ""}</span></div></div><div class="ktp-dc-box"><div class="ktp-dc-title"> Delivery CHALLAN</div><div class="ktp-dc-details">No.: <strong>${challan.challanNo}</strong> &nbsp;&nbsp;&nbsp; Date: <strong>${new Date(challan.challanDate).toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" })}</strong></div></div></div><div class="ktp-info">${consigneeInfoHTML}</div><div class="ktp-table-wrap"><table class="items"><thead><tr><th style="width:35px">S.No.</th><th class="tl">Description of Goods</th>${!hidePrice ? `<th style="width:95px">Quantity</th><th style="width:80px">Rate</th><th style="width:95px">Amount</th>` : `<th style="width:100px">Quantity</th>`}</tr></thead><tbody>${pageRows.join("")}${spacerRow}</tbody></table></div><div class="ktp-footer"><div class="ktp-footer-left"><div class="ktp-terms-section"><div class="ktp-footer-cert">Certified that the particulars given above are true and correct.</div><ul class="ktp-terms-list"><li>Goods once sold will not be taken back or exchanged.</li><li>All disputes are subject to Bhopal jurisdiction only.</li><li>Interest @2% per month will be charged on overdue payments.</li></ul></div><div class="ktp-sig-area"><div class="ktp-sig-box"><div class="ktp-sig-line"></div><div class="ktp-sig-label">Customer Signature</div></div><div class="ktp-sig-box"><div class="ktp-footer-for-inline">For : Krishna Timber &amp; Plywoods</div><div class="ktp-sig-line"></div><div class="ktp-sig-label">Authorised Signatory</div></div></div></div><div class="ktp-footer-right">${footerRight}</div></div></div></div>`;
   }).join("");
 
   return `<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Challan ${challan.challanNo}</title><style>${PRINT_CSS}</style></head><body><div class="action-bar"><button class="action-btn btn-print" onclick="window.print()">🖨️ Print Challan</button><button class="action-btn btn-save" onclick="savePDF()">💾 Save as PDF</button><button class="action-btn btn-close" onclick="window.close()">✕ Close</button></div>${pagesHTML}<script>function savePDF(){var ab=document.querySelector('.action-bar');if(ab)ab.style.display='none';window.print();setTimeout(function(){if(ab)ab.style.display='flex';},1200);}</script></body></html>`;
 }
-
-
-///////////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 
 
