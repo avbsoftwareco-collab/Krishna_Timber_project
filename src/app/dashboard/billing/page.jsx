@@ -1191,7 +1191,7 @@ function getChallanPrintHTML(
   }
   if (pages.length === 0) pages.push([]);
 
-  // Charges HTML
+  // Charges HTML /////////
   let chargesHtml = "";
   if (chargesList.length > 0 && !hidePrice) {
     chargesHtml = `<div class="ktp-charge-section"><div class="ktp-charge-header">ADDITIONAL CHARGES</div>${chargesList.map((ch) => `<div class="ktp-charge-row"><span class="ktp-charge-name">${ch.name}</span><span class="ktp-charge-amt">₹${ch.amount.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>`).join("")}</div>`;
