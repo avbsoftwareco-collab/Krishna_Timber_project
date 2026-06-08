@@ -1043,7 +1043,7 @@ function getChallanPrintHTML(
   const colCount = hidePrice ? 3 : 5;
 
   // ===== 12 items per page =====
-  const ITEMS_PER_PAGE = 15;
+  const ITEMS_PER_PAGE = 13;
 
   const pages = [];
   if (itemRowsArr.length === 0) {
@@ -1100,7 +1100,18 @@ function getChallanPrintHTML(
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////
+
+
+
+
+
+
+
+
+
+
+
 
 const apiGet = async (url) => {
   try {
