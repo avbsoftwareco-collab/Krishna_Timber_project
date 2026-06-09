@@ -64,7 +64,7 @@ const WOODEN_BALUSTER_UNIT_OPTIONS = ["Per Piece", "CFT"];
 
 const KITCHEN_UNIT_OPTIONS = ["Per Piece", "Set"];
 const LOUVER_UNIT_OPTIONS = ["Per Piece"];
-const LAMINATE_UNIT_OPTIONS = ["PCS,Per Piece"];
+const LAMINATE_UNIT_OPTIONS = ["PCS" ,"Per Piece"];
 const DOOR_FRAME_UNIT_OPTIONS = ["CFT", "Per Piece"];
 
 const CHARGE_TYPES = [
