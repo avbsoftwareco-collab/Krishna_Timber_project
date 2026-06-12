@@ -1129,8 +1129,11 @@ function getChallanPrintHTML(
   const subTotalWithCharges = itemsTotal + chargesTotal;
   const calculatedGST =
     gstRate > 0 ? (subTotalWithCharges * gstRate) / 100 : gstAmount || 0;
-  const finalGrandTotal = subTotalWithCharges + calculatedGST;
-  const challanTotal = hidePrice ? 0 : finalGrandTotal;
+
+const finalGrandTotal = subTotalWithCharges + calculatedGST;
+// ✅ order.roundUp se rounded value lo
+const roundUpVal = parseFloat(order.roundUp || 0);
+const challanTotal = hidePrice ? 0 : (finalGrandTotal + roundUpVal);
 
   let sno = 0;
   const formatQty = (val) => {
@@ -1200,11 +1203,38 @@ function getChallanPrintHTML(
   }
 
   let footerRightLast = "";
-  if (!hidePrice) {
-    footerRightLast = `${chargesHtml}<div class="ktp-total-row"><span class="ktp-total-label">Items Total</span><span class="ktp-total-val">₹${itemsTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>${chargesTotal > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Charges Total</span><span class="ktp-total-val">₹${chargesTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}${gstRate > 0 ? `<div class="ktp-total-row"><span class="ktp-total-label">Sub Total</span><span class="ktp-total-val">₹${subTotalWithCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-total-row"><span class="ktp-total-label">GST (${gstRate}%)</span><span class="ktp-total-val">₹${calculatedGST.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div>` : ""}<div class="ktp-total-row grand"><span class="ktp-total-label">GRAND TOTAL</span><span class="ktp-total-val">₹${challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
-  } else {
-    footerRightLast = `<div class="ktp-no-price-box"><div style="font-size:22px;">📋</div><div>DELIVERY CHALLAN</div><div style="font-size:9px;font-weight:normal;color:#999;">For Goods Reference Only</div></div><div class="ktp-eoe-line">E. &amp; O.E.</div>`;
-  }
+if (!hidePrice) {
+  footerRightLast = `${chargesHtml}
+  <div class="ktp-total-row">
+    <span class="ktp-total-label">Items Total</span>
+    <span class="ktp-total-val">₹${itemsTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+  </div>
+  ${chargesTotal > 0 ? `
+  <div class="ktp-total-row">
+    <span class="ktp-total-label">Charges Total</span>
+    <span class="ktp-total-val">₹${chargesTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+  </div>` : ""}
+  ${gstRate > 0 ? `
+  <div class="ktp-total-row">
+    <span class="ktp-total-label">Sub Total</span>
+    <span class="ktp-total-val">₹${subTotalWithCharges.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+  </div>
+  <div class="ktp-total-row">
+    <span class="ktp-total-label">GST (${gstRate}%)</span>
+    <span class="ktp-total-val">₹${calculatedGST.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+  </div>` : ""}
+  ${roundUpVal !== 0 ? `
+  <div class="ktp-total-row">
+    <span class="ktp-total-label">Round ${roundUpVal > 0 ? 'Up' : 'Off'}</span>
+    <span class="ktp-total-val">${roundUpVal > 0 ? '+' : ''}₹${roundUpVal.toFixed(2)}</span>
+  </div>` : ""}
+  <div class="ktp-total-row grand">
+    <span class="ktp-total-label">GRAND TOTAL</span>
+    <span class="ktp-total-val">₹${challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+  </div>
+  <div class="ktp-eoe-line">E. &amp; O.E.</div>`;
+}
+
   const footerRightContinued = `<div class="ktp-no-price-box"><div style="font-size:13px;color:#666;">Continued on next page...</div></div>`;
 
   const consigneeInfoHTML = `<div class="ktp-compact-row"><span class="ktp-info-title-box">CONSIGNOR (DETAILS OF RECEIVER)</span><div class="ktp-compact-field"><span class="ktp-compact-label">Phone No.:</span><span class="ktp-compact-value">${order.customerPhone || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">Vehicle No.:</span><span class="ktp-compact-value">${order.vehicleNo || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field flex-name"><span class="ktp-compact-label">Name:</span><span class="ktp-compact-value">${order.customerName || ""}</span></div><div class="ktp-compact-field"><span class="ktp-compact-label">PO No.:</span><span class="ktp-compact-value">${order.poNumber || ""}</span></div></div><div class="ktp-compact-row"><div class="ktp-compact-field" style="flex:1;"><span class="ktp-compact-label">Address:</span><span class="ktp-compact-value">${order.customerAddress || ""}</span></div></div>`;
@@ -1297,26 +1327,69 @@ export default function ChallanOnlyBilling() {
   const [lastChallanNo, setLastChallanNo] = useState("");
 const [editingChallan, setEditingChallan] = useState(null);
 const [savingToSheet, setSavingToSheet] = useState(null)
+const [paymentsData, setPaymentsData] = useState([]);
 
 
   // Challan form state
-  const [challanForm, setChallanForm] = useState({
-    customerName: "",
-    customerPhone: "",
-    customerAddress: "",
-    vehicleNo: "",
-    challanDate: new Date().toISOString().split("T")[0],
-    gstRate: 0,
-    notes: "",
-    poNumber: "",
-    gstCustomerName: "",
-    hidePrice: false,
-  });
-
+ const [challanForm, setChallanForm] = useState({
+  customerName: "",
+  customerPhone: "",
+  customerAddress: "",
+  vehicleNo: "",
+  challanDate: new Date().toISOString().split("T")[0],
+  gstRate: 0,
+  notes: "",
+  poNumber: "",
+  gstCustomerName: "",
+  hidePrice: false,
+  roundUp: "",  // ✅ NEW
+});
   const [itemGroups, setItemGroups] = useState([createEmptyGroup()]);
   const [charges, setCharges] = useState([]);
 
   const T = darkMode ? DARK : LIGHT;
+
+
+  const getPaymentStatus = (challan) => {
+  const challanNo = challan.challanNo;
+  const challanTotal = parseFloat(challan.challanTotal || 0);
+
+  if (challanTotal <= 0 || challan.hidePrice) return null;
+
+  const challanPayments = paymentsData.filter(p => {
+    const pChallan = (p.challanNo || '').toString().trim();
+    return pChallan === challanNo;
+  });
+
+  const totalPaid = challanPayments.reduce(
+    (s, p) => s + parseFloat(p.amount || 0), 0
+  );
+  
+  const due = challanTotal - totalPaid;
+
+  if (totalPaid <= 0) {
+    return { 
+      status: 'unpaid', 
+      paid: 0, 
+      due: challanTotal, 
+      total: challanTotal 
+    };
+  } else if (due <= 0.5) {
+    return { 
+      status: 'paid', 
+      paid: totalPaid, 
+      due: 0, 
+      total: challanTotal 
+    };
+  } else {
+    return { 
+      status: 'partial', 
+      paid: totalPaid, 
+      due: due, 
+      total: challanTotal 
+    };
+  }
+};
 
   function createEmptyItem(ov = {}) {
     return {
@@ -1386,25 +1459,29 @@ const [savingToSheet, setSavingToSheet] = useState(null)
         filterSubCategory: g.filterSubCategory,
       })),
     );
-  const itemsSubtotal = getAllItems().reduce((s, i) => s + (i.amount || 0), 0);
-  const chargesSubtotal = charges.reduce((s, c) => s + (c.amount || 0), 0);
-  const gstAmount = challanForm.gstRate > 0 ? (itemsSubtotal + chargesSubtotal) * (challanForm.gstRate / 100) : 0;
-  const challanTotal = itemsSubtotal + chargesSubtotal + gstAmount;
+ const itemsSubtotal = getAllItems().reduce((s, i) => s + (i.amount || 0), 0);
+const chargesSubtotal = charges.reduce((s, c) => s + (c.amount || 0), 0);
+const gstAmount = challanForm.gstRate > 0 ? (itemsSubtotal + chargesSubtotal) * (challanForm.gstRate / 100) : 0;
+const calculatedTotal = itemsSubtotal + chargesSubtotal + gstAmount;
+const roundUpValue = parseFloat(challanForm.roundUp || 0);
+const challanTotal = calculatedTotal + roundUpValue;
 
-  const fetchData = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [cR, pR] = await Promise.all([
-        apiGet("/api/billing-backend/challans"),
-        apiGet("/api/dropdown-data"),
-      ]);
-      setChallans(cR.success ? cR.data : []);
-      setProducts(pR.success && pR.data ? pR.data : []);
-    } catch {
-      setError("Data load problem");
-    }
-    setLoading(false);
-  }, []);
+const fetchData = useCallback(async () => {
+  setLoading(true);
+  try {
+    const [cR, pR, payR] = await Promise.all([
+      apiGet("/api/billing-backend/challans"),
+      apiGet("/api/dropdown-data"),
+      apiGet("/api/billing-backend/payments"),
+    ]);
+    setChallans(cR.success ? cR.data : []);
+    setProducts(pR.success && pR.data ? pR.data : []);
+    setPaymentsData(payR.success ? payR.data : []);
+  } catch {
+    setError("Data load problem");
+  }
+  setLoading(false);
+}, []);
 
   useEffect(() => {
     fetchData();
@@ -1426,23 +1503,23 @@ const [savingToSheet, setSavingToSheet] = useState(null)
     return `${prefix}${String(max + 1).padStart(4, "0")}`;
   };
 
-  const resetForm = () => {
-    setChallanForm({
-      customerName: "",
-      customerPhone: "",
-      customerAddress: "",
-      vehicleNo: "",
-      challanDate: new Date().toISOString().split("T")[0],
-      gstRate: 0,
-      notes: "",
-      poNumber: "",
-      gstCustomerName: "",
-      hidePrice: false,
-    });
-    setItemGroups([createEmptyGroup()]);
-    setCharges([]);
-  };
-
+ const resetForm = () => {
+  setChallanForm({
+    customerName: "",
+    customerPhone: "",
+    customerAddress: "",
+    vehicleNo: "",
+    challanDate: new Date().toISOString().split("T")[0],
+    gstRate: 0,
+    notes: "",
+    poNumber: "",
+    gstCustomerName: "",
+    hidePrice: false,
+    roundUp: "",  // ✅ NEW
+  });
+  setItemGroups([createEmptyGroup()]);
+  setCharges([]);
+};
   // Group & item handlers
   const updateGroupFilter = (gid, field, val) =>
     setItemGroups((prev) =>
@@ -1759,7 +1836,6 @@ const handleSubmitChallan = async () => {
   setSaving(true);
   setError(null);
   try {
-    // If editing use same challanNo, else generate new
     const challanNo = editingChallan ? editingChallan.challanNo : genChallanNo();
 
     const validItems = getAllItems()
@@ -1803,6 +1879,10 @@ const handleSubmitChallan = async () => {
       });
     }
 
+    // ✅ Final total with roundUp
+    const finalRoundUp = parseFloat(challanForm.roundUp || 0);
+    const finalTotal = itemsSubtotal + chargesSubtotal + gstAmount + finalRoundUp;
+
     const payload = {
       challan: {
         challanNo,
@@ -1815,19 +1895,24 @@ const handleSubmitChallan = async () => {
         gstCustomerName: challanForm.gstCustomerName,
         challanDate: challanForm.challanDate,
         deliveryNote: challanForm.notes,
-        challanTotal,
+        challanTotal: finalTotal,
         status: "Delivered",
         hidePrice: challanForm.hidePrice,
         gstRate: challanForm.gstRate,
         gstAmount,
         subtotal: itemsSubtotal,
         chargesTotal: chargesSubtotal,
+        roundUp: finalRoundUp,
       },
       items: validItems,
       charges: validCharges,
     };
 
-    // If editing use PUT, else use POST
+    // ✅ Debug log
+    console.log("Items being sent:", validItems.length);
+    console.log("Charges being sent:", validCharges.length);
+    console.log("Final total:", finalTotal);
+
     let res;
     if (editingChallan) {
       res = await apiPut("/api/billing-backend/challans", payload);
@@ -1845,6 +1930,7 @@ const handleSubmitChallan = async () => {
         vehicleNo: challanForm.vehicleNo,
         poNumber: challanForm.poNumber,
         gstCustomerName: challanForm.gstCustomerName,
+        roundUp: finalRoundUp,
       },
       { ...payload.challan, items: validItems },
       challanForm.hidePrice,
@@ -2200,6 +2286,7 @@ const handleSaveToSheet = async (item, group) => {
           const gstEntry = (ch.charges || []).find((c) => c.type === "gst");
           const gstRate = parseFloat(ch.gstRate || gstEntry?.quantity || 0);
           const gstAmount = parseFloat(ch.gstAmount || gstEntry?.amount || 0);
+           const payStatus = getPaymentStatus(ch);
           return (
             <div key={ch.challanNo} className="kt-card" style={{ padding: 16 }}>
               <div
@@ -2229,7 +2316,7 @@ const handleSaveToSheet = async (item, group) => {
                     >
                       {ch.challanNo}
                     </span>
-                    <span
+                    {/* <span
                       className="status-pill"
                       style={{
                         background: T.successBg,
@@ -2241,7 +2328,50 @@ const handleSaveToSheet = async (item, group) => {
                         style={{ background: "#22c55e" }}
                       />
                       Delivered
-                    </span>
+                    </span> */}
+                    {payStatus && (
+  <span
+    className="status-pill"
+    style={{
+      background:
+        payStatus.status === 'paid'
+          ? (darkMode ? '#052e16' : '#dcfce7')
+          : payStatus.status === 'partial'
+          ? (darkMode ? '#451a03' : '#fef3c7')
+          : (darkMode ? '#450a0a' : '#fef2f2'),
+      color:
+        payStatus.status === 'paid'
+          ? (darkMode ? '#4ade80' : '#166534')
+          : payStatus.status === 'partial'
+          ? (darkMode ? '#fbbf24' : '#92400e')
+          : (darkMode ? '#fca5a5' : '#dc2626'),
+      border: `1px solid ${
+        payStatus.status === 'paid'
+          ? (darkMode ? '#166534' : '#bbf7d0')
+          : payStatus.status === 'partial'
+          ? (darkMode ? '#92400e' : '#fde68a')
+          : (darkMode ? '#7f1d1d' : '#fecaca')
+      }`,
+      fontWeight: 700,
+      fontSize: 11,
+    }}
+  >
+    <span
+      className="status-dot"
+      style={{
+        background:
+          payStatus.status === 'paid' ? '#22c55e'
+          : payStatus.status === 'partial' ? '#f59e0b'
+          : '#ef4444',
+      }}
+    />
+    {payStatus.status === 'paid'
+      ? '✓ PAID'
+      : payStatus.status === 'partial'
+      ? '◑ PARTIAL'
+      : '✗ UNPAID'}
+  </span>
+)}
                     {ch.hidePrice && (
                       <span
                         className="status-pill"
@@ -2268,29 +2398,44 @@ const handleSaveToSheet = async (item, group) => {
                   >
                     {ch.customerName}
                   </p>
-                  <p style={{ fontSize: 12, color: T.textMuted, margin: 0 }}>
-                    {new Date(ch.challanDate).toLocaleDateString()} •{" "}
-                    {(ch.items || []).length} items
-                    {!ch.hidePrice &&
-                      ` • ₹${parseFloat(ch.challanTotal || 0).toLocaleString()}`}
-                  </p>
+                 <p style={{ fontSize: 12, color: T.textMuted, margin: 0 }}>
+  {new Date(ch.challanDate).toLocaleDateString()} •{" "}
+  {(ch.items || []).length} items
+  {!ch.hidePrice &&
+    ` • ₹${parseFloat(ch.challanTotal || 0).toLocaleString()}`}
+  {payStatus && payStatus.status === 'partial' && (
+    <span style={{ color: '#d97706', fontWeight: 600 }}>
+      {' '}• Due: ₹{payStatus.due.toFixed(0)}
+    </span>
+  )}
+  {payStatus && payStatus.status === 'unpaid' && (
+    <span style={{ color: '#dc2626', fontWeight: 600 }}>
+      {' '}• Unpaid
+    </span>
+  )}
+  {payStatus && payStatus.status === 'paid' && (
+    <span style={{ color: '#166534', fontWeight: 600 }}>
+      {' '}• Fully Paid ✓
+    </span>
+  )}
+</p>
                 </div>
                 <div style={{ display: "flex", gap: 8 }}>
   <button
     className="btn-white"
     style={{ padding: "5px 12px", fontSize: 12 }}
-    onClick={() => {
-      openPDFView(
-        getChallanPrintHTML(
-          ch,          // ✅ ab challan object hi bhejo (usme saare customer fields hain)
-          ch,
-          ch.hidePrice,
-          regularCharges,
-          gstRate,
-          gstAmount,
-        ),
-      );
-    }}
+   onClick={() => {
+  openPDFView(
+    getChallanPrintHTML(
+      { ...ch, roundUp: ch.roundUp || 0 }, // ✅
+      ch,
+      ch.hidePrice,
+      regularCharges,
+      gstRate,
+      gstAmount,
+    ),
+  );
+}}
   >
     <Eye size={12} /> View
   </button>
@@ -2306,17 +2451,17 @@ const handleSaveToSheet = async (item, group) => {
     className="btn-maroon"
     style={{ padding: "5px 12px", fontSize: 12 }}
     onClick={() => {
-      openPDFPrint(
-        getChallanPrintHTML(
-          ch,          // ✅ same here
-          ch,
-          ch.hidePrice,
-          regularCharges,
-          gstRate,
-          gstAmount,
-        ),
-      );
-    }}
+  openPDFPrint(
+    getChallanPrintHTML(
+      { ...ch, roundUp: ch.roundUp || 0 }, // ✅
+      ch,
+      ch.hidePrice,
+      regularCharges,
+      gstRate,
+      gstAmount,
+    ),
+  );
+}}
   >
     <Printer size={12} /> Print
   </button>
@@ -3797,64 +3942,130 @@ const handleSaveToSheet = async (item, group) => {
               </div>
 
               {/* Totals */}
-              {!challanForm.hidePrice && (
-                <div style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <div className="total-box" style={{ width: 320 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        marginBottom: 6,
-                        color: T.textDark,
-                      }}
-                    >
-                      <span>Materials</span>
-                      <span>₹{itemsSubtotal.toLocaleString()}</span>
-                    </div>
-                    {chargesSubtotal > 0 && (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          marginBottom: 6,
-                          color: T.textDark,
-                        }}
-                      >
-                        <span>Charges</span>
-                        <span>₹{chargesSubtotal.toLocaleString()}</span>
-                      </div>
-                    )}
-                    {challanForm.gstRate > 0 && (
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          marginBottom: 6,
-                          color: T.textDark,
-                        }}
-                      >
-                        <span>GST ({challanForm.gstRate}%)</span>
-                        <span>₹{gstAmount.toLocaleString()}</span>
-                      </div>
-                    )}
-                    <div
-                      style={{
-                        display: "flex",
-                        justifyContent: "space-between",
-                        fontWeight: "bold",
-                        fontSize: 18,
-                        borderTop: `2px solid ${T.maroon}`,
-                        paddingTop: 8,
-                        marginTop: 8,
-                        color: T.maroon,
-                      }}
-                    >
-                      <span>Grand Total</span>
-                      <span>₹{challanTotal.toLocaleString()}</span>
-                    </div>
-                  </div>
-                </div>
-              )}
+            {!challanForm.hidePrice && (
+  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+    <div className="total-box" style={{ width: 340 }}>
+
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, color: T.textDark }}>
+        <span>Materials</span>
+        <span>₹{itemsSubtotal.toLocaleString()}</span>
+      </div>
+
+      {chargesSubtotal > 0 && (
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, color: T.textDark }}>
+          <span>Charges</span>
+          <span>₹{chargesSubtotal.toLocaleString()}</span>
+        </div>
+      )}
+
+      {challanForm.gstRate > 0 && (
+        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6, color: T.textDark }}>
+          <span>GST ({challanForm.gstRate}%)</span>
+          <span>₹{gstAmount.toLocaleString()}</span>
+        </div>
+      )}
+
+      <div style={{
+        display: "flex", justifyContent: "space-between", alignItems: "center",
+        marginBottom: 8, paddingTop: 8, borderTop: `1px dashed ${T.borderSoft}`,
+      }}>
+        <span style={{ fontSize: 13, color: T.textDark, fontWeight: 500 }}>
+          Round Off
+        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+          <button
+            onClick={() => {
+              const diff = +(Math.round(calculatedTotal) - calculatedTotal).toFixed(2);
+              setChallanForm({ ...challanForm, roundUp: diff.toString() });
+            }}
+            style={{
+              padding: "3px 8px", fontSize: 10, borderRadius: 6,
+              border: `1px solid ${T.borderSoft}`, background: T.creamDark,
+              color: T.textDark, cursor: "pointer", fontWeight: 600,
+            }}
+            title="Nearest ₹1"
+          >
+            ₹1
+          </button>
+          <button
+            onClick={() => {
+              const diff = +(Math.round(calculatedTotal / 10) * 10 - calculatedTotal).toFixed(2);
+              const clamped = Math.max(-9.99, Math.min(9.99, diff));
+              setChallanForm({ ...challanForm, roundUp: clamped.toString() });
+            }}
+            style={{
+              padding: "3px 8px", fontSize: 10, borderRadius: 6,
+              border: `1px solid ${T.borderSoft}`, background: T.creamDark,
+              color: T.textDark, cursor: "pointer", fontWeight: 600,
+            }}
+            title="Nearest ₹10 (max ±9)"
+          >
+            ₹10
+          </button>
+          <button
+            onClick={() => setChallanForm({ ...challanForm, roundUp: "" })}
+            style={{
+              padding: "3px 6px", fontSize: 10, borderRadius: 6,
+              border: `1px solid ${T.borderSoft}`, background: T.creamDark,
+              color: T.errorColor, cursor: "pointer", fontWeight: 600,
+            }}
+            title="Clear"
+          >
+            ✕
+          </button>
+          <input
+            type="number"
+            step="0.01"
+            min="-9.99"
+            max="9.99"
+            placeholder="0.00"
+            value={challanForm.roundUp}
+            onChange={e => {
+              let val = parseFloat(e.target.value || 0);
+              if (val > 9.99) val = 9.99;
+              if (val < -9.99) val = -9.99;
+              setChallanForm({
+                ...challanForm,
+                roundUp: e.target.value === "" ? "" : val.toString()
+              });
+            }}
+            style={{
+              width: 72, padding: "4px 6px",
+              border: `1.5px solid ${roundUpValue > 0 ? T.successColor : roundUpValue < 0 ? T.errorColor : T.borderSoft}`,
+              borderRadius: 8, fontSize: 13,
+              background: T.inputBg, color: T.textDark,
+              outline: "none", textAlign: "right",
+            }}
+          />
+        </div>
+      </div>
+
+      {roundUpValue !== 0 && (
+        <div style={{
+          display: "flex", justifyContent: "space-between",
+          marginBottom: 6, fontSize: 12,
+          color: roundUpValue > 0 ? T.successColor : T.errorColor,
+        }}>
+          <span>{roundUpValue > 0 ? "Round Up (+)" : "Round Down (−)"}</span>
+          <span style={{ fontWeight: 600 }}>
+            {roundUpValue > 0 ? "+" : ""}₹{roundUpValue.toFixed(2)}
+          </span>
+        </div>
+      )}
+
+      <div style={{
+        display: "flex", justifyContent: "space-between",
+        fontWeight: "bold", fontSize: 18,
+        borderTop: `2px solid ${T.maroon}`, paddingTop: 8, marginTop: 4,
+        color: T.maroon,
+      }}>
+        <span>Grand Total</span>
+        <span>₹{challanTotal.toLocaleString("en-IN", { minimumFractionDigits: 2 })}</span>
+      </div>
+
+    </div>
+  </div>
+)}
             </div>
 
             <div
