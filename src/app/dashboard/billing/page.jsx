@@ -63,7 +63,7 @@ const CEILING_PLANK_UNIT_OPTIONS = ["SQFT", "RFT", "Per Piece"];
 const WOODEN_BALUSTER_UNIT_OPTIONS = ["Per Piece", "CFT"];
 
 const KITCHEN_UNIT_OPTIONS = ["Per Piece", "Set"];
-const LOUVER_UNIT_OPTIONS = ["Per Piece"];
+const LOUVER_UNIT_OPTIONS = ["PCS"];
 const LAMINATE_UNIT_OPTIONS = ["PCS" ,"Per Piece"];
 const DOOR_FRAME_UNIT_OPTIONS = ["CFT", "Per Piece"];
 
@@ -328,123 +328,6 @@ function calculateDoorFrameCFT(item) {
   return Math.round(totalCFT * 1000) / 1000;
 }
 
-// function calculateByUnit(item) {
-//   const qty = parseFloat(item.quantity || 0);
-//   const rate = parseFloat(item.rate || 0);
-//   if (isSolidSurface(item)) {
-//     const customL = parseFloat(item.customLength || 0);
-//     const customW = parseFloat(item.customWidth || 0);
-//     let areaPerPc = item.areaPerPiece || 0;
-//     if (customL > 0 && customW > 0) areaPerPc = customL * customW;
-//     const totalSqft = areaPerPc * qty;
-//     return {
-//       calculatedQty: Math.round(totalSqft * 1000) / 1000,
-//       amount: Math.round(totalSqft * rate * 100) / 100,
-//     };
-//   }
-
-//   if (isDoorFrame(item)) {
-//   // Per Piece mode
-//   if (item.unit === "Per Piece") {
-//     return {
-//       calculatedQty: qty,
-//       amount: Math.round(qty * rate * 100) / 100,
-//     };
-//   }
-//   // CFT mode (default)
-//   const totalCFT = calculateDoorFrameCFT(item);
-//   return {
-//     calculatedQty: totalCFT,
-//     amount: Math.round(totalCFT * rate * 100) / 100,
-//   };
-// }
-
-//   if (isCeilingPlank(item)) {
-//     const customL = parseFloat(item.customLength || 0);
-//     const customW = parseFloat(item.customWidth || 0);
-//     let areaPerPc = item.areaPerPiece || 0;
-//     if (customL > 0 && customW > 0) areaPerPc = customL * customW;
-//     let calculatedQty = qty;
-//     if (item.unit === "SQFT") calculatedQty = areaPerPc * qty;
-//     else if (item.unit === "RFT")
-//       calculatedQty = (customL || item.width || 0) * qty;
-//     else calculatedQty = qty;
-//     return {
-//       calculatedQty: Math.round(calculatedQty * 1000) / 1000,
-//       amount: Math.round(calculatedQty * rate * 100) / 100,
-//     };
-//   }
-//   if (isWoodenBaluster(item)) {
-//     const width = parseFloat(item.width || 0);
-//     const thickness = parseFloat(item.thickness || 0);
-//     const lengthFeet =
-//       parseFloat(item.lengthFeet || 0) +
-//       parseFloat(item.lengthInches || 0) / 12;
-//     let calculatedQty = qty;
-//     if (item.unit === "CFT")
-//       calculatedQty = (width * thickness * lengthFeet * qty) / 144;
-//     else calculatedQty = qty;
-//     return {
-//       calculatedQty: Math.round(calculatedQty * 1000) / 1000,
-//       amount: Math.round(calculatedQty * rate * 100) / 100,
-//     };
-//   }
-//   if (isWoodenCladding(item)) {
-//     const width = parseFloat(item.width || 0);
-//     const lengthFeet =
-//       parseFloat(item.lengthFeet || 0) +
-//       parseFloat(item.lengthInches || 0) / 12;
-//     let calculatedQty = qty;
-//     if (item.unit === "SQFT") calculatedQty = (width * lengthFeet * qty) / 12;
-//     else if (item.unit === "RFT") calculatedQty = lengthFeet * qty;
-//     else calculatedQty = qty;
-//     return {
-//       calculatedQty: Math.round(calculatedQty * 1000) / 1000,
-//       amount: Math.round(calculatedQty * rate * 100) / 100,
-//     };
-//   }
-//   if (isTimberWood(item) || (item.isWood && !item.isSheet)) {
-//     const width = parseFloat(item.width || 0);
-//     const thickness = parseFloat(item.thickness || 0);
-//     const lengthFeet =
-//       parseFloat(item.lengthFeet || 0) +
-//       parseFloat(item.lengthInches || 0) / 12;
-//     let calculatedQty = qty;
-//     switch (item.unit) {
-//       case "CFT":
-//         calculatedQty = (width * thickness * lengthFeet * qty) / 144;
-//         break;
-//       case "RFT":
-//         calculatedQty = lengthFeet * qty;
-//         break;
-//       case "SQFT":
-//         calculatedQty = (width * lengthFeet * qty) / 12;
-//         break;
-//       case "Per Piece":
-//       default:
-//         calculatedQty = qty;
-//     }
-//     return {
-//       calculatedQty: Math.round(calculatedQty * 1000) / 1000,
-//       amount: Math.round(calculatedQty * rate * 100) / 100,
-//     };
-//   }
-//   if (item.isSheet && item.unit === "SQFT") {
-//     const customL = parseFloat(item.customLength || 0);
-//     const customW = parseFloat(item.customWidth || 0);
-//     let areaPerPc = item.areaPerPiece || 0;
-//     if (customL > 0 && customW > 0) areaPerPc = customL * customW;
-//     const totalSqft = areaPerPc * qty;
-//     return {
-//       calculatedQty: Math.round(totalSqft * 1000) / 1000,
-//       amount: Math.round(totalSqft * rate * 100) / 100,
-//     };
-//   }
-//   if (item.isSheet && (item.unit === "Per Piece" || item.unit === "Pcs")) {
-//     return { calculatedQty: qty, amount: Math.round(qty * rate * 100) / 100 };
-//   }
-//   return { calculatedQty: qty, amount: Math.round(qty * rate * 100) / 100 };
-// }
 
 
 
