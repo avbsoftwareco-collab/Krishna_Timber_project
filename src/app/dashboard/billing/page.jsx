@@ -33,20 +33,20 @@ const GST_OPTIONS = [
   { value: 18, label: "GST 18%" },
 ];
 
-const WOOD_UNIT_OPTIONS = ["CFT", "RFT", "SQFT", "Per Piece"];
+const WOOD_UNIT_OPTIONS = ["CFT", "RFT", "SQFT", "PCS"];
 const HARDWARE_UNIT_OPTIONS = [
-  "Pcs",
+  "PCS",
   "Pkt",
   "Set",
   "Kg",
  
 ];
 const CUSTOM_UNIT_OPTIONS = [
-  "Pcs",
+  "PCS",
   "CFT",
   "RFT",
   "SQFT",
-  "Per Piece",
+
   "Kg",
   "Meter",
   "Box",
@@ -54,18 +54,18 @@ const CUSTOM_UNIT_OPTIONS = [
   "Pkt",
   "Dozen",
 ];
-const SHEET_UNIT_OPTIONS = ["SQFT", "Per Piece", "Pcs"];
-const CHARGE_UNIT_OPTIONS = ["CFT", "RFT", "SQFT", "Per Piece", "Lump Sum"];
-const TIMBER_UNIT_OPTIONS = ["CFT", "RFT", "SQFT", "Per Piece"];
-const WOODEN_CLADDING_UNIT_OPTIONS = ["Per Piece", "RFT", "SQFT"];
+const SHEET_UNIT_OPTIONS = ["SQFT",  "PCS"];
+const CHARGE_UNIT_OPTIONS = ["CFT", "RFT", "SQFT", "PCS", "Lump Sum"];
+const TIMBER_UNIT_OPTIONS = ["CFT", "RFT", "SQFT", "PCS"];
+const WOODEN_CLADDING_UNIT_OPTIONS = ["PCS", "RFT", "SQFT"];
 const SOLID_SURFACE_UNIT_OPTIONS = ["SQFT"];
-const CEILING_PLANK_UNIT_OPTIONS = ["SQFT", "RFT", "Per Piece"];
-const WOODEN_BALUSTER_UNIT_OPTIONS = ["Per Piece", "CFT"];
+const CEILING_PLANK_UNIT_OPTIONS = ["SQFT", "RFT", "PCS"];
+const WOODEN_BALUSTER_UNIT_OPTIONS = ["PCS", "CFT"];
 
-const KITCHEN_UNIT_OPTIONS = ["Per Piece", "Set"];
+const KITCHEN_UNIT_OPTIONS = ["PCS", "Set"];
 const LOUVER_UNIT_OPTIONS = ["PCS"];
-const LAMINATE_UNIT_OPTIONS = ["PCS" ,"Per Piece"];
-const DOOR_FRAME_UNIT_OPTIONS = ["CFT", "Per Piece"];
+const LAMINATE_UNIT_OPTIONS = ["PCS" ];
+const DOOR_FRAME_UNIT_OPTIONS = ["CFT", "PCS"];
 
 const CHARGE_TYPES = [
   { value: "labour", label: "Labour Charges", icon: "👷" },
