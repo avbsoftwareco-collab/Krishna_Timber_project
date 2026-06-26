@@ -999,13 +999,13 @@ table.items tbody{height:100%;}
 table.items tbody tr{border-bottom:1px solid #ddd}
 table.items tbody tr:nth-child(even){background:#FAFAFA}
 table.items tbody tr:nth-child(odd){background:#fff}
-table.items td{padding:6px 8px;font-size:13px;border-right:1px solid #000;vertical-align:middle;line-height:1.3;color:#000;font-weight:500}
+table.items td{padding:5px 8px;font-size:12.5px;border-right:1px solid #000;vertical-align:middle;line-height:1.3;color:#000;font-weight:500}
 table.items td.r{white-space:nowrap;}
 table.items td:last-child{border-right:none}
 table.items td.r{text-align:right;font-variant-numeric:tabular-nums}
 table.items td.c{text-align:center}
 table.items .item-detail{font-size:11.5px;color:#444;font-style:italic;font-weight:400;display:inline !important;}
-table.items .erow td{height:38px;border-right:1px solid #000}
+table.items .erow td{height:32px;border-right:1px solid #000}
 table.items .erow td:last-child{border-right:none}
 table.items .spacer-row td{height:auto !important;border-right:1px solid #000;border-bottom:none!important;}
 table.items .spacer-row td:last-child{border-right:none!important;}
