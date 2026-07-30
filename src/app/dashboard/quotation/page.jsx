@@ -4048,15 +4048,40 @@ function parseSheetDimensions(name) {
 }
 
 // ✅ FIXED: Hardware ko sheet nahi manega
+// function isSheetMaterial(name, item = {}) {
+//   const productName = (name || "").toLowerCase();
+//   const type = `${item?.materialType || ""} ${item?.category || ""}`.toLowerCase();
+//   if (/hardware|miss|fitting|accessor/i.test(type)) return false;
+//   if (/stopper|handle|hinge|lock|knob|bolt|latch|screw|nail|hook|bracket|catcher|magnet|roller|slider|channel|drawer|tower\s*bolt|aldrop|kabza/i.test(productName)) {
+//     return false;
+//   }
+//   return /mdf|hdhdr|hdmr|door|wpc|ply|block|flush|laminate|board|sunmica|formica|veneer/i.test(productName);
+// }
+
+
 function isSheetMaterial(name, item = {}) {
   const productName = (name || "").toLowerCase();
   const type = `${item?.materialType || ""} ${item?.category || ""}`.toLowerCase();
+  
+  // ✅ Sheet detection FIRST - agar sheet material hai to return true immediately
+  if (/mdf|hdhdr|hdmr|door|wpc|ply|block\s*board|blockboard|flush|laminate|board|sunmica|formica|veneer/i.test(productName)) {
+    // But agar Hardware category me hai to sheet nahi
+    if (/hardware|miss|fitting|accessor/i.test(type)) return false;
+    return true;
+  }
+  
+  // ✅ Hardware category check
   if (/hardware|miss|fitting|accessor/i.test(type)) return false;
-  if (/stopper|handle|hinge|lock|knob|bolt|latch|screw|nail|hook|bracket|catcher|magnet|roller|slider|channel|drawer|tower\s*bolt|aldrop|kabza/i.test(productName)) {
+  
+  // ✅ Hardware products check - word boundaries use karo (\b) taaki "block" me "lock" match na ho
+  if (/\b(stopper|handle|hinge|lock|knob|bolt|latch|screw|nail|hook|bracket|catcher|magnet|roller|slider|channel|drawer|aldrop|kabza)\b/i.test(productName)) {
     return false;
   }
-  return /mdf|hdhdr|hdmr|door|wpc|ply|block|flush|laminate|board|sunmica|formica|veneer/i.test(productName);
+  if (/tower\s*bolt/i.test(productName)) return false;
+  
+  return false;
 }
+
 
 // ✅ FIXED: Oak, Pine, Mahogany etc. bhi detect hoga
 function isTimberWood(item) {
